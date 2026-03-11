@@ -1,0 +1,30 @@
+[2026-02-09 13:23:34] Starting band-pass zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', '']].
+[2026-02-09 13:26:10] Starting band-pass zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', '']].
+[2026-02-09 13:27:06] Starting band-pass zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', '']].
+[2026-02-09 13:29:25] Starting band-pass zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', '']].
+[2026-02-09 13:29:33] Starting band-pass zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', '']].
+[2026-02-09 13:29:38] Starting band-pass zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', '']].
+[2026-02-09 13:31:40] Starting band-pass zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', '']].
+[2026-02-09 13:32:03] Starting band-pass zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', '']].
+[2026-02-09 13:32:35] Starting band-pass zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', '']].
+[2026-02-09 13:33:20] Starting band-pass zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', '']].
+[2026-02-09 13:34:24] Starting band-pass zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', '']].
+[2026-02-09 13:35:07] Starting band-pass zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', '']].
+[2026-02-10 13:07:07] Starting band-pass zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', '']].
+[2026-02-10 13:08:14] Completed calculation of zFC matrices for the band-pass filtered signals.
+[2026-02-10 13:08:14] Starting band-pass zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restPA', '', '']].
+[2026-02-10 13:09:19] Completed calculation of zFC matrices for the band-pass filtered signals.
