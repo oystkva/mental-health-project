@@ -882,7 +882,7 @@ def plot_combined_with_runs(
         sup_title = r"$\Delta\Delta$ Band Interaction: (HC − MDD) " + f"{band_type} − full{(' decomposed with ' + decomp_method.upper()) if band_type != 'full' else ''}{' - FDR corrected' if use_fdr_pvals else ''}"
         cbar_label = r"$\Delta\Delta$ (" + f"{band_type} − full" + r") of mean zFC"
     elif test_type == "method_comparison":
-        sup_title = r"$\Delta\Delta$ Method Interaction: (HC − MDD) MEMD − Band-pass for " + f"{band_type}{(' decomposed with ' + decomp_method.upper()) if band_type != 'full' else ''}{' - FDR corrected' if use_fdr_pvals else ''}"
+        sup_title = r"$\Delta\Delta$ Method Interaction: (HC − MDD) MEMD − Band-pass filtered for " + f"{band_type}{' - FDR corrected' if use_fdr_pvals else ''}"
         cbar_label = r"$\Delta\Delta$ (MEMD − Band-pass) of mean zFC"
     else:
         sup_title = f"Permutation Test Results: {test_type}, {atlas_type if atlas_type else 'both atlases'}, {band_type}{' decomposed with ' + decomp_method.upper() if band_type != 'full' else ''}{' - FDR corrected' if use_fdr_pvals else ''}"
