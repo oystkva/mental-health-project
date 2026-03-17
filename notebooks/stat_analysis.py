@@ -30,7 +30,7 @@ if __name__ == "__main__":
     task = "restAP"
     network_means = True
     decomp = "bandpass"
-    use_fdr_pvals = True
+    use_fdr_pvals = not True
 
     # for t in ["combined"]:
     #     for band in ["full", "slow5", "slow4", "slow3"]:
@@ -101,13 +101,13 @@ if __name__ == "__main__":
                 #     network_means=network_means,
                 #     decomp_method=decomp
                 # )
-                plot_combined_with_runs(
-                    test_type='hc_mdd',
-                    band_type=band,
-                    atlas_type=a,
-                    decomp_method=decomp,
-                    use_fdr_pvals=use_fdr_pvals
-                )
+                # plot_combined_with_runs(
+                #     test_type='hc_mdd',
+                #     band_type=band,
+                #     atlas_type=a,
+                #     decomp_method=decomp,
+                #     use_fdr_pvals=use_fdr_pvals
+                # )
                 if band != "full":
                 #     plot_perm_test_result(
                 #         test_type='band_comparison',
@@ -117,13 +117,13 @@ if __name__ == "__main__":
                 #         network_means=network_means,
                 #         decomp_method=decomp
                 #     )
-                    plot_combined_with_runs(
-                        test_type='band_comparison',
-                        band_type=band,
-                        atlas_type=a,
-                        decomp_method=decomp,
-                        use_fdr_pvals=use_fdr_pvals
-                    )
+                    # plot_combined_with_runs(
+                    #     test_type='band_comparison',
+                    #     band_type=band,
+                    #     atlas_type=a,
+                    #     decomp_method=decomp,
+                    #     use_fdr_pvals=use_fdr_pvals
+                    # )
             #         plot_perm_test_result(
             #             test_type='method_comparison',
             #             task_type=t,
@@ -146,13 +146,13 @@ if __name__ == "__main__":
             #     network_means=network_means,
             #     decomp_method=decomp
             # )
-            plot_combined_with_runs(
-                test_type='atlas_comparison',
-                band_type=band,
-                atlas_type=a,
-                decomp_method=decomp,
-                use_fdr_pvals=use_fdr_pvals
-            )
+            # plot_combined_with_runs(
+            #     test_type='atlas_comparison',
+            #     band_type=band,
+            #     atlas_type=a,
+            #     decomp_method=decomp,
+            #     use_fdr_pvals=use_fdr_pvals
+            # )
             # plot_delta_atlas_comp(
             #     task_type=t,
             #     network_means=network_means,
