@@ -544,6 +544,41 @@ def load_perm_test_results(
     return delta_obs, p_values
 
 
+def compute_global_abs_max(
+        test_type: str,
+) -> float:
+    """Compute the global maximum absolute value across multiple .npy files containing FC matrices.
+    Args:
+        test_type: 'hc_mdd', 'atlas_comparison', 'band_comparison', or 'method_comparison' to determine which set of results to load.
+
+    Returns:
+        float: The global maximum absolute value across all matrices.
+    """
+    match_str = "delta"
+    path = os.path.join(DATA_DIR, "permutation_test_results")
+    if test_type == "method_comparison":
+        file_paths = [
+            os.path.join(path, "method_comparison", f)
+            for f in os.listdir(os.path.join(path, "method_comparison"))
+            if f.endswith(".npy") and (match_str in f)
+        ]       
+    elif test_type in ["hc_mdd", "atlas_comparison", "band_comparison"]:
+        file_paths = [
+            os.path.join(path, decomp_dir, test_type, f)
+            for decomp_dir in ["memd", "bandpass"]  # both memd and band_pass directories contain relevant results for these test types
+            for f in os.listdir(os.path.join(path, decomp_dir, test_type))
+            if f.endswith(".npy") and (match_str in f)
+        ]
+    else:
+        raise ValueError(f"test_type must be 'hc_mdd', 'atlas_comparison', 'band_comparison', or 'method_comparison'. test_type provided: {test_type}")
+
+
+    return max(
+        np.max(np.abs(np.load(f)))
+        for f in file_paths
+    )
+
+
 def plot_perm_test_results_old(
     delta_obs: np.ndarray,
     p_values: np.ndarray,
@@ -661,6 +696,8 @@ def plot_perm_test_result(
     plt.close()
 
 
+
+
 def plot_combined_with_runs(
     test_type: str,
     atlas_type: str,
@@ -722,7 +759,7 @@ def plot_combined_with_runs(
             f"{delta_obs.shape}, {delta_obs_AP.shape}, {delta_obs_PA.shape}"
         )
 
-    vmax = np.max(np.abs(np.stack([delta_obs, delta_obs_AP, delta_obs_PA])))
+    vmax = compute_global_abs_max(test_type=test_type)
     vmin = -vmax
 
     # Plot

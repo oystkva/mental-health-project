@@ -31,6 +31,12 @@ if __name__ == "__main__":
     network_means = True
     decomp = "bandpass"
     use_fdr_pvals = not True
+    plot_grids = [False, False, False]
+    
+    # plot_perm_test_results = ["hc_mdd", "band", "method", "atlas"]
+    plot_perm_test_results = []
+    plot_combined = ["hc_mdd", "band", "method", "atlas"]
+    # ^ options: "hc_mdd", "band", "method", "atlas" ^
 
     # for t in ["combined"]:
     #     for band in ["full", "slow5", "slow4", "slow3"]:
@@ -82,79 +88,89 @@ if __name__ == "__main__":
     for t in ["combined"]:
         for band in tqdm(["full", "slow5", "slow4", "slow3"]):
             for a in ["Yan2023"]:
-                # plot_perm_test_results_grid2(
-                #     atlas_type=a,
-                #     network_means=network_means,
-                #     decomp_method=decomp,
-                # )
-                # plot_perm_test_results_grid(
-                #     task_type=t,
-                #     atlas_type=a,
-                #     network_means=network_means,
-                #     decomp_method=decomp,
-                # )
-                # plot_perm_test_result(
-                #     test_type='hc_mdd',
-                #     task_type=t,
-                #     band_type=band,
-                #     atlas_type=a,
-                #     network_means=network_means,
-                #     decomp_method=decomp
-                # )
-                # plot_combined_with_runs(
-                #     test_type='hc_mdd',
-                #     band_type=band,
-                #     atlas_type=a,
-                #     decomp_method=decomp,
-                #     use_fdr_pvals=use_fdr_pvals
-                # )
-                if band != "full":
-                #     plot_perm_test_result(
-                #         test_type='band_comparison',
-                #         task_type=t,
-                #         band_type=band,
-                #         atlas_type=a,
-                #         network_means=network_means,
-                #         decomp_method=decomp
-                #     )
-                    # plot_combined_with_runs(
-                    #     test_type='band_comparison',
-                    #     band_type=band,
-                    #     atlas_type=a,
-                    #     decomp_method=decomp,
-                    #     use_fdr_pvals=use_fdr_pvals
-                    # )
-            #         plot_perm_test_result(
-            #             test_type='method_comparison',
-            #             task_type=t,
-            #             band_type=band,
-            #             atlas_type=a,
-            #             network_means=network_means,
-            #             decomp_method=decomp
-            #         )
+                if plot_grids[0]:
+                    plot_perm_test_results_grid2(
+                        atlas_type=a,
+                        network_means=network_means,
+                        decomp_method=decomp,
+                    )
+                if plot_grids[1]:
+                    plot_perm_test_results_grid(
+                        task_type=t,
+                        atlas_type=a,
+                        network_means=network_means,
+                        decomp_method=decomp,
+                    )
+                if 'hc_mdd' in plot_perm_test_results:
+                    plot_perm_test_result(
+                        test_type='hc_mdd',
+                        task_type=t,
+                        band_type=band,
+                        atlas_type=a,
+                        network_means=network_means,
+                        decomp_method=decomp
+                    )
+                if 'hc_mdd' in plot_combined:
                     plot_combined_with_runs(
-                        test_type='method_comparison',
+                        test_type='hc_mdd',
                         band_type=band,
                         atlas_type=a,
                         decomp_method=decomp,
                         use_fdr_pvals=use_fdr_pvals
                     )
-            # plot_perm_test_result(
-            #     test_type='atlas_comparison',
-            #     task_type=t,
-            #     band_type=band,
-            #     network_means=network_means,
-            #     decomp_method=decomp
-            # )
-            # plot_combined_with_runs(
-            #     test_type='atlas_comparison',
-            #     band_type=band,
-            #     atlas_type=a,
-            #     decomp_method=decomp,
-            #     use_fdr_pvals=use_fdr_pvals
-            # )
-            # plot_delta_atlas_comp(
-            #     task_type=t,
-            #     network_means=network_means,
-            #     decomp_method=decomp
-            # )
+                if band != "full":
+                    if 'band' in plot_perm_test_results:
+                        plot_perm_test_result(
+                            test_type='band_comparison',
+                            task_type=t,
+                            band_type=band,
+                            atlas_type=a,
+                            network_means=network_means,
+                            decomp_method=decomp
+                        )
+                    if 'band' in plot_combined:
+                        plot_combined_with_runs(
+                            test_type='band_comparison',
+                            band_type=band,
+                            atlas_type=a,
+                            decomp_method=decomp,
+                            use_fdr_pvals=use_fdr_pvals
+                        )
+                    if 'method' in plot_perm_test_results:
+                        plot_perm_test_result(
+                            test_type='method_comparison',
+                            task_type=t,
+                            band_type=band,
+                            atlas_type=a,
+                            network_means=network_means,
+                            decomp_method=decomp
+                        )
+                    if 'method' in plot_combined:
+                        plot_combined_with_runs(
+                            test_type='method_comparison',
+                            band_type=band,
+                            atlas_type=a,
+                            decomp_method=decomp,
+                            use_fdr_pvals=use_fdr_pvals
+                        )
+            if 'atlas' in plot_perm_test_results:
+                plot_perm_test_result(
+                    test_type='atlas_comparison',
+                    task_type=t,
+                    band_type=band,
+                    network_means=network_means,
+                    decomp_method=decomp
+                )
+            if 'atlas' in plot_combined:
+                plot_combined_with_runs(
+                    test_type='atlas_comparison',
+                    band_type=band,
+                    atlas_type=a,
+                    decomp_method=decomp,
+                    use_fdr_pvals=use_fdr_pvals
+                )
+                plot_delta_atlas_comp(
+                    task_type=t,
+                    network_means=network_means,
+                    decomp_method=decomp
+                )
