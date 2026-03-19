@@ -1,4 +1,4 @@
-import os
+import os, sys
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -6,6 +6,9 @@ import matplotlib.gridspec as gridspec
 from matplotlib.pyplot import title
 from matplotlib import Line2D
 from tqdm import tqdm
+
+PROJECT_ROOT = "/cluster/home/oystkva/project/code"
+sys.path.append(os.path.join(PROJECT_ROOT, "src"))
 
 from config import DATA_DIR
 
