@@ -2,7 +2,6 @@ import os, sys
 from joblib import Parallel, delayed
 import numpy as np
 from tqdm import tqdm
-# from scipy.stats import zscore, norm
 
 from utils import (
     log_message,
@@ -71,7 +70,6 @@ def calculate_zFC(fmri_data: np.ndarray) -> np.ndarray:
     avg_zFC /= fmri_data.shape[0]
     return avg_zFC, n_samples
 
-
 def calculate_zFC_parcel(fmri_data: np.ndarray) -> np.ndarray:
     """
     Calculate the functional connectivity (FC) matrix using parcelled fMRI data.
@@ -82,7 +80,6 @@ def calculate_zFC_parcel(fmri_data: np.ndarray) -> np.ndarray:
     """
     zfc_matrix, _ = calculate_zFC(fmri_data)
     return zfc_matrix
-
 
 def calculate_zFC_network(fmri_data: np.ndarray) -> np.ndarray:
     """

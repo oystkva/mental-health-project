@@ -10,15 +10,17 @@ from config import (
 )
 from permutation_test import (
     perm_test_HC_MDD,
-    plot_perm_test_result,
     load_perm_test_results,
-    plot_perm_test_results_grid,
-    plot_perm_test_results_grid2,
-    plot_delta_atlas_comp,
-    plot_combined_with_runs,
     perm_test_slow_band,
     perm_test_atlas,
     perm_test_memd_bandpass,
+)
+from plot_test_res import (
+    plot_perm_test_result,
+    plot_perm_test_results_grid,
+    plot_perm_test_results_grid_AP_PA,
+    plot_delta_atlas_comp,
+    plot_combined_with_runs,
 )
 from fdr_correction import fdr_correct_pipeline
 
@@ -89,7 +91,7 @@ if __name__ == "__main__":
         for band in tqdm(["full", "slow5", "slow4", "slow3"]):
             for a in ["Yan2023"]:
                 if plot_grids[0]:
-                    plot_perm_test_results_grid2(
+                    plot_perm_test_results_grid_AP_PA(
                         atlas_type=a,
                         network_means=network_means,
                         decomp_method=decomp,
