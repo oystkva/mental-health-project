@@ -1,14 +1,14 @@
 import os
 import numpy as np
+from typing import Optional
 
+from src.config import DATA_DIR, LOG_DIR, PLOT_DIR
 
-from config import DATA_DIR, LOG_DIR, PLOT_DIR
+from src.utils import log_message
 
-from utils import log_message
+from src.data_loader import list_networks
 
-from data_loader import list_networks
-
-from functional_connectivity import fisher_z2r
+from src.functional_connectivity import fisher_z2r
 
 
 def permutation_test(Z_A: np.ndarray, Z_B: np.ndarray, n_permutations: int = 10_000, test_dir: str = 'upper_tailed', seed = 42) -> tuple[np.ndarray, np.ndarray]:
@@ -474,7 +474,7 @@ def load_perm_test_results(
     test_type: str, 
     task_type: str, 
     band_type: str, 
-    atlas_type: str = None, 
+    atlas_type: Optional[str] = None, 
     network_means: bool = True,
     decomp_method: str = "memd",
     use_fdr_pvals: bool = False

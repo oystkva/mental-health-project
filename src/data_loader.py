@@ -2,8 +2,9 @@ import os, sys
 import numpy as np
 import pandas as pd
 import h5py as h5
+from typing import Optional
 
-PROJECT_ROOT = "/cluster/home/oystkva/project/code"
+from src.config import PROJECT_ROOT
 
 def recursively_load(data: dict, name: str, obj) -> None:
     if isinstance(obj, h5.Dataset):
@@ -42,7 +43,7 @@ def extract_subjectkey_from_subdir(subdir: str) -> str:
         raise ValueError(f"Invalid subdirectory format: {subdir}")
 
 
-def load_h5_file(file_path: str) -> np.ndarray:
+def load_h5_file(file_path: str) -> dict:
     """
     Load an h5 file and return its contents as a dictionary.
     Args:
@@ -185,7 +186,7 @@ def extract_run_id(path: str) -> str:
     raise ValueError(f"No known atlas token {atlases} found in filename: {base}")
 
 
-def list_networks(Yan2023: bool = False) -> dict:
+def list_networks(Yan2023: bool = False) -> dict[str, list[int]]:
     network_map = {}
     if Yan2023:
         network_map.update(list_Yan17_networks())
@@ -196,7 +197,7 @@ def list_networks(Yan2023: bool = False) -> dict:
     return network_map
 
 
-def list_Yan17_networks() -> dict:
+def list_Yan17_networks() -> dict[str, list[int]]:
     network_map = {}
     with open(os.path.join(PROJECT_ROOT, "src", "brain_atlases", "Yan2023_homotopic_400Parcels_Kong2022_17Networks_info.txt"), "r") as f:
         lines = f.readlines()
@@ -210,7 +211,7 @@ def list_Yan17_networks() -> dict:
     return network_map
 
 
-def list_Schaefer17_networks() -> dict:
+def list_Schaefer17_networks() -> dict[str, list[int]]:
     network_map = {}
     with open(os.path.join(PROJECT_ROOT, "src", "brain_atlases", "Schaefer2018_400Parcels_Kong2022_17Networks_order.txt"), "r") as f:
         lines = f.readlines()
@@ -224,7 +225,7 @@ def list_Schaefer17_networks() -> dict:
     return network_map
 
 
-def list_Tian3_networks() -> dict:
+def list_Tian3_networks() -> dict[str, list[int]]:
     """
     Labels found on: https://github.com/yetianmed/subcortex/blob/master/Group-Parcellation/3T/Cortex-Subcortex/Schaefer2018_400Parcels_17Networks_order_Tian_Subcortex_S2_label.txt
     """
@@ -247,7 +248,10 @@ def list_Tian3_networks() -> dict:
     return network_map
 
 
-def list_Buckner1_networks() -> dict:
+def list_Buckner1_networks() -> dict[str, list[int]]:
     return {
         "Cerebellar": [432, 433]
     }
+
+
+print(list_Tian3_networks())

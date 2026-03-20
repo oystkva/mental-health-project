@@ -1,22 +1,20 @@
 import os, sys
+from typing import Optional
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.gridspec as gridspec
 from matplotlib.pyplot import title
-from matplotlib import Line2D
+from matplotlib.lines import Line2D
 from tqdm import tqdm
 
-PROJECT_ROOT = "/cluster/home/oystkva/project/code"
-sys.path.append(os.path.join(PROJECT_ROOT, "src"))
+from src.config import DATA_DIR
 
-from config import DATA_DIR
+from src.data_loader import list_networks
 
-from data_loader import list_networks
+from src.functional_connectivity import fisher_z2r
 
-from functional_connectivity import fisher_z2r
-
-from permutation_test_results import (
+from src.permutation_test import (
     load_perm_test_results,
     load_mean_zFCs,
     load_zFCs,
@@ -109,8 +107,8 @@ def plot_perm_test_result(
     out_dir: str = DATA_DIR,
     network_means: bool = True,
     alpha: tuple = (0.05, 0.01, 0.001),
-    atlas_type: str = None,
-    title: str = None,
+    atlas_type: Optional[str] = None,
+    title: Optional[str] = None,
     decomp_method: str = "memd"
 ):
     """
@@ -152,7 +150,8 @@ def plot_perm_test_result(
         elif test_type == "method_comparison":
             title = f"Method interaction: (HC−MDD) MEMD − Band-pass ({atlas_type}, {band_type})"
 
-    plt.title(title)
+    if title:
+        plt.title(title)
     #endregion
 
     plt.xlabel("Network")
@@ -179,7 +178,7 @@ def plot_perm_test_result(
     save_path = os.path.join(save_path, file_name)
     #endregion
 
-    network_labels = list_networks()
+    network_labels = list(list_networks().keys())
     plt.xticks(ticks=np.arange(len(network_labels)), labels=network_labels, rotation=90, fontsize=7)
     plt.yticks(ticks=np.arange(len(network_labels)), labels=network_labels, fontsize=7)
 
@@ -441,7 +440,7 @@ def plot_combined_with_runs(
     _apply_axis_labels(ax_pa, networks=None, x_labels=False, y_labels=False)
     #endregion
 
-    plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plt.tight_layout(rect=(0, 0, 1, 0.96))
 
     decomp_dir = decomp_method if test_type != "method_comparison" else "method_comparison"
     save_path = os.path.join(out_dir, "permutation_test_results", decomp_dir, "plots", test_type if test_type != "method_comparison" else "")

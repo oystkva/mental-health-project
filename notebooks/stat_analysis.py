@@ -2,27 +2,25 @@ import sys, os
 from tqdm import tqdm
 
 PROJECT_ROOT = "/cluster/home/oystkva/project/code"
-sys.path.append(os.path.join(PROJECT_ROOT, "src"))
-sys.path.append(os.path.join(PROJECT_ROOT, "plots"))
-from config import (
+from src.config import (
     DATA_DIR,
     LOG_DIR,
 )
-from permutation_test import (
+from src.permutation_test import (
     perm_test_HC_MDD,
     load_perm_test_results,
     perm_test_slow_band,
     perm_test_atlas,
     perm_test_memd_bandpass,
 )
-from plot_test_res import (
+from plots.plot_test_res import (
     plot_perm_test_result,
     plot_perm_test_results_grid,
     plot_perm_test_results_grid_AP_PA,
     plot_delta_atlas_comp,
     plot_combined_with_runs,
 )
-from fdr_correction import fdr_correct_pipeline
+from src.fdr_correction import fdr_correct_pipeline
 
 if __name__ == "__main__":
     

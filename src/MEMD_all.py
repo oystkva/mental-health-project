@@ -616,7 +616,7 @@ def memd_original(*args):
             nbit=nbit+1
             
             if nbit == (MAXITERATIONS-1) and  nbit > 100:
-                warnings.wanr('emd:warning','forced stop of sifting : too many erations')
+                warnings.warn('emd:warning','forced stop of sifting : too many erations')
             
         q.append(m.transpose())
         

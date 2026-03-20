@@ -6,7 +6,7 @@ from config import (
     DATA_DIR,
     LOG_DIR,
 )
-from utils import log_message
+from src.utils import log_message
 
 def fdr_correction_fc(p_values: np.ndarray, alpha: float = 0.05) -> (tuple[np.ndarray, np.ndarray]):
     """

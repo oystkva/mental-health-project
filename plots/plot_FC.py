@@ -1,18 +1,16 @@
 import os, sys
+from typing import Optional
 import numpy as np
 import matplotlib.pyplot as plt
 
-PROJECT_ROOT = "/cluster/home/oystkva/project/code"
-sys.path.append(os.path.join(PROJECT_ROOT, "src"))
-
-from config import (
+from src.config import (
     PLOT_DIR,
 )
 
-from data_loader import (
+from src.data_loader import (
     list_networks,
 )
-from functional_connectivity import (
+from src.functional_connectivity import (
     calculate_zFC_network,
     fisher_z2r,
 )
@@ -43,7 +41,7 @@ def plot_FC(zFC: np.ndarray, title: str):
     plt.savefig(os.path.join(PLOT_DIR, 'FC_matrices', f"{title.replace(' ', '_').lower()}_fc_matrix.svg"), format="svg")
     plt.close()
 
-def plot_FC_comparison(zFCs: list, titles: list, filename: str = None, format: str = "svg", p_val_matrix: list = None, networks: bool = False):
+def plot_FC_comparison(zFCs: list, titles: list, filename: Optional[str] = None, format: str = "svg", p_val_matrix: Optional[list] = None, networks: bool = False):
     """
     Plot multiple FC matrices for comparison.
     Args:

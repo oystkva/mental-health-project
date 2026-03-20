@@ -4,7 +4,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
-from project_root import PROJECT_ROOT
+from project_root import ROOT_DIRECTORY
 
 ######################## CONFIG PARAMETERS #########################
 
@@ -13,6 +13,7 @@ TR = 0.8
 
 ###################### CONFIG PATHS #########################
 
+PROJECT_ROOT = ROOT_DIRECTORY
 
 FMRI_DIR = "/cluster/projects/itea_lille-ie/Transdiagnostic/output/fmriprep-25.1.4" # Only on IDUN
 DATA_DIR = os.path.join(PROJECT_ROOT, "data")

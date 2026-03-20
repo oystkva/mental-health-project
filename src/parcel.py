@@ -1,18 +1,18 @@
 import os, sys
 import numpy as np
+from io import BytesIO
 import nibabel as nib
 from nibabel.processing import resample_from_to
 from nilearn.maskers import NiftiLabelsMasker
 from nilearn.image import resample_to_img, new_img_like
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 from tqdm import tqdm
 from joblib import Parallel, delayed
+from PIL import Image
 
-
-sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "..", "src")))
-
-from config import PROJECT_ROOT, FMRI_DIR
-from data_loader import (
+from src.config import PROJECT_ROOT, FMRI_DIR
+from src.data_loader import (
     load_subject_list, 
     list_fmri_nii_file_paths, 
     save_BOLD_signals_h5,
@@ -85,7 +85,6 @@ def make_gifs_of_atlas_slices():
     """
     Help function to create gifs of axial, coronal, and sagittal slices of the BucknerLR atlas to visualize the regions.
     """
-    from PIL import Image
     # Create axial slice gifs for BucknerLR atlas in x, y, z directions adn compare with Buckner7
     atlas_img = nib.load(ATLAS_PATHS["BucknerLR"])
     atlas_data = atlas_img.get_fdata()
@@ -125,7 +124,6 @@ def make_gifs_of_atlas_slices():
             plt.subplots_adjust(top=0.88)
 
             # Save to a temporary buffer
-            from io import BytesIO
             buf = BytesIO()
             plt.savefig(buf, format='png', dpi=100)
             buf.seek(0)
@@ -386,19 +384,6 @@ def make_gifs_schaefer_vs_bold(bold_path, atlas_path=None, out_prefix="schaefer_
     out_prefix : str
         Prefix for the output GIF filenames.
     """
-    import os
-    from io import BytesIO
-
-    import nibabel as nib
-    import numpy as np
-    import matplotlib.pyplot as plt
-    from PIL import Image
-    import matplotlib.cm as cm
-    try:
-        from nilearn.image import resample_to_img
-    except ImportError:
-        resample_to_img = None
-
     if atlas_path is None:
         atlas_path = ATLAS_PATHS["Schaefer400"]
 
@@ -488,9 +473,6 @@ def make_gifs_schaefer_vs_bold(bold_path, atlas_path=None, out_prefix="schaefer_
 
 
 def get_missing_schaefer_labels(atlas_path, bold_path):
-    import numpy as np
-    import nibabel as nib
-    from nilearn.image import resample_to_img
     """Return expected, present, and missing Schaefer labels for one BOLD run."""
     atlas_img = nib.load(atlas_path)
     bold_img = nib.load(bold_path)
@@ -512,10 +494,6 @@ def make_gifs_missing_schaefer_vs_bold(bold_path, atlas_path=None, out_prefix="m
     Visualize where the *missing* Schaefer labels would be, relative to the BOLD image.
     Creates axial/coronal/sagittal GIFs of missing-label voxels overlaid on BOLD.
     """
-    import matplotlib.pyplot as plt
-    from PIL import Image
-    from io import BytesIO
-
     if atlas_path is None:
         atlas_path = ATLAS_PATHS["Schaefer400"]
 
@@ -589,9 +567,6 @@ def make_gifs_missing_schaefer_vs_bold(bold_path, atlas_path=None, out_prefix="m
         print(f"Saved GIF: {gif_path}")
 
 def show_missing_label_mask(atlas_path, bold_path, missing_labels):
-    from nilearn.image import resample_to_img
-    from PIL import Image
-    
     atlas_img = nib.load(atlas_path)
     bold_img = nib.load(bold_path)
 
@@ -615,7 +590,6 @@ def show_missing_label_mask(atlas_path, bold_path, missing_labels):
         plt.title(f"Missing labels mask - axial slice z={s}")
         plt.axis("off")
 
-        from io import BytesIO
         buf = BytesIO()
         plt.savefig(buf, format='png', dpi=100)
         buf.seek(0)

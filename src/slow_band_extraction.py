@@ -3,7 +3,7 @@ import numpy as np
 from scipy.signal import hilbert, butter, filtfilt
 
 from config import LOG_DIR, TR
-from utils import log_message
+from src.utils import log_message
 
 def assign_imfs_to_slow_bands(imfs: np.ndarray, TR: float = TR) -> tuple:
     """

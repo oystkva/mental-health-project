@@ -6,14 +6,14 @@ from joblib import Parallel, delayed
 
 import MEMD_all as memd_utils
 
-from data_loader import (
+from src.data_loader import (
     load_h5_file, 
     load_subject_list,
     list_bold_h5_file_paths,
     extract_subjectkey_from_subdir,
     extract_run_id,
 )
-from config import (
+from src.config import (
     TR,
     N_CPUs,
     #region path configurations
@@ -21,13 +21,13 @@ from config import (
     LOG_DIR,
     #endregion
 )
-from utils import log_message
+from src.utils import log_message
 
 
 #region Memd function
 # =============================================================================
 
-##### Customized memd function (adapted from MEMD_all.py) to include progress bar (no other changes) ######
+##### Customized memd function (adapted from src.memd_all.py) to include progress bar (no other changes) ######
 
 def memd(*args):
     x, seq, t, ndir, N_dim, N, sd, sd2, tol, nbit, MAXITERATIONS, stop_crit, stp_cnt = memd_utils.set_value(args)
@@ -52,7 +52,7 @@ def memd(*args):
             # spurious extrema to appear
             if np.max(np.abs(m)) < (1e-10)*(np.max(np.abs(x))):
                 if stop_sift == False:
-                    warnings.warn('emd:warning','forced stop of EMD : too small amplitude')
+                    warnings.warn('forced stop of EMD : too small amplitude', category=UserWarning)
                 else:
                     print('forced stop of EMD : too small amplitude')
                 break
@@ -71,7 +71,7 @@ def memd(*args):
                 nbit = nbit + 1
 
                 if nbit == (MAXITERATIONS-1) and  nbit > 100:
-                    warnings.warn('emd:warning','forced stop of sifting : too many iterations')
+                    warnings.warn('forced stop of sifting : too many iterations', category=UserWarning)
 
             q.append(m.transpose())
 

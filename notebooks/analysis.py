@@ -5,10 +5,8 @@ from tqdm import tqdm
 from joblib import Parallel, delayed
 
 PROJECT_ROOT = "/cluster/home/oystkva/project/code"
-sys.path.append(os.path.join(PROJECT_ROOT, "src"))
-sys.path.append(os.path.join(PROJECT_ROOT, "plots"))
 
-from config import ( 
+from src.config import ( 
     TR,
     N_CPUs,
     #paths
@@ -17,9 +15,9 @@ from config import (
     DATA_DIR,
     #endregion
 )
-from data_loader import load_subject_list 
-from functional_connectivity import run_zFC_pipeline, run_bandpass_zFC_pipeline
-from memd import run_memd_pipeline
+from src.data_loader import load_subject_list 
+from src.functional_connectivity import run_zFC_pipeline, run_bandpass_zFC_pipeline
+from src.memd import run_memd_pipeline
 
 
 

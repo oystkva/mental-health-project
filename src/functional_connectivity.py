@@ -2,23 +2,24 @@ import os, sys
 from joblib import Parallel, delayed
 import numpy as np
 from tqdm import tqdm
+from typing import Tuple
 
-from utils import (
+from src.utils import (
     log_message,
 )
-from config import (
+from src.config import (
     TR,
     N_CPUs,
     BOLD_DIR,
     DATA_DIR,
     LOG_DIR,
 )
-from data_loader import (
+from src.data_loader import (
     list_networks,
     extract_run_id,
     load_h5_file,
 )
-from slow_band_extraction import seperate_slow_band_signals, extract_slow_band_signals
+from src.slow_band_extraction import seperate_slow_band_signals, extract_slow_band_signals
 
 #region fisher Z transformation functions
 def fisher_r2z(r: np.ndarray, eps: float = 1e-7) -> np.ndarray:
@@ -43,7 +44,7 @@ def fisher_z2r(z: np.ndarray) -> np.ndarray:
 #endregion
 
 #region zFC calculation functions
-def calculate_zFC(fmri_data: np.ndarray) -> np.ndarray:
+def calculate_zFC(fmri_data: np.ndarray) -> Tuple[np.ndarray, int]:
     """
     Calculate the Fisher Z-transformed functional connectivity (FC) matrix.
     Args:
@@ -142,7 +143,7 @@ def calculate_subject_bold_zFC(bold_path: str, out_dir: str) -> None:
 
 def calculate_subject_band_zFC(imf_path: str, memd_dir: str, out_dir: str, TR: float = TR) -> None:
     """
-    Calculate and save the zFC parcel and mean network matrices for a subject's slow band signals extracted from MEMD IMFs.
+    Calculate and save the zFC parcel and mean network matrices for a subject's slow band signals extracted from src.memd IMFs.
     Args:
         imf_path (str): Path to the subject's IMF signals npy file.
         memd_dir (str): Directory where the MEMD processed files are stored.
