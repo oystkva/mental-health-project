@@ -8,7 +8,6 @@ from src.config import (
 )
 from src.permutation_test import (
     perm_test_HC_MDD,
-    load_perm_test_results,
     perm_test_slow_band,
     perm_test_atlas,
     perm_test_memd_bandpass,

@@ -6,7 +6,7 @@ from src.config import DATA_DIR, LOG_DIR, PLOT_DIR
 from src.utils import log_message
 from src.atlas_config import list_networks
 from src.functional_connectivity import fisher_z2r
-
+from src.data_loader import load_zFCs, load_mean_zFCs
 
 def permutation_test(
     Z_A: np.ndarray,
@@ -143,68 +143,6 @@ def permutation_test_delta_delta(
         p_values = (np.sum(np.abs(delta_delta_perm) >= np.abs(delta_delta_obs[None, ...]), axis=0) + 1) / (n_permutations + 1)
 
     return delta_delta_obs, p_values
-
-
-def load_zFCs(
-    task_type: str, 
-    atlas_type: str, 
-    band_type: str, 
-    group: str, 
-    network_means: bool = True,
-    decomp_method: str = "memd",
-) -> np.ndarray:
-    """
-    Load Fisher Z-transformed functional connectivity matrices for a given group.
-    Args:
-        task_type (str): Task type ('restAP'/'restPA'/'combined').
-        atlas_type (str): Atlas type ('Schaefer400'/'Yan2023').
-        band_type (str): Band type ('full'/'slow5'/'slow4'/'slow3').
-        group (str): Group identifier ('MDD'/'HC').
-        network_means (bool): Whether to use network means or parcel-level data (default: True).
-        decomp_method (str): Decomposition method used ('memd', 'bandpass', etc.) to determine the directory structure.
-    Returns:
-        np.ndarray: Fisher Z-transformed FC matrices for the specified group.
-    """
-    parcellation = "networks" if network_means else "full_parcels"
-    if decomp_method == "memd" or band_type == "full":
-        load_dir = os.path.join(DATA_DIR, "zFC_matrices", task_type, parcellation)
-    elif decomp_method == "bandpass" and band_type != "full":
-        load_dir = os.path.join(DATA_DIR, "zFC_matrices", task_type + "_bandpass", parcellation)
-    zFCs = np.empty((0, ))
-    for root, _, files in list(os.walk(load_dir)):
-        for file in files:
-            if file.endswith(".npy"):
-                if all(param in file for param in [group, atlas_type, band_type]):
-                    file_path = os.path.join(root, file)
-                    loaded_zFCs = np.load(file_path)[np.newaxis, ...]
-                    if zFCs.size == 0:
-                        zFCs = loaded_zFCs
-                    else:
-                        zFCs = np.concatenate((zFCs, loaded_zFCs), axis=0)
-    return zFCs
-
-
-def load_mean_zFCs(
-    atlas_type: str,
-    band_type: str,
-    group: str,
-    network_means: bool = True,
-    decomp_method: str = "memd",
-) -> np.ndarray:
-    """Load mean Fisher Z-transformed functional connectivity matrix for a given group.
-    Args:
-        atlas_type (str): Atlas type ('Schaefer400'/'Yan2023').
-        band_type (str): Band type ('full'/'slow5'/'slow4'/'slow3').
-        group (str): Group identifier ('MDD'/'HC').
-        network_means (bool): Whether to use network means or parcel-level data (default: True).
-        decomp_method (str): Decomposition method used ('memd', 'bandpass', etc.) to determine the directory structure.
-    Returns:
-        np.ndarray: Mean Fisher Z-transformed FC matrix for the specified group.
-    """
-    zFCs_AP = load_zFCs("restAP", atlas_type, band_type, group, network_means, decomp_method)
-    zFCs_PA = load_zFCs("restPA", atlas_type, band_type, group, network_means, decomp_method)
-    mean_zFC = np.mean(np.stack([zFCs_AP, zFCs_PA]), axis=0)
-    return mean_zFC
 
 
 def perm_test_HC_MDD(
@@ -473,71 +411,6 @@ def perm_test_memd_bandpass(
 
     return delta_delta_obs, p_values
     
-
-def load_perm_test_results(
-    test_type: str, 
-    task_type: str, 
-    band_type: str, 
-    atlas_type: Optional[str] = None, 
-    network_means: bool = True,
-    decomp_method: str = "memd",
-    use_fdr_pvals: bool = False
-) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Load permutation test results for given task, atlas, and band type.
-    Args:
-        test_type (str): Type of test ('hc_mdd', 'atlas_comparison', 'band_comparison', 'method_comparison').
-        task_type (str): Task type ('restAP'/'restPA'/'combined').
-        band_type (str): Band type ('full'/'slow5'/'slow4'/'slow3').
-        atlas_type (str | None): Atlas type ('Schaefer400'/'Yan2023') or None if not applicable (atlas comparison).
-        network_means (bool): Whether to use network means or parcel-level data (default: True).
-        decomp_method (str): Decomposition method used ('memd', 'bandpass', etc.).
-    Returns:
-        delta_obs (np.ndarray): Observed difference in means between groups.
-        p_values (np.ndarray): P-values from the permutation test.
-    """
-
-
-    file_name_id = ""
-    if test_type == "method_comparison":
-        if band_type == "full":
-            raise ValueError("Method comparison is not applicable for full band type since it only applies to decomposed bands.")
-        file_name_id = f"{task_type}_{atlas_type}_{band_type}_{'networks' if network_means else 'full_parcels.npy'}"
-    elif test_type == "hc_mdd":
-        if atlas_type is None:
-            raise ValueError("atlas_type must be provided for 'hc_mdd' test_type")
-        file_name_id = f"{task_type}_{atlas_type}_{band_type}_{'networks' if network_means else 'full_parcels.npy'}"
-    elif test_type == "atlas_comparison":
-        file_name_id = f"{task_type}_{band_type}_{'networks' if network_means else 'full_parcels.npy'}"
-    elif test_type == "band_comparison":
-        if atlas_type is None:
-            raise ValueError("atlas_type must be provided for 'band_comparison' test_type")
-        file_name_id = f"{task_type}_{atlas_type}_{band_type}_{'networks' if network_means else 'full_parcels.npy'}"
-    else:
-        print(test_type, task_type, band_type, atlas_type, network_means, decomp_method)
-        raise ValueError(f"test_type must be 'hc_mdd', 'atlas_comparison', or 'band_comparison'. test_type provided: {test_type}")
-
-    decomp_dir = decomp_method
-    if band_type == "full":
-        decomp_dir = "memd"  # full band results are stored under memd directory for now since they are the same for both methods
-    elif test_type == "method_comparison":
-        decomp_dir = ""  # method comparison results are stored under their own directory since they involve both methods
-
-    delta_obs_path = os.path.join(
-        DATA_DIR, "permutation_test_results",
-        decomp_dir, test_type,
-        f"delta{'_delta' if test_type != 'hc_mdd' else ''}_obs_{file_name_id}.npy"
-    )
-    p_values_path = os.path.join(
-        DATA_DIR, "permutation_test_results", 
-        decomp_dir, test_type, 
-        f"p_{'fdr_' if use_fdr_pvals else ''}values_{file_name_id}.npy"
-    )
-    delta_obs = np.load(delta_obs_path)
-    p_values = np.load(p_values_path)
-
-    return delta_obs, p_values
-
 
 def compute_global_abs_max(
         test_type: str,

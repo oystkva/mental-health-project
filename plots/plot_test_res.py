@@ -15,11 +15,11 @@ from src.atlas_config import list_networks
 from src.functional_connectivity import fisher_z2r
 
 from src.permutation_test import (
-    load_perm_test_results,
     load_mean_zFCs,
     load_zFCs,
     compute_global_abs_max
 )
+from src.data_loader import load_perm_test_results
 
 from matplotlib.colors import LinearSegmentedColormap
 ##### custom cmap #####
