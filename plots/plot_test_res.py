@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 from src.config import DATA_DIR
 
-from src.data_loader import list_networks
+from src.atlas_config import list_networks
 
 from src.functional_connectivity import fisher_z2r
 

@@ -5,6 +5,7 @@ import h5py as h5
 from typing import Optional
 
 from src.config import PROJECT_ROOT
+from src.utils import subjectkey_to_subdir
 
 def recursively_load(data: dict, name: str, obj) -> None:
     if isinstance(obj, h5.Dataset):
@@ -12,35 +13,6 @@ def recursively_load(data: dict, name: str, obj) -> None:
     elif isinstance(obj, h5.Group):
         for key, val in obj.items():
             recursively_load(data, f"{name}/{key}", val)
-
-
-def subjectkey_to_subdir(subject_key: str) -> str:
-    """
-    Convert a subject key to its corresponding subdirectory name.
-    Args:
-        subject_key (str): Subject key on form 'NDAR_XXXXXXXXXXX'
-    Returns:
-        str: Corresponding subdirectory name on form 'sub-NDARXXXXXXXXXXX'
-    """
-    if not subject_key.startswith("NDAR_"):
-        raise ValueError(f"Invalid subject key format: {subject_key}")
-    return "sub-" + subject_key.replace("NDAR_", "NDAR")
-
-
-def extract_subjectkey_from_subdir(subdir: str) -> str:
-    """
-    Extract the subject key from a subdirectory name.
-    Args:
-        subdir (str): Subdirectory name on form 'sub-NDARXXXXXXXXXXX_.....'
-    Returns:
-        str: Corresponding subject key on form 'NDAR_XXXXXXXXXXX'
-    """
-    if "sub-NDAR" in subdir:
-        start_idx = subdir.index("sub-NDAR") + len("sub-")
-        subjectkey = subdir[start_idx:].split("_")[0]
-        return subjectkey.replace("NDAR", "NDAR_")
-    else:
-        raise ValueError(f"Invalid subdirectory format: {subdir}")
 
 
 def load_h5_file(file_path: str) -> dict:
@@ -163,95 +135,3 @@ def save_BOLD_signals_h5(
         f.attrs["TR"] = TR
         f.attrs["n_runs"] = n_runs
         print(f"[IO] Saved: {out_dir}")
-
-
-def extract_run_id(path: str) -> str:
-    """
-    Extract the run identifier from a file path of saved data from this project (non-imported data).
-    Args:
-        path (str): File path.
-    Returns:
-        str: Extracted run identifier.
-    e.g. /path/to/HC_NDAR_INVWU297KRB_restPA_run01_Schaefer400_BOLD_signals.h5 -> 'HC_NDAR_INVWU297KRB_restPA_run01_Schaefer400'
-    """
-    atlases = ["Schaefer400", "Yan2023"]
-
-    base = os.path.splitext(os.path.basename(path))[0]
-    parts = base.split("_")
-
-    for i, token in enumerate(parts):
-        if token in atlases:
-            return "_".join(parts[:i + 1])
-
-    raise ValueError(f"No known atlas token {atlases} found in filename: {base}")
-
-
-def list_networks(Yan2023: bool = False) -> dict[str, list[int]]:
-    network_map = {}
-    if Yan2023:
-        network_map.update(list_Yan17_networks())
-    else:
-        network_map.update(list_Schaefer17_networks())
-    network_map.update(list_Tian3_networks())
-    network_map.update(list_Buckner1_networks())
-    return network_map
-
-
-def list_Yan17_networks() -> dict[str, list[int]]:
-    network_map = {}
-    with open(os.path.join(PROJECT_ROOT, "src", "brain_atlases", "Yan2023_homotopic_400Parcels_Kong2022_17Networks_info.txt"), "r") as f:
-        lines = f.readlines()
-    lines = [network.strip().split("_") for network in lines]
-    networks_labels = list(set([line[2] for line in lines[::2]]))
-    networks = []
-    for i in range(0, len(lines), 2):
-        networks.append([int(lines[i+1][0].split(" ")[0])-1, lines[i][2]])
-    for label in networks_labels:
-        network_map[label] = [network[0] for network in networks if network[1] == label]
-    return network_map
-
-
-def list_Schaefer17_networks() -> dict[str, list[int]]:
-    network_map = {}
-    with open(os.path.join(PROJECT_ROOT, "src", "brain_atlases", "Schaefer2018_400Parcels_Kong2022_17Networks_order.txt"), "r") as f:
-        lines = f.readlines()
-    lines = [network.strip().split('\t') for network in lines]
-    # networks_labels = list(set([line[1].split("_")[2] for line in lines]))
-    # print(networks_labels)
-    for i in range(len(lines)):
-        if lines[i][1].split("_")[2] not in network_map:
-            network_map[lines[i][1].split("_")[2]] = []
-        network_map[lines[i][1].split("_")[2]].extend([int(lines[i][0]) - 1])
-    return network_map
-
-
-def list_Tian3_networks() -> dict[str, list[int]]:
-    """
-    Labels found on: https://github.com/yetianmed/subcortex/blob/master/Group-Parcellation/3T/Cortex-Subcortex/Schaefer2018_400Parcels_17Networks_order_Tian_Subcortex_S2_label.txt
-    """
-    network_map = {
-        "MedialTemporal": [], 
-        "Striatal": [], 
-        "Thalamic": []
-    }
-    with open(os.path.join(PROJECT_ROOT, "src", "brain_atlases", "Tian_Subcortex_S2_3T_info.txt"), "r") as f:
-        lines = f.readlines()
-    lines = [network.strip() for network in lines]
-    for i in range(0, len(lines), 2):
-        label = lines[i]
-        if "HIP" in label.upper() or "AMY" in label.upper():
-            network_map["MedialTemporal"].extend([int(lines[i+1].split(" ")[0]) - 1 + 400])
-        elif "THA" in label.upper():
-            network_map["Thalamic"].extend([int(lines[i+1].split(" ")[0]) - 1 + 400])
-        else:
-            network_map["Striatal"].extend([int(lines[i+1].split(" ")[0]) - 1 + 400]) 
-    return network_map
-
-
-def list_Buckner1_networks() -> dict[str, list[int]]:
-    return {
-        "Cerebellar": [432, 433]
-    }
-
-
-print(list_Tian3_networks())

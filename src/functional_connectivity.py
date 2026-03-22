@@ -6,7 +6,9 @@ from typing import Tuple
 
 from src.utils import (
     log_message,
+    extract_run_id
 )
+from atlas_config import list_networks
 from src.config import (
     TR,
     N_CPUs,
@@ -14,11 +16,7 @@ from src.config import (
     DATA_DIR,
     LOG_DIR,
 )
-from src.data_loader import (
-    list_networks,
-    extract_run_id,
-    load_h5_file,
-)
+from src.data_loader import load_h5_file
 from src.slow_band_extraction import seperate_slow_band_signals, extract_slow_band_signals
 
 #region fisher Z transformation functions

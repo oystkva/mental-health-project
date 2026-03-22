@@ -3,15 +3,18 @@ import numpy as np
 from typing import Optional
 
 from src.config import DATA_DIR, LOG_DIR, PLOT_DIR
-
 from src.utils import log_message
-
-from src.data_loader import list_networks
-
+from src.atlas_config import list_networks
 from src.functional_connectivity import fisher_z2r
 
 
-def permutation_test(Z_A: np.ndarray, Z_B: np.ndarray, n_permutations: int = 10_000, test_dir: str = 'upper_tailed', seed = 42) -> tuple[np.ndarray, np.ndarray]:
+def permutation_test(
+    Z_A: np.ndarray,
+    Z_B: np.ndarray, 
+    n_permutations: int = 10_000, 
+    test_dir: str = 'upper_tailed', 
+    seed = 42
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Perform a permutation test between two groups of Fisher Z-transformed functional connectivity matrices.
     Args:
@@ -415,6 +418,7 @@ def perm_test_slow_band(
 
     return delta_delta_obs, p_values
 
+
 def perm_test_memd_bandpass(
     task_type: str,
     atlas_type: str,
@@ -568,4 +572,3 @@ def compute_global_abs_max(
         np.max(np.abs(np.load(f)))
         for f in file_paths
     )
-

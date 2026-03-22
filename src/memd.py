@@ -10,8 +10,6 @@ from src.data_loader import (
     load_h5_file, 
     load_subject_list,
     list_bold_h5_file_paths,
-    extract_subjectkey_from_subdir,
-    extract_run_id,
 )
 from src.config import (
     TR,
@@ -21,7 +19,7 @@ from src.config import (
     LOG_DIR,
     #endregion
 )
-from src.utils import log_message
+from src.utils import extract_run_id, extract_subjectkey_from_subdir
 
 
 #region Memd function

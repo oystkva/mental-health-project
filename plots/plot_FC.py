@@ -7,7 +7,7 @@ from src.config import (
     PLOT_DIR,
 )
 
-from src.data_loader import (
+from src.atlas_config import (
     list_networks,
 )
 from src.functional_connectivity import (
