@@ -26,3 +26,7 @@ schaefer_vs_bold_coronal_slices.gif
 # Shell script for starting analysis
 start_analysis.sh
 start_analysis.ps1
+
+
+# todo
+models/todo.txt
