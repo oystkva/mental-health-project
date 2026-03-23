@@ -10,7 +10,9 @@ import matplotlib.cm as cm
 from tqdm import tqdm
 from joblib import Parallel, delayed
 from PIL import Image
+from pathlib import Path
 
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 from src.config import PROJECT_ROOT, FMRI_DIR
 from src.data_loader import (
     load_subject_list, 

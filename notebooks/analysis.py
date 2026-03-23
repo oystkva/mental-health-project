@@ -3,7 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from joblib import Parallel, delayed
+from pathlib import Path
 
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 PROJECT_ROOT = "/cluster/home/oystkva/project/code"
 
 from src.config import ( 

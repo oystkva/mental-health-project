@@ -3,8 +3,10 @@ import warnings
 import numpy as np
 from tqdm import tqdm
 from joblib import Parallel, delayed
+from pathlib import Path
 
-import MEMD_all as memd_utils
+sys.path.append(str(Path(__file__).resolve().parents[1]))
+import src.MEMD_all as memd_utils
 
 from src.data_loader import (
     load_h5_file, 

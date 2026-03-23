@@ -1,8 +1,10 @@
-import os
+import os, sys
 import numpy as np
 from statsmodels.stats.multitest import fdrcorrection
+from pathlib import Path
 
-from config import (
+sys.path.append(str(Path(__file__).resolve().parents[1]))
+from src.config import (
     DATA_DIR,
     LOG_DIR,
 )

@@ -3,12 +3,14 @@ from joblib import Parallel, delayed
 import numpy as np
 from tqdm import tqdm
 from typing import Tuple
+from pathlib import Path
 
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 from src.utils import (
     log_message,
     extract_run_id
 )
-from atlas_config import list_networks
+from src.atlas_config import list_networks
 from src.config import (
     TR,
     N_CPUs,

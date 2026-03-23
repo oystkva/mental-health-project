@@ -1,8 +1,10 @@
-import os
+import os, sys
 import numpy as np
 from scipy.signal import hilbert, butter, filtfilt
+from pathlib import Path
 
-from config import LOG_DIR, TR
+sys.path.append(str(Path(__file__).resolve().parents[1]))
+from src.config import LOG_DIR, TR
 from src.utils import log_message
 
 def assign_imfs_to_slow_bands(imfs: np.ndarray, TR: float = TR) -> tuple:

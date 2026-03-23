@@ -7,7 +7,9 @@ import matplotlib.gridspec as gridspec
 from matplotlib.pyplot import title
 from matplotlib.lines import Line2D
 from tqdm import tqdm
+from pathlib import Path
 
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 from src.config import DATA_DIR
 
 from src.atlas_config import list_networks
@@ -70,7 +72,8 @@ def _add_sig_rectangles(ax, p_mat, alpha_levels, n, upper_triangle_only=True):
             ax.add_patch(rect)
 
 def _apply_axis_labels(ax, networks, x_labels=True, y_labels=True, hide_ticks=False):
-    n = len(networks)
+    if networks:
+        n = len(networks)
     if x_labels:
         ax.set_xticks(np.arange(n))
         ax.set_xticklabels(networks, rotation=90, fontsize=7)

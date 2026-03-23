@@ -1,7 +1,9 @@
-import os
+import os, sys
 import numpy as np
 from typing import Optional
+from pathlib import Path
 
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 from src.config import DATA_DIR, LOG_DIR, PLOT_DIR
 from src.utils import log_message
 from src.atlas_config import list_networks

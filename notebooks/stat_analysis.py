@@ -1,6 +1,8 @@
 import sys, os
 from tqdm import tqdm
+from pathlib import Path
 
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 PROJECT_ROOT = "/cluster/home/oystkva/project/code"
 from src.config import (
     DATA_DIR,
@@ -20,9 +22,12 @@ from plots.plot_test_res import (
     plot_combined_with_runs,
 )
 from src.fdr_correction import fdr_correct_pipeline
+from src.data_loader import load_zFC_df
 
 if __name__ == "__main__":
     
+    load_zFC_df()
+
     fdr_correct_pipeline()
 
     atlas = "Yan2023"
