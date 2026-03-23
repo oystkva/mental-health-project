@@ -3,9 +3,12 @@ import numpy as np
 import pandas as pd
 import h5py as h5
 from typing import Optional
+from pathlib import Path
 
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 from src.config import PROJECT_ROOT, DATA_DIR
 from src.utils import subjectkey_to_subdir
+from src.atlas_config import list_networks
 
 def recursively_load(data: dict, name: str, obj) -> None:
     if isinstance(obj, h5.Dataset):
@@ -139,11 +142,12 @@ def save_BOLD_signals_h5(
 
 def load_zFCs(
     task_type: str, 
-    atlas_type: str, 
     band_type: str, 
     group: str, 
+    atlas_type: str = "Yan2023", 
     network_means: bool = True,
     decomp_method: str = "memd",
+    vectorize: bool = False,
 ) -> np.ndarray:
     """
     Load Fisher Z-transformed functional connectivity matrices for a given group.
@@ -154,6 +158,7 @@ def load_zFCs(
         group (str): Group identifier ('MDD'/'HC').
         network_means (bool): Whether to use network means or parcel-level data (default: True).
         decomp_method (str): Decomposition method used ('memd', 'bandpass', etc.) to determine the directory structure.
+        vectorize (bool): Vectorize the zFCs (for ML appliances) 
     Returns:
         np.ndarray: Fisher Z-transformed FC matrices for the specified group.
     """
@@ -173,30 +178,36 @@ def load_zFCs(
                         zFCs = loaded_zFCs
                     else:
                         zFCs = np.concatenate((zFCs, loaded_zFCs), axis=0)
+    if vectorize:
+        return vectorize_zFCs(zFCs)
     return zFCs
 
 
 def load_mean_zFCs(
-    atlas_type: str,
     band_type: str,
     group: str,
+    atlas_type: str = "Yan2023",
     network_means: bool = True,
     decomp_method: str = "memd",
+    vectorize: bool = False,
 ) -> np.ndarray:
-    """Load mean Fisher Z-transformed functional connectivity matrix for a given group.
+    """Load Fisher Z-transformed functional connectivity matrices for a given group, computed as the mean across restAP and restPA runs.
     Args:
         atlas_type (str): Atlas type ('Schaefer400'/'Yan2023').
         band_type (str): Band type ('full'/'slow5'/'slow4'/'slow3').
         group (str): Group identifier ('MDD'/'HC').
         network_means (bool): Whether to use network means or parcel-level data (default: True).
         decomp_method (str): Decomposition method used ('memd', 'bandpass', etc.) to determine the directory structure.
+        vectorize (bool): Vectorize the zFCs (for ML appliances) 
     Returns:
-        np.ndarray: Mean Fisher Z-transformed FC matrix for the specified group.
+        np.ndarray: Fisher Z-transformed FC matrices for the specified group, averaged across restAP and restPA runs.
     """
     zFCs_AP = load_zFCs("restAP", atlas_type, band_type, group, network_means, decomp_method)
     zFCs_PA = load_zFCs("restPA", atlas_type, band_type, group, network_means, decomp_method)
-    mean_zFC = np.mean(np.stack([zFCs_AP, zFCs_PA]), axis=0)
-    return mean_zFC
+    mean_zFCs = np.mean(np.stack([zFCs_AP, zFCs_PA]), axis=0)
+    if vectorize:
+        return vectorize_zFCs(mean_zFCs)
+    return mean_zFCs
 
 
 def load_perm_test_results(
@@ -263,3 +274,49 @@ def load_perm_test_results(
 
     return delta_obs, p_values
 
+
+def vectorize_zFCs(zFCs: np.ndarray) -> np.ndarray:
+    """
+    Vectorize zFC matrices.
+    
+    Args:
+        zFCs (np.ndarray): Fisher-z transformed FC array of shape (N, N) or an array of these of shape (S, N, N)
+    Output:
+        np.ndarray: vectorizations of the zFC matrices of shape (M, ) or (S, M) with M = (N^2+N)/2 [Upper Triangle Elements]
+    """
+    single_output = False
+    if zFCs.ndim == 2:
+        zFCs = zFCs[np.newaxis, ...]
+        single_output = True
+    
+    N, n, _ = zFCs.shape
+
+    mask = np.triu_indices(n, k=0)
+    zFC_vecs = zFCs[:, mask[0], mask[1]]
+
+    if single_output:
+        return zFC_vecs[0]
+    return zFC_vecs
+
+
+def load_zFC_df(
+    band_type: str = "all",
+):
+    n = list(list_networks().keys())
+    feature_labels = []
+    for idx, i in enumerate(n):
+        feature_labels.extend([f'{i} - {j}' for j in n[idx:]])
+
+    X_HC = load_zFCs("restAP", band_type="slow4", group="HC", vectorize=True)
+    X_MDD = load_zFCs("restAP", band_type="slow4", group="MDD", vectorize=True)
+    X = np.concatenate([X_HC, X_MDD])
+    df = pd.DataFrame(X, columns=feature_labels)
+    labels = np.concatenate([
+        np.zeros(len(X_HC)),
+        np.ones(len(X_MDD))
+    ])
+
+    # TODO?: Add subjectkeys
+    df["MDD"] = labels
+
+    return df
