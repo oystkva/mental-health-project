@@ -25,8 +25,6 @@ from src.fdr_correction import fdr_correct_pipeline
 from src.data_loader import load_zFC_df
 
 if __name__ == "__main__":
-    
-    load_zFC_df()
 
     fdr_correct_pipeline()
 

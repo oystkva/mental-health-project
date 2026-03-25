@@ -300,23 +300,75 @@ def vectorize_zFCs(zFCs: np.ndarray) -> np.ndarray:
 
 
 def load_zFC_df(
-    band_type: str = "all",
+    band_type: str = 'all',
+    run_type: str = 'restAP',
+    run_num: int = 1
 ):
     n = list(list_networks().keys())
-    feature_labels = []
-    for idx, i in enumerate(n):
-        feature_labels.extend([f'{i} - {j}' for j in n[idx:]])
-
-    X_HC = load_zFCs("restAP", band_type="slow4", group="HC", vectorize=True)
-    X_MDD = load_zFCs("restAP", band_type="slow4", group="MDD", vectorize=True)
-    X = np.concatenate([X_HC, X_MDD])
+    
+    if band_type == 'all':
+        feature_labels = []
+        for band_label in ['s3', 's4', 's5']:    
+            for idx, i in enumerate(n):
+                feature_labels.extend([f'{i} - {j} ({band_label})' for j in n[idx:]])
+        if run_type == 'all':
+            X_HC = np.concatenate([
+                load_zFCs('restAP', band_type='slow3', group='HC', vectorize=True),
+                load_zFCs('restAP', band_type='slow4', group='HC', vectorize=True),
+                load_zFCs('restAP', band_type='slow5', group='HC', vectorize=True),
+                load_zFCs('restPA', band_type='slow3', group='HC', vectorize=True),
+                load_zFCs('restPA', band_type='slow4', group='HC', vectorize=True),
+                load_zFCs('restPA', band_type='slow5', group='HC', vectorize=True) 
+            ], axis=1)
+            X_MDD = np.concatenate([
+                load_zFCs('restAP', band_type='slow3', group='MDD', vectorize=True),
+                load_zFCs('restAP', band_type='slow4', group='MDD', vectorize=True),
+                load_zFCs('restAP', band_type='slow5', group='MDD', vectorize=True),
+                load_zFCs('restPA', band_type='slow3', group='MDD', vectorize=True),
+                load_zFCs('restPA', band_type='slow4', group='MDD', vectorize=True),
+                load_zFCs('restPA', band_type='slow5', group='MDD', vectorize=True) 
+            ], axis=1)
+        else:
+            X_HC = np.concatenate([
+                load_zFCs(run_type, band_type='slow3', group='HC', vectorize=True),
+                load_zFCs(run_type, band_type='slow4', group='HC', vectorize=True),
+                load_zFCs(run_type, band_type='slow5', group='HC', vectorize=True) 
+            ], axis=1)
+            X_MDD = np.concatenate([
+                load_zFCs(run_type, band_type='slow3', group='MDD', vectorize=True),
+                load_zFCs(run_type, band_type='slow4', group='MDD', vectorize=True),
+                load_zFCs(run_type, band_type='slow5', group='MDD', vectorize=True) 
+            ], axis=1)
+    else:
+        band_label = band_type[0]+band_type[-1]
+        feature_labels = []
+        for idx, i in enumerate(n):
+            feature_labels.extend([f'{i} - {j} ({band_label})' for j in n[idx:]])
+        if run_type == 'all':
+            X_HC = np.concatenate([
+                load_zFCs('restAP', band_type=band_type, group='HC', vectorize=True),
+                load_zFCs('restPA', band_type=band_type, group='HC', vectorize=True)
+            ])
+            X_MDD = np.concatenate([
+                load_zFCs('restAP', band_type=band_type, group='MDD', vectorize=True),
+                load_zFCs('restPA', band_type=band_type, group='MDD', vectorize=True)
+            ])
+        else:
+            X_HC = load_zFCs(run_type, band_type=band_type, group='HC', vectorize=True)
+            X_MDD = load_zFCs(run_type, band_type=band_type, group='MDD', vectorize=True)
+    
+    X = np.concatenate([X_HC, X_MDD], axis=0)
     df = pd.DataFrame(X, columns=feature_labels)
     labels = np.concatenate([
-        np.zeros(len(X_HC)),
-        np.ones(len(X_MDD))
-    ])
+        np.zeros(len(X_HC), dtype=bool),
+        np.ones(len(X_MDD), dtype=bool)
+    ], axis=0)
 
     # TODO?: Add subjectkeys
-    df["MDD"] = labels
+    # subjectkeys = []
+    # df.insert(loc=0, column='subjectkey', value=subjectkeys)
+    df['MDD'] = labels
+
+    print(df)
 
     return df
