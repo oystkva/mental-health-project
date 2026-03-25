@@ -24,7 +24,7 @@ if __name__ == "__main__":
         subject_group="HC",
         n_parallels=N_CPUs,
         fmri_run_types=[
-                    ["task-restAP", "run-01", "space-MNI152NLin2009cAsym_res-2_desc-preproc_bold"],
+                    ["task-restAP", "run-02", "space-MNI152NLin2009cAsym_res-2_desc-preproc_bold"],
                 ]
     )
 
@@ -35,6 +35,6 @@ if __name__ == "__main__":
         subject_group="MDD",
         n_parallels=N_CPUs,
         fmri_run_types=[
-                    ["task-restAP", "run-01", "space-MNI152NLin2009cAsym_res-2_desc-preproc_bold"],
+                    ["task-restAP", "run-02", "space-MNI152NLin2009cAsym_res-2_desc-preproc_bold"],
                 ]
     )

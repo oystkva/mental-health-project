@@ -13,12 +13,13 @@ from PIL import Image
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
-from src.config import PROJECT_ROOT, FMRI_DIR
+from src.config import PROJECT_ROOT, FMRI_DIR, LOG_DIR
 from src.data_loader import (
     load_subject_list, 
     list_fmri_nii_file_paths, 
     save_BOLD_signals_h5,
 )
+from src.utils import log_message
 
 Buckner7_PATH = os.path.join(PROJECT_ROOT, "src/brain_atlases/atl-Buckner7_space-MNI_dseg.nii")
 
@@ -266,9 +267,12 @@ def parcel_data(
         atlas_paths (dict): Dictionary of atlas names and their NIfTI file paths.
     """
     os.makedirs(out_dir, exist_ok=True)
+    log_path = os.path.join(LOG_DIR, "parcel_data.log")
+
+    log_message(f"Starting parcellation of specification {fmri_run_types}", log_path)
 
     subjectkeys = load_subject_list(subject_list)
-    print("Loaded subject list with", len(subjectkeys), "subjects from the file:", subject_list)
+    log_message(f"Loaded subject list with {len(subjectkeys)} subjects from the file: {subject_list}", log_path)
 
     run_dict = {}
     for subjectkey in tqdm(subjectkeys):
@@ -277,7 +281,16 @@ def parcel_data(
             subjectkey=subjectkey,
             fmri_run_types=fmri_run_types
         )
-    print("Collected fMRI run paths for all subjects.")
+    #region clean empty entries
+    empty_keys = [k for k, v in run_dict.items() if not v]
+    for k in empty_keys:
+        del run_dict[k]
+    if not empty_keys:
+        msg = "Collected fMRI run paths for all subjects."
+    else:
+        msg = f"Collected fMRI run paths; removed {len(empty_keys)} subjects with no return: {empty_keys}"
+    log_message(msg, log_path)
+    #endregion
 
     Parallel(n_jobs=n_parallels)(
         delayed(parcellate_subject)(
