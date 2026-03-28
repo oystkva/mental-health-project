@@ -23,21 +23,21 @@ from src.utils import log_message
 
 Buckner7_PATH = os.path.join(PROJECT_ROOT, "src/brain_atlases/atl-Buckner7_space-MNI_dseg.nii")
 
-ATLAS_PATHS = {
+ATLAS_PATHS_S400 = {
     "Schaefer400": os.path.join(PROJECT_ROOT, "src/brain_atlases/Schaefer2018_400Parcels_Kong2022_17Networks_order_FSLMNI152_2mm.nii.gz"),
     "Tian_Subcortex": os.path.join(PROJECT_ROOT, "src/brain_atlases/Tian_Subcortex_S2_3T.nii.gz"),
     "BucknerLR": os.path.join(PROJECT_ROOT, "src/brain_atlases/atl-BucknerLR_space-MNI_dseg.nii"),
 }
 
-ATLAS_PATHS_YAN = {
-    "Yan2023": os.path.join(PROJECT_ROOT, "src/brain_atlases/Yan2023_homotopic_400Parcels_Kong2022_17Networks.dlabel.nii"),
+ATLAS_PATHS = {
+    "Yan2023": os.path.join(PROJECT_ROOT, "src/brain_atlases/Yan2023_homotopic_400Parcels_Kong2022_17Networks_FSLMNI152_2mm.nii.gz"),
     "Tian_Subcortex": os.path.join(PROJECT_ROOT, "src/brain_atlases/Tian_Subcortex_S2_3T.nii.gz"),
     "BucknerLR": os.path.join(PROJECT_ROOT, "src/brain_atlases/atl-BucknerLR_space-MNI_dseg.nii"),
 }
 
 def make_BucknerLR(
-        buckner_path: str = Buckner7_PATH,
-        out_path: str = ATLAS_PATHS["BucknerLR"],
+    buckner_path: str = Buckner7_PATH,
+    out_path: str = ATLAS_PATHS["BucknerLR"],
 ):
     """
     Convert the Buckner7 atlas with 7 regions into a left-right hemisphere atlas with 2 regions.
@@ -84,66 +84,6 @@ def make_BucknerLR(
     unique_labels = np.unique(lr_mask)
     print(f"Saved BucknerLR atlas to {out_path} with labels: {unique_labels}")
 
-def make_gifs_of_atlas_slices():
-    """
-    Help function to create gifs of axial, coronal, and sagittal slices of the BucknerLR atlas to visualize the regions.
-    """
-    # Create axial slice gifs for BucknerLR atlas in x, y, z directions adn compare with Buckner7
-    atlas_img = nib.load(ATLAS_PATHS["BucknerLR"])
-    atlas_data = atlas_img.get_fdata()
-    X, Y, Z = atlas_data.shape
-    slices = {
-        "axial": [atlas_data[:, :, z] for z in range(0, Z, 5)],
-        "coronal": [atlas_data[:, y, :] for y in range(0, Y, 5)],
-        "sagittal": [atlas_data[x, :, :] for x in range(0, X, 5)],
-    }
-
-    atlas7_img = nib.load(Buckner7_PATH)
-    atlas7_data = atlas7_img.get_fdata()
-    slices7 = {
-        "axial": [atlas7_data[:, :, z] for z in range(0, Z, 5)],
-        "coronal": [atlas7_data[:, y, :] for y in range(0, Y, 5)],
-        "sagittal": [atlas7_data[x, :, :] for x in range(0, X, 5)],
-    }
-
-
-    # Create images for each atlas and vstack them
-    for direction, slice_list in slices.items():
-        images = []
-        for s in slice_list:
-            fig, ax = plt.subplots(1, 2, figsize=(8, 4))
-            ax[0].imshow(np.rot90(s), cmap="plasma", vmin=0, vmax=7)
-            ax[0].set_title("BucknerLR")
-            ax[0].axis("off")
-            
-            # Get corresponding slice from Buckner7
-            s7 = slices7[direction].pop(0)
-            ax[1].imshow(np.rot90(s7), cmap="plasma", vmin=0, vmax=7)
-            ax[1].set_title("Buckner7")
-            ax[1].axis("off")
-
-            plt.suptitle(f"{direction.capitalize()} Slice", fontsize=16)
-            plt.tight_layout()
-            plt.subplots_adjust(top=0.88)
-
-            # Save to a temporary buffer
-            buf = BytesIO()
-            plt.savefig(buf, format='png', dpi=100)
-            buf.seek(0)
-            images.append(Image.open(buf))
-            plt.close()
-
-        # Save as GIF
-        gif_path = f"bucknerLR_{direction}_slices.gif"
-        images[0].save(
-            fp=gif_path,
-            format='GIF',
-            append_images=images[1:],
-            save_all=True,
-            duration=500,
-            loop=0
-        )
-        print(f"Saved GIF: {gif_path}")
 
 def create_mask_image(atlas_path: str, bold_path: str) -> nib.Nifti1Image:
     atlas_img = nib.load(atlas_path)
@@ -159,7 +99,7 @@ def create_mask_image(atlas_path: str, bold_path: str) -> nib.Nifti1Image:
 
 def parcellate_to_BOLD(
     bold_path: str,
-    atlas_paths: dict =ATLAS_PATHS,
+    atlas_paths: dict = ATLAS_PATHS,
 ) -> np.ndarray:
     """
     Parcellate one fMRIPrep run into a BOLD time series for each ROI.
@@ -177,7 +117,6 @@ def parcellate_to_BOLD(
         )
         time_series = mask.fit_transform(bold_path).T
         ROIs.append(time_series)
-
     return np.vstack(ROIs)
 
 def load_subject_BOLD_signals(
@@ -216,31 +155,33 @@ def parcellate_subject(
         TR (float): Repetition time in seconds.
         atlas_paths (dict): Dictionary of atlas names and their NIfTI file paths.
     """
-    atlas_type = "Yan2023" if "Yan2023" in atlas_paths.keys() else "Schaefer400"
-
-    run_num = "run01" if "run-01" in runs[0] else "run02"
-    task = "restPA" if "restPA" in runs[0] else "restAP"
-
-    out_path = os.path.join(out_dir, task, f"{grouping}_{subjectkey}_{task}_{run_num}_{atlas_type}_BOLD_signals.h5")
-
-    if os.path.exists(out_path):
-        print(f"[SKIP]: [{grouping}] {subjectkey} already exists.")
-        return
     
-    try:
-        bold_signals = load_subject_BOLD_signals(runpaths=runs)
-        save_BOLD_signals_h5(
-            bold_signals=bold_signals,
-            out_dir=out_path,
-            subjectkey=subjectkey,
-            atlas_paths=atlas_paths,
-            TR=TR,
-            n_runs=len(runs),
-        )
-        print(f"[DONE]: [{grouping}] {subjectkey} {task}")
+    log_path = os.path.join(LOG_DIR, "parcel_data.log")
+    log_message(f"Parcellating {subjectkey}", log_path)
 
-    except Exception as e:
-        print(f"[ERROR]: [{grouping}] {subjectkey} {task} failed with error: {e}")
+    for run in runs:
+        atlas_type = "Yan2023" if "Yan2023" in atlas_paths.keys() else "Schaefer400"
+        run_num = "run01" if "run-01" in run else "run02"
+        task = "restPA" if "restPA" in run else "restAP"
+        out_path = os.path.join(out_dir, task, f"{grouping}_{subjectkey}_{task}_{run_num}_{atlas_type}_BOLD_signals.h5")
+        if os.path.exists(out_path):
+            print(f"[SKIP]: [{grouping}] {subjectkey} already exists.")
+            return
+        
+        try:
+            bold_signals = load_subject_BOLD_signals(runpaths=[run])
+            save_BOLD_signals_h5(
+                bold_signals=bold_signals,
+                out_dir=out_path,
+                subjectkey=subjectkey,
+                atlas_paths=atlas_paths,
+                TR=TR,
+                n_runs=len(runs),
+            )
+            print(f"[DONE]: [{grouping}] {subjectkey} {task}")
+            log_message(f"{subjectkey} finished", log_path)
+        except Exception as e:
+            print(f"[ERROR]: [{grouping}] {subjectkey} {task} failed with error: {e}")
 
 
 def parcel_data(
@@ -307,84 +248,6 @@ def parcel_data(
     return
 
 
-# # for key in ATLAS_PATHS:
-# #     atlas = nib.load(ATLAS_PATHS[key])
-# #     labels = np.unique(atlas.get_fdata()).astype(int)
-# #     print(f"Atlas: {key}")
-# #     print("labels:", labels)
-# #     print("Number of non-zero labels in the atlas:", len(labels[labels > 0]))
-# #     print("-----")
-
-# ## Create png of Buckner atlas slices for visualization with a subplot for each label
-
-
-# fmri_df = nib.load(os.path.join(FMRI_DIR, "sub-NDARINVWU297KRB", "func", "sub-NDARINVWU297KRB_task-restAP_run-01_space-MNI152NLin2009cAsym_res-2_desc-preproc_bold.nii.gz"))
-
-# atlas = nib.load(ATLAS_PATHS["Buckner7"])
-
-# atlas_resampled = resample_from_to(
-#         atlas,
-#         (fmri_df.shape[:3], fmri_df.affine),
-#         order=0,  # nearest neighbour so labels stay integer
-#     )
-
-# data = fmri_df.dataobj
-# atlas_data = atlas_resampled.get_fdata()
-# slices = [5, 10, 15, 20, 25]
-
-# X, Y, Z, T = data.shape
-
-# # Compute world (MNI) x-coordinates for each voxel using the atlas affine
-
-# affine = fmri_df.affine  # (4, 4)
-# i, j, k = np.meshgrid(
-#     np.arange(X), np.arange(Y), np.arange(Z), indexing="ij"
-# )
-# ijk = np.vstack([
-#     i.ravel(),
-#     j.ravel(),
-#     k.ravel(),
-#     np.ones(i.size)
-# ])  # (4, N_voxels)
-
-# xyz = affine @ ijk  # (4, N_voxels)
-# x_coords = xyz[0, :].reshape(X, Y, Z)  # (X, Y, Z)
-
-# cereb_mask = atlas_data > 0
-# left_hemi_mask = (x_coords < 0) & cereb_mask
-# right_hemi_mask = (x_coords > 0) & cereb_mask
-
-
-# for s in tqdm(slices):
-#     left_data = data[:, :, s, 200]
-#     right_data = data[:, :, s, 200]
-#     cereb_masked_data = data[:, :, s, 200]
-#     left_data = np.where(left_hemi_mask[:, :, s]*data[:, :, s, 200], 1, 0)
-#     right_data = np.where(right_hemi_mask[:, :, s]*data[:, :, s, 200], 2, 0)
-#     cereb_masked_data = left_data + right_data
-#     print(left_data.shape, right_data.shape, cereb_masked_data.shape)
-
-#     plt.figure(figsize=(10, 5))
-#     plt.suptitle(f"Buckner7 Atlas - Axial Slice z={s}", fontsize=16)
-
-#     plt.subplot(1, 3, 1)
-#     plt.title("Left Hemisphere")
-#     plt.imshow(left_data, cmap="tab20")
-#     plt.axis("off")
-
-#     plt.subplot(1, 3, 2)
-#     plt.title("Right Hemisphere")
-#     plt.imshow(right_data, cmap="tab20")
-#     plt.axis("off")
-
-#     plt.subplot(1, 3, 3)
-#     plt.title("Both Hemispheres")
-#     plt.imshow(cereb_masked_data, cmap="tab20")
-#     plt.axis("off")
-
-#     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-#     plt.savefig(f"buckner7_atlas_slice_z{s}.png", dpi=150)
-
 def make_gifs_schaefer_vs_bold(bold_path, atlas_path=None, out_prefix="schaefer_vs_bold"):
     """
     Create GIFs of axial, coronal, and sagittal slices comparing the Schaefer atlas
@@ -395,12 +258,12 @@ def make_gifs_schaefer_vs_bold(bold_path, atlas_path=None, out_prefix="schaefer_
     bold_path : str
         Path to a 4D (or 3D) fMRI NIfTI image.
     atlas_path : str or None
-        Path to the Schaefer atlas NIfTI. If None, uses ATLAS_PATHS["Schaefer400"].
+        Path to the Schaefer atlas NIfTI. If None, uses ATLAS_PATHS["Yan2023"].
     out_prefix : str
         Prefix for the output GIF filenames.
     """
     if atlas_path is None:
-        atlas_path = ATLAS_PATHS["Schaefer400"]
+        atlas_path = ATLAS_PATHS["Yan2023"]
 
     # --- Load atlas ---
     atlas_img = nib.load(atlas_path)
@@ -510,7 +373,7 @@ def make_gifs_missing_schaefer_vs_bold(bold_path, atlas_path=None, out_prefix="m
     Creates axial/coronal/sagittal GIFs of missing-label voxels overlaid on BOLD.
     """
     if atlas_path is None:
-        atlas_path = ATLAS_PATHS["Schaefer400"]
+        atlas_path = ATLAS_PATHS["Yan2023"]
 
     # 1) Get missing labels and resampled atlas in BOLD space
     expected, present, missing, atlas_res = get_missing_schaefer_labels(atlas_path, bold_path)
@@ -621,6 +484,145 @@ def show_missing_label_mask(atlas_path, bold_path, missing_labels):
         loop=0                     # 0 means loop forever, 1 means loop once, etc.
     )
     print(f"Saved GIF: {gif_path}")
+
+def make_gifs_of_atlas_slices():
+    """
+    Help function to create gifs of axial, coronal, and sagittal slices of the BucknerLR atlas to visualize the regions.
+    """
+    # Create axial slice gifs for BucknerLR atlas in x, y, z directions adn compare with Buckner7
+    atlas_img = nib.load(ATLAS_PATHS["BucknerLR"])
+    atlas_data = atlas_img.get_fdata()
+    X, Y, Z = atlas_data.shape
+    slices = {
+        "axial": [atlas_data[:, :, z] for z in range(0, Z, 5)],
+        "coronal": [atlas_data[:, y, :] for y in range(0, Y, 5)],
+        "sagittal": [atlas_data[x, :, :] for x in range(0, X, 5)],
+    }
+
+    atlas7_img = nib.load(Buckner7_PATH)
+    atlas7_data = atlas7_img.get_fdata()
+    slices7 = {
+        "axial": [atlas7_data[:, :, z] for z in range(0, Z, 5)],
+        "coronal": [atlas7_data[:, y, :] for y in range(0, Y, 5)],
+        "sagittal": [atlas7_data[x, :, :] for x in range(0, X, 5)],
+    }
+
+
+    # Create images for each atlas and vstack them
+    for direction, slice_list in slices.items():
+        images = []
+        for s in slice_list:
+            fig, ax = plt.subplots(1, 2, figsize=(8, 4))
+            ax[0].imshow(np.rot90(s), cmap="plasma", vmin=0, vmax=7)
+            ax[0].set_title("BucknerLR")
+            ax[0].axis("off")
+            
+            # Get corresponding slice from Buckner7
+            s7 = slices7[direction].pop(0)
+            ax[1].imshow(np.rot90(s7), cmap="plasma", vmin=0, vmax=7)
+            ax[1].set_title("Buckner7")
+            ax[1].axis("off")
+
+            plt.suptitle(f"{direction.capitalize()} Slice", fontsize=16)
+            plt.tight_layout()
+            plt.subplots_adjust(top=0.88)
+
+            # Save to a temporary buffer
+            buf = BytesIO()
+            plt.savefig(buf, format='png', dpi=100)
+            buf.seek(0)
+            images.append(Image.open(buf))
+            plt.close()
+
+        # Save as GIF
+        gif_path = f"bucknerLR_{direction}_slices.gif"
+        images[0].save(
+            fp=gif_path,
+            format='GIF',
+            append_images=images[1:],
+            save_all=True,
+            duration=500,
+            loop=0
+        )
+        print(f"Saved GIF: {gif_path}")
+
+# # for key in ATLAS_PATHS:
+# #     atlas = nib.load(ATLAS_PATHS[key])
+# #     labels = np.unique(atlas.get_fdata()).astype(int)
+# #     print(f"Atlas: {key}")
+# #     print("labels:", labels)
+# #     print("Number of non-zero labels in the atlas:", len(labels[labels > 0]))
+# #     print("-----")
+
+# ## Create png of Buckner atlas slices for visualization with a subplot for each label
+
+
+# fmri_df = nib.load(os.path.join(FMRI_DIR, "sub-NDARINVWU297KRB", "func", "sub-NDARINVWU297KRB_task-restAP_run-01_space-MNI152NLin2009cAsym_res-2_desc-preproc_bold.nii.gz"))
+
+# atlas = nib.load(ATLAS_PATHS["Buckner7"])
+
+# atlas_resampled = resample_from_to(
+#         atlas,
+#         (fmri_df.shape[:3], fmri_df.affine),
+#         order=0,  # nearest neighbour so labels stay integer
+#     )
+
+# data = fmri_df.dataobj
+# atlas_data = atlas_resampled.get_fdata()
+# slices = [5, 10, 15, 20, 25]
+
+# X, Y, Z, T = data.shape
+
+# # Compute world (MNI) x-coordinates for each voxel using the atlas affine
+
+# affine = fmri_df.affine  # (4, 4)
+# i, j, k = np.meshgrid(
+#     np.arange(X), np.arange(Y), np.arange(Z), indexing="ij"
+# )
+# ijk = np.vstack([
+#     i.ravel(),
+#     j.ravel(),
+#     k.ravel(),
+#     np.ones(i.size)
+# ])  # (4, N_voxels)
+
+# xyz = affine @ ijk  # (4, N_voxels)
+# x_coords = xyz[0, :].reshape(X, Y, Z)  # (X, Y, Z)
+
+# cereb_mask = atlas_data > 0
+# left_hemi_mask = (x_coords < 0) & cereb_mask
+# right_hemi_mask = (x_coords > 0) & cereb_mask
+
+
+# for s in tqdm(slices):
+#     left_data = data[:, :, s, 200]
+#     right_data = data[:, :, s, 200]
+#     cereb_masked_data = data[:, :, s, 200]
+#     left_data = np.where(left_hemi_mask[:, :, s]*data[:, :, s, 200], 1, 0)
+#     right_data = np.where(right_hemi_mask[:, :, s]*data[:, :, s, 200], 2, 0)
+#     cereb_masked_data = left_data + right_data
+#     print(left_data.shape, right_data.shape, cereb_masked_data.shape)
+
+#     plt.figure(figsize=(10, 5))
+#     plt.suptitle(f"Buckner7 Atlas - Axial Slice z={s}", fontsize=16)
+
+#     plt.subplot(1, 3, 1)
+#     plt.title("Left Hemisphere")
+#     plt.imshow(left_data, cmap="tab20")
+#     plt.axis("off")
+
+#     plt.subplot(1, 3, 2)
+#     plt.title("Right Hemisphere")
+#     plt.imshow(right_data, cmap="tab20")
+#     plt.axis("off")
+
+#     plt.subplot(1, 3, 3)
+#     plt.title("Both Hemispheres")
+#     plt.imshow(cereb_masked_data, cmap="tab20")
+#     plt.axis("off")
+
+#     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+#     plt.savefig(f"buckner7_atlas_slice_z{s}.png", dpi=150)
 
 if __name__ == "__main__":
 

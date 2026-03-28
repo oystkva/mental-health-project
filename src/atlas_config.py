@@ -7,16 +7,19 @@ from src.config import PROJECT_ROOT
 
 #region list_ATLAS_networks helper functions 
 def list_Yan17_networks() -> dict[str, list[int]]:
+    """
+    https://github.com/ThomasYeoLab/CBIG/blob/master/stable_projects/brain_parcellation/Yan2023_homotopic/parcellations/MNI/kong17/400Parcels_Kong2022_17Networks_FSLMNI152_2mm.nii.gz
+    """
     network_map = {}
-    with open(os.path.join(PROJECT_ROOT, "src", "brain_atlases", "Yan2023_homotopic_400Parcels_Kong2022_17Networks_info.txt"), "r") as f:
+    with open(os.path.join(PROJECT_ROOT, "src", "brain_atlases", "Yan2023_homotopic_400Parcels_Kong2022_17Networks_LUT.txt"), "r") as f:
         lines = f.readlines()
-    lines = [network.strip().split("_") for network in lines]
-    networks_labels = list(set([line[2] for line in lines[::2]]))
-    networks = []
-    for i in range(0, len(lines), 2):
-        networks.append([int(lines[i+1][0].split(" ")[0])-1, lines[i][2]])
-    for label in networks_labels:
-        network_map[label] = [network[0] for network in networks if network[1] == label]
+    lines = [network.strip().split(' ') for network in lines]
+    # networks_labels = list(set([line[1].split("_")[2] for line in lines]))
+    # print(networks_labels)
+    for i in range(len(lines)):
+        if lines[i][1].split("_")[2] not in network_map:
+            network_map[lines[i][1].split("_")[2]] = []
+        network_map[lines[i][1].split("_")[2]].extend([int(lines[i][0]) - 1])
     return network_map
 
 
