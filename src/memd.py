@@ -134,7 +134,14 @@ def subject_memd_decomposition(subjectkey: str, data: np.ndarray, task_type: str
 
 #TODO: Add logging
 
-def run_memd_pipeline(subject_list: list[str], out_dir: str, group: str, task_type: str = "restPA", cortical_atlas: str = "Schaefer400", n_parallels: int = N_CPUs) -> None:
+def run_memd_pipeline(
+    subject_list: list[str], 
+    out_dir: str, 
+    group: str, 
+    task_type: str = "restPA", 
+    cortical_atlas: str = "Yan2023", 
+    n_parallels: int = N_CPUs
+) -> None:
     """
     Run the MEMD decomposition pipeline for a list of subjects.
     Args:

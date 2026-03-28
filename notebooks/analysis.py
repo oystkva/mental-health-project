@@ -49,7 +49,7 @@ if __name__ == "__main__":
     # run_memd_pipeline(
     #     subject_list=hc_subjects, 
     #     group="HC", 
-    #     task_type="restAP",
+    #     task_type="restPA",
     #     cortical_atlas="Yan2023",
     #     out_dir=processed_MEMD_dir,
     #     n_parallels=N_CPUs,
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     # run_memd_pipeline(
     #     subject_list=mdd_subjects, 
     #     group="MDD", 
-    #     task_type="restAP",
+    #     task_type="restPA",
     #     cortical_atlas="Yan2023",
     #     out_dir=processed_MEMD_dir,
     #     n_parallels=N_CPUs
@@ -121,13 +121,13 @@ if __name__ == "__main__":
     # # )
     #endregion
 
-    # run_zFC_pipeline(
-    #     [["", "restAP", "", "Schaefer400"]], 
-    #     task_type="restAP", 
-    #     memd_dir=processed_MEMD_dir, 
-    #     n_parallels=N_CPUs, 
-    #     out_dir=zFC_dir, 
-    #     TR=TR
-    # )
+    run_zFC_pipeline(
+        [["", "restAP", "", "Yan2023"]], 
+        task_type="restAP", 
+        memd_dir=processed_MEMD_dir, 
+        n_parallels=N_CPUs, 
+        out_dir=zFC_dir, 
+        TR=TR
+    )
     
     pass
