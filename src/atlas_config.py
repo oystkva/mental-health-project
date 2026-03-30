@@ -10,7 +10,7 @@ def list_Yan17_networks() -> dict[str, list[int]]:
     """
     https://github.com/ThomasYeoLab/CBIG/blob/master/stable_projects/brain_parcellation/Yan2023_homotopic/parcellations/MNI/kong17/400Parcels_Kong2022_17Networks_FSLMNI152_2mm.nii.gz
     """
-    network_map = {}
+    network_map = {k: [] for k in list_Schaefer17_networks().keys()}
     with open(os.path.join(PROJECT_ROOT, "src", "brain_atlases", "Yan2023_homotopic_400Parcels_Kong2022_17Networks_LUT.txt"), "r") as f:
         lines = f.readlines()
     lines = [network.strip().split(' ') for network in lines]
@@ -66,9 +66,9 @@ def list_Buckner1_networks() -> dict[str, list[int]]:
     }
 #endregion
 
-def list_networks(Yan2023: bool = False) -> dict[str, list[int]]:
+def list_networks(atlas = "Yan2023") -> dict[str, list[int]]:
     network_map = {}
-    if Yan2023:
+    if atlas == "Yan2023":
         network_map.update(list_Yan17_networks())
     else:
         network_map.update(list_Schaefer17_networks())

@@ -164,9 +164,9 @@ def load_zFCs(
     """
     parcellation = "networks" if network_means else "full_parcels"
     if decomp_method == "memd" or band_type == "full":
-        load_dir = os.path.join(DATA_DIR, "zFC_matrices", task_type, parcellation)
+        load_dir = os.path.join(DATA_DIR, "zFC_matrices", atlas_type, task_type, parcellation)
     elif decomp_method == "bandpass" and band_type != "full":
-        load_dir = os.path.join(DATA_DIR, "zFC_matrices", task_type + "_bandpass", parcellation)
+        load_dir = os.path.join(DATA_DIR, "zFC_matrices", atlas_type, task_type + "_bandpass", parcellation)
     zFCs = np.empty((0, ))
     for root, _, files in list(os.walk(load_dir)):
         for file in files:

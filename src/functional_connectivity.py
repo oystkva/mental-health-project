@@ -82,7 +82,7 @@ def calculate_zFC_parcel(fmri_data: np.ndarray) -> np.ndarray:
     zfc_matrix, _ = calculate_zFC(fmri_data)
     return zfc_matrix
 
-def calculate_zFC_network(fmri_data: np.ndarray) -> np.ndarray:
+def calculate_zFC_network(fmri_data: np.ndarray, atlas: str = "Yan2023") -> np.ndarray:
     """
     Calculate mean FC values within and between networks.
     Args:
@@ -91,7 +91,7 @@ def calculate_zFC_network(fmri_data: np.ndarray) -> np.ndarray:
         np.ndarray: Mean FC values matrix between networks.
         np.ndarray: P-value matrix for the mean FC values.
     """
-    networks = list_networks()
+    networks = list_networks(atlas = atlas)
     network_labels = list(networks.keys())
 
     n_networks = len(network_labels)
@@ -320,7 +320,7 @@ def run_bandpass_zFC_pipeline(run_types: list, task_type: str, out_dir: str, n_p
         TR (float): Repetition time of the fMRI data.
     Returns:
         None
-        Results are saved to data/zFC_matrices_bandpass/.
+        Results are saved to data/zFC_matrices/*bandpass/.
     """
     if task_type == "restPA" and "restAP" in run_types or task_type == "restAP" and "restPA" in run_types:
         raise ValueError("Cannot process both 'restPA' and 'restAP' run types simultaneously.")
