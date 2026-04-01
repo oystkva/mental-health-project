@@ -155,6 +155,7 @@ def perm_test_HC_MDD(
     n_permutations: int = 10_000, 
     test_dir: str = 'upper_tailed',
     decomp_method: str = "memd",
+    runs: int = 1
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Perform permutation test between HC and MDD groups for given task, atlas, and band type.
@@ -166,6 +167,7 @@ def perm_test_HC_MDD(
         n_permutations (int): Number of permutations to perform.
         test_dir (str): Type of test ('upper_tailed', 'lower_tailed', 'two_tailed').
         decomp_method (str): Decomposition method used ('memd', 'bandpass', etc.).
+        runs (int): numeber of runs per subject to include (maximum).
     Returns:
         delta_obs (np.ndarray): Observed difference in means between groups.
         p_values (np.ndarray): P-values from the permutation test.
@@ -174,21 +176,61 @@ def perm_test_HC_MDD(
     log_message(f"Starting permutation test for {task_type}, {atlas_type}, {band_type}, network_means={network_means}, decomp_method={decomp_method}", log_path)
 
     if task_type == "combined":
-        Z_HC = load_mean_zFCs(atlas_type, band_type, "HC", network_means, decomp_method)
-        Z_MDD = load_mean_zFCs(atlas_type, band_type, "MDD", network_means, decomp_method)
+        Z_HC = load_mean_zFCs(
+            group="HC", 
+            band_type=band_type, 
+            runs=runs,
+            atlas_type=atlas_type, 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
+        Z_MDD = load_mean_zFCs(
+            group="MDD", 
+            band_type=band_type, 
+            runs=runs,
+            atlas_type=atlas_type,
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
     else:
-        Z_HC = load_zFCs(task_type, atlas_type, band_type, "HC", network_means, decomp_method)
-        Z_MDD = load_zFCs(task_type, atlas_type, band_type, "MDD", network_means, decomp_method)
+        Z_HC = load_zFCs(
+            group="HC", 
+            task_type=task_type, 
+            band_type=band_type, 
+            runs=runs,
+            atlas_type=atlas_type, 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
+        Z_MDD = load_zFCs(
+            group="MDD", 
+            task_type=task_type, 
+            band_type=band_type, 
+            runs=runs,
+            atlas_type=atlas_type, 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
 
-    delta_obs, p_values = permutation_test(Z_HC, Z_MDD, n_permutations, test_dir)
+    delta_obs, p_values = permutation_test(
+        Z_A=Z_HC, Z_B=Z_MDD, 
+        n_permutations=n_permutations, 
+        test_dir=test_dir
+    )
 
     log_message(f"Results: delta_obs shape: {delta_obs.shape}, p_values shape: {p_values.shape}", log_path)
 
     network_label = "networks" if network_means else "full_parcels"
 
     os.makedirs(os.path.join(DATA_DIR, "permutation_test_results", decomp_method, "hc_mdd"), exist_ok=True)
-    np.save(os.path.join(DATA_DIR, "permutation_test_results", decomp_method, "hc_mdd", f"delta_obs_{task_type}_{atlas_type}_{band_type}_{network_label}.npy"), delta_obs)
-    np.save(os.path.join(DATA_DIR, "permutation_test_results", decomp_method, "hc_mdd",  f"p_values_{task_type}_{atlas_type}_{band_type}_{network_label}.npy"), p_values)
+    np.save(os.path.join(
+            DATA_DIR, "permutation_test_results", decomp_method, "hc_mdd", 
+            f"delta_obs_{task_type}_{atlas_type}_{band_type}_{network_label}.npy"
+        ), delta_obs)
+    np.save(os.path.join(
+            DATA_DIR, "permutation_test_results", decomp_method, "hc_mdd", 
+            f"p_values_{task_type}_{atlas_type}_{band_type}_{network_label}.npy"
+        ), p_values)
     #TODO: remove?
     # # plot comparison of mean FC matrices with delta_obs between groups
     # fig, ax = plt.subplots(1, 3, figsize=(18, 6))
@@ -251,7 +293,8 @@ def perm_test_atlas(
     network_means: bool = True, 
     n_permutations: int = 10_000, 
     test_dir: str = 'upper_tailed',
-    decomp_method: str = 'memd'
+    decomp_method: str = 'memd',
+    runs = 1
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Perform permutation test between the results of the permutation tests for the Schaefer400 and Yan2023 atlases.
@@ -262,6 +305,7 @@ def perm_test_atlas(
         n_permutations (int): Number of permutations to perform.
         test_dir (str): Type of test ('upper_tailed', 'lower_tailed', 'two_tailed').
         decomp_method (str): Decomposition method used ('memd', 'bandpass', etc.).
+        runs (int): numeber of runs per subject to include (maximum).
     Returns:
         delta_obs (np.ndarray): Observed difference in means between atlases.
         p_values (np.ndarray): P-values from the permutation test.
@@ -270,33 +314,96 @@ def perm_test_atlas(
     log_message(f"Starting permutation test between atlases for {task_type}, {band_type}, network_means={network_means}", log_path)
 
     if task_type == "combined":
-        Z_HC_yan = load_mean_zFCs("Yan2023", band_type, "HC", network_means, decomp_method)
-        Z_MDD_yan = load_mean_zFCs("Yan2023", band_type, "MDD", network_means, decomp_method)
+        Z_HC_yan = load_mean_zFCs(
+            group="HC", 
+            band_type=band_type, 
+            runs=runs,
+            atlas_type="Yan2023", 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
+        Z_MDD_yan = load_mean_zFCs(
+            group="MDD", 
+            band_type=band_type, 
+            runs=runs,
+            atlas_type="Yan2023", 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
 
-        Z_HC_sch = load_mean_zFCs("Schaefer400", band_type, "HC", network_means, decomp_method)
-        Z_MDD_sch = load_mean_zFCs("Schaefer400", band_type, "MDD", network_means, decomp_method)
+        Z_HC_sch = load_mean_zFCs(
+            group="HC", 
+            band_type=band_type, 
+            runs=runs,
+            atlas_type="Schaefer400", 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
+        Z_MDD_sch = load_mean_zFCs(
+            group="MDD", 
+            band_type=band_type, 
+            runs=runs,
+            atlas_type="Schaefer400", 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
     else:
-        Z_HC_yan = load_zFCs(task_type, "Yan2023", band_type, "HC", network_means, decomp_method)
-        Z_MDD_yan = load_zFCs(task_type, "Yan2023", band_type, "MDD", network_means, decomp_method)
-        
-        Z_HC_sch = load_zFCs(task_type, "Schaefer400", band_type, "HC", network_means, decomp_method)
-        Z_MDD_sch = load_zFCs(task_type, "Schaefer400", band_type, "MDD", network_means, decomp_method)
+        Z_HC_yan = load_zFCs(
+            group="HC", 
+            task_type=task_type, 
+            band_type=band_type, 
+            runs=runs,
+            atlas_type="Yan2023", 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
+        Z_MDD_yan = load_zFCs(
+            group="MDD", 
+            task_type=task_type, 
+            band_type=band_type, 
+            runs=runs,
+            atlas_type="Yan2023", 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
+        Z_HC_sch = load_zFCs(
+            group="HC", 
+            task_type=task_type, 
+            band_type=band_type, 
+            runs=runs,
+            atlas_type="Schaefer400", 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
+        Z_MDD_sch = load_zFCs(
+            group="MDD", 
+            task_type=task_type, 
+            band_type=band_type, 
+            runs=runs,
+            atlas_type="Schaefer400", 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
 
     delta_delta_obs, p_values = permutation_test_delta_delta(
-        Z_HC_yan, 
-        Z_HC_sch, 
-        Z_MDD_yan, 
-        Z_MDD_sch, 
-        n_permutations, 
-        test_dir, 
+        Z_A_X=Z_HC_yan, Z_A_Y=Z_HC_sch, 
+        Z_B_X=Z_MDD_yan, Z_B_Y=Z_MDD_sch, 
+        n_permutations=n_permutations, 
+        test_dir=test_dir, 
         seed=42
     )
     
     log_message(f"Results: delta_delta_obs shape: {delta_delta_obs.shape}, p_values shape: {p_values.shape}", log_path)
     
     os.makedirs(os.path.join(DATA_DIR, "permutation_test_results", decomp_method, "atlas_comparison"), exist_ok=True)
-    np.save(os.path.join(DATA_DIR, "permutation_test_results", decomp_method, "atlas_comparison", f"delta_delta_obs_{task_type}_{band_type}_{'networks' if network_means else 'full_parcels'}.npy"), delta_delta_obs)
-    np.save(os.path.join(DATA_DIR, "permutation_test_results", decomp_method, "atlas_comparison",  f"p_values_{task_type}_{band_type}_{'networks' if network_means else 'full_parcels'}.npy"), p_values)  
+    np.save(os.path.join(
+            DATA_DIR, "permutation_test_results", decomp_method, "atlas_comparison", 
+            f"delta_delta_obs_{task_type}_{band_type}_{'networks' if network_means else 'full_parcels'}.npy"
+        ), delta_delta_obs)
+    np.save(os.path.join(
+            DATA_DIR, "permutation_test_results", decomp_method, "atlas_comparison", 
+            f"p_values_{task_type}_{band_type}_{'networks' if network_means else 'full_parcels'}.npy"
+        ), p_values)  
 
     return delta_delta_obs, p_values
 
@@ -308,7 +415,8 @@ def perm_test_slow_band(
     network_means: bool = True, 
     n_permutations: int = 5000, 
     test_dir: str = 'upper_tailed',
-    decomp_method: str = 'memd'
+    decomp_method: str = 'memd',
+    runs: int = 1
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Perform permutation test between the results of the permutation tests for slow band n and full band.
@@ -320,6 +428,7 @@ def perm_test_slow_band(
         n_permutations (int): Number of permutations to perform.
         test_dir (str): Type of test ('upper_tailed', 'lower_tailed', 'two_tailed').
         decomp_method (str): Decomposition method used ('memd', 'bandpass', etc.).
+        runs (int): numeber of runs per subject to include (maximum).
     Returns:
         delta_delta_obs (np.ndarray): Observed difference in means between bands.
         p_values (np.ndarray): P-values from the permutation test.
@@ -328,33 +437,95 @@ def perm_test_slow_band(
     log_message(f"Starting permutation test between {slow_band} and full band for {task_type}, {atlas_type}, network_means={network_means}", log_path)
 
     if task_type == "combined":
-        Z_HC_full = load_mean_zFCs(atlas_type, "full", "HC", network_means, decomp_method)
-        Z_MDD_full = load_mean_zFCs(atlas_type, "full", "MDD", network_means, decomp_method)
-        
-        Z_HC_slow = load_mean_zFCs(atlas_type, slow_band, "HC", network_means, decomp_method)
-        Z_MDD_slow = load_mean_zFCs(atlas_type, slow_band, "MDD", network_means, decomp_method)
+        Z_HC_full = load_mean_zFCs(
+            atlas_type=atlas_type, 
+            group="HC", 
+            band_type="full", 
+            runs=runs,
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
+        Z_MDD_full = load_mean_zFCs(
+            atlas_type=atlas_type, 
+            group="MDD", 
+            band_type="full", 
+            runs=runs,
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
+        Z_HC_slow = load_mean_zFCs(
+            group="HC", 
+            atlas_type=atlas_type, 
+            band_type=slow_band, 
+            runs=runs,
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
+        Z_MDD_slow = load_mean_zFCs(
+            group="MDD", 
+            atlas_type=atlas_type, 
+            band_type=slow_band, 
+            runs=runs,
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
     else:
-        Z_HC_full = load_zFCs(task_type, atlas_type, "full", "HC", network_means, decomp_method)
-        Z_MDD_full = load_zFCs(task_type, atlas_type, "full", "MDD", network_means, decomp_method)
-        
-        Z_HC_slow = load_zFCs(task_type, atlas_type, slow_band, "HC", network_means, decomp_method)
-        Z_MDD_slow = load_zFCs(task_type, atlas_type, slow_band, "MDD", network_means, decomp_method)
+        Z_HC_full = load_zFCs(
+            group="HC", 
+            task_type=task_type, 
+            band_type="full", 
+            runs=runs,
+            atlas_type=atlas_type, 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
+        Z_MDD_full = load_zFCs(
+            group="MDD", 
+            task_type=task_type, 
+            band_type="full", 
+            runs=runs,
+            atlas_type=atlas_type, 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
+        Z_HC_slow = load_zFCs(
+            group="HC", 
+            task_type=task_type, 
+            band_type=slow_band, 
+            runs=runs,
+            atlas_type=atlas_type, 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
+        Z_MDD_slow = load_zFCs(
+            group="MDD", 
+            task_type=task_type, 
+            band_type=slow_band, 
+            runs=runs,
+            atlas_type=atlas_type, 
+            network_means=network_means, 
+            decomp_method=decomp_method, 
+        )
 
     delta_delta_obs, p_values = permutation_test_delta_delta(
-        Z_HC_slow, 
-        Z_HC_full, 
-        Z_MDD_slow, 
-        Z_MDD_full, 
-        n_permutations, 
-        test_dir, 
+        Z_A_X=Z_HC_slow, Z_A_Y=Z_HC_full, 
+        Z_B_X=Z_MDD_slow, Z_B_Y=Z_MDD_full, 
+        n_permutations=n_permutations, 
+        test_dir=test_dir, 
         seed=42
     )
 
     log_message(f"Results: delta_delta_obs shape: {delta_delta_obs.shape}, p_values shape: {p_values.shape}", log_path)
     
     os.makedirs(os.path.join(DATA_DIR, "permutation_test_results", decomp_method, "band_comparison"), exist_ok=True)
-    np.save(os.path.join(DATA_DIR, "permutation_test_results", decomp_method, "band_comparison", f"delta_delta_obs_{task_type}_{atlas_type}_{slow_band}_{'networks' if network_means else 'full_parcels'}.npy"), delta_delta_obs)
-    np.save(os.path.join(DATA_DIR, "permutation_test_results", decomp_method, "band_comparison",  f"p_values_{task_type}_{atlas_type}_{slow_band}_{'networks' if network_means else 'full_parcels'}.npy"), p_values) 
+    np.save(os.path.join(
+            DATA_DIR, "permutation_test_results", decomp_method, "band_comparison", 
+            f"delta_delta_obs_{task_type}_{atlas_type}_{slow_band}_{'networks' if network_means else 'full_parcels'}.npy"
+        ), delta_delta_obs)
+    np.save(os.path.join(
+            DATA_DIR, "permutation_test_results", decomp_method, "band_comparison", 
+            f"p_values_{task_type}_{atlas_type}_{slow_band}_{'networks' if network_means else 'full_parcels'}.npy"
+        ), p_values) 
 
     return delta_delta_obs, p_values
 
@@ -366,6 +537,7 @@ def perm_test_memd_bandpass(
     network_means: bool = True,
     n_permutations: int = 10_000,
     test_dir: str = 'upper_tailed',
+    runs: int = 1
 ) -> tuple[np.ndarray, np.ndarray]:
     """Perform permutation test between MEMD and band-pass results for given task, atlas, and band type.
     Args:
@@ -375,6 +547,7 @@ def perm_test_memd_bandpass(
         network_means (bool): Whether to use network means or parcel-level data (default: True).
         n_permutations (int): Number of permutations to perform.
         test_dir (str): Type of test ('upper_tailed', 'lower_tailed', 'two_tailed').
+        runs (int): numeber of runs per subject to include (maximum).
     Returns:
         delta_delta_obs (np.ndarray): Observed difference in means between methods.
         p_values (np.ndarray): P-values from the permutation test.
@@ -383,33 +556,96 @@ def perm_test_memd_bandpass(
     log_message(f"Starting permutation test between MEMD and band-pass for {task_type}, {atlas_type}, {slow_band}, network_means={network_means}", log_path)
 
     if task_type == "combined":
-        Z_HC_MEMD = load_mean_zFCs(atlas_type, slow_band, "HC", network_means, decomp_method="memd")
-        Z_MDD_MEMD = load_mean_zFCs(atlas_type, slow_band, "MDD", network_means, decomp_method="memd")
+        Z_HC_MEMD = load_mean_zFCs(
+            atlas_type=atlas_type, 
+            group="HC", 
+            band_type=slow_band, 
+            runs=runs,
+            network_means=network_means, 
+            decomp_method="memd", 
+        )
+        Z_MDD_MEMD = load_mean_zFCs(
+            atlas_type=atlas_type, 
+            group="MDD", 
+            band_type=slow_band, 
+            runs=runs,
+            network_means=network_means, 
+            decomp_method="memd", 
+        )
 
-        Z_HC_BP = load_mean_zFCs(atlas_type, slow_band, "HC", network_means, decomp_method="bandpass")
-        Z_MDD_BP = load_mean_zFCs(atlas_type, slow_band, "MDD", network_means, decomp_method="bandpass")
+        Z_HC_BP = load_mean_zFCs(
+            atlas_type=atlas_type, 
+            group="HC", 
+            band_type=slow_band, 
+            runs=runs,
+            network_means=network_means, 
+            decomp_method="bandpass", 
+        )
+        Z_MDD_BP = load_mean_zFCs(
+            atlas_type=atlas_type, 
+            group="MDD", 
+            band_type=slow_band, 
+            runs=runs,
+            network_means=network_means, 
+            decomp_method="bandpass", 
+        )
     else:
-        Z_HC_MEMD = load_zFCs(task_type, atlas_type, slow_band, "HC", network_means, decomp_method="memd")
-        Z_MDD_MEMD = load_zFCs(task_type, atlas_type, slow_band, "MDD", network_means, decomp_method="memd")
-        
-        Z_HC_BP = load_zFCs(task_type, atlas_type, slow_band, "HC", network_means, decomp_method="bandpass")
-        Z_MDD_BP = load_zFCs(task_type, atlas_type, slow_band, "MDD", network_means, decomp_method="bandpass")
-    # difference per subject
+        Z_HC_MEMD = load_zFCs(
+            group="HC", 
+            task_type=task_type, 
+            band_type=slow_band, 
+            runs=runs,
+            atlas_type=atlas_type, 
+            network_means=network_means, 
+            decomp_method="memd", 
+        )
+        Z_MDD_MEMD = load_zFCs(
+            group="MDD", 
+            task_type=task_type, 
+            band_type=slow_band, 
+            runs=runs,
+            atlas_type=atlas_type, 
+            network_means=network_means, 
+            decomp_method="memd", 
+        )
+        Z_HC_BP = load_zFCs(
+            group="HC", 
+            task_type=task_type, 
+            band_type=slow_band, 
+            runs=runs,
+            atlas_type=atlas_type, 
+            network_means=network_means, 
+            decomp_method="bandpass", 
+        )
+        Z_MDD_BP = load_zFCs(
+            group="MDD", 
+            task_type=task_type, 
+            band_type=slow_band, 
+            runs=runs,
+            atlas_type=atlas_type, 
+            network_means=network_means, 
+            decomp_method="bandpass", 
+        )
+        # difference per subject
 
     delta_delta_obs, p_values = permutation_test_delta_delta(
-        Z_HC_MEMD, 
-        Z_HC_BP, 
-        Z_MDD_MEMD, 
-        Z_MDD_BP, 
-        n_permutations, 
-        test_dir, 
+        Z_A_X=Z_HC_MEMD, Z_A_Y=Z_HC_BP, 
+        Z_B_X=Z_MDD_MEMD, Z_B_Y=Z_MDD_BP, 
+        n_permutations=n_permutations, 
+        test_dir=test_dir, 
         seed=42
     )
     log_message(f"Results: delta_delta_obs shape: {delta_delta_obs.shape}, p_values shape: {p_values.shape}", log_path)
     
     os.makedirs(os.path.join(DATA_DIR, "permutation_test_results", "method_comparison"), exist_ok=True)
-    np.save(os.path.join(DATA_DIR, "permutation_test_results", "method_comparison", f"delta_delta_obs_{task_type}_{atlas_type}_{slow_band}_{'networks' if network_means else 'full_parcels'}.npy"), delta_delta_obs)
-    np.save(os.path.join(DATA_DIR, "permutation_test_results", "method_comparison",  f"p_values_{task_type}_{atlas_type}_{slow_band}_{'networks' if network_means else 'full_parcels'}.npy"), p_values) 
+    np.save(os.path.join(
+            DATA_DIR, "permutation_test_results", "method_comparison", 
+            f"delta_delta_obs_{task_type}_{atlas_type}_{slow_band}_{'networks' if network_means else 'full_parcels'}.npy"
+        ), delta_delta_obs)
+    np.save(os.path.join(
+            DATA_DIR, "permutation_test_results", "method_comparison", 
+            f"p_values_{task_type}_{atlas_type}_{slow_band}_{'networks' if network_means else 'full_parcels'}.npy"
+        ), p_values) 
 
     return delta_delta_obs, p_values
     

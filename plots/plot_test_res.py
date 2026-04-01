@@ -467,7 +467,8 @@ def plot_perm_test_results_grid(
     alpha: tuple[float, float, float] = (0.05, 0.01, 0.001),
     test_stat_sign: str = "hc_mdd",
     out_dir: str = DATA_DIR,
-    decomp_method: str = "memd"
+    decomp_method: str = "memd",
+    runs: int = 1
 ) -> str:
     """
     Creates a 4x3 grid plot:
@@ -490,35 +491,39 @@ def plot_perm_test_results_grid(
     for band in band_types:
         if task_type == "combined":
             Z_HC = load_mean_zFCs(
-                atlas_type=atlas_type, 
-                band_type=band, 
                 group="HC", 
+                band_type=band, 
+                runs=runs,
+                atlas_type=atlas_type, 
                 network_means=network_means,
-                decomp_method=decomp_method
+                decomp_method=decomp_method,
             )
             Z_MDD = load_mean_zFCs(
-                atlas_type=atlas_type, 
-                band_type=band, 
                 group="MDD",
+                band_type=band, 
+                runs=runs,
+                atlas_type=atlas_type, 
                 network_means=network_means,
-                decomp_method=decomp_method
+                decomp_method=decomp_method,
             )
         else:
             Z_HC = load_zFCs(
-                task_type=task_type, 
-                atlas_type=atlas_type, 
-                band_type=band, 
                 group="HC", 
+                task_type=task_type, 
+                band_type=band, 
+                runs=runs,
+                atlas_type=atlas_type, 
                 network_means=network_means,
-                decomp_method=decomp_method
+                decomp_method=decomp_method,
             )
             Z_MDD = load_zFCs(
-                task_type=task_type, 
-                atlas_type=atlas_type, 
-                band_type=band, 
                 group="MDD",
+                task_type=task_type, 
+                band_type=band, 
+                runs=runs,
+                atlas_type=atlas_type, 
                 network_means=network_means,
-                decomp_method=decomp_method
+                decomp_method=decomp_method,
             )
 
         if Z_HC.ndim != 3 or Z_MDD.ndim != 3:
@@ -638,7 +643,8 @@ def plot_perm_test_results_grid_AP_PA(
     alpha: tuple[float, float, float] = (0.05, 0.01, 0.001),
     test_stat_sign: str = "hc_mdd",
     out_dir: str = DATA_DIR,
-    decomp_method: str = "memd"
+    decomp_method: str = "memd",
+    runs: int = 1
 ) -> str:
     """
     Creates two side-by-side 4x3 grid plots for restAP and restPA:
@@ -664,36 +670,40 @@ def plot_perm_test_results_grid_AP_PA(
 
     for band in band_types:
         Z_HC_PA = load_zFCs(
-            task_type="restPA", 
-            atlas_type=atlas_type, 
-            band_type=band, 
             group="HC", 
+            task_type="restPA", 
+            band_type=band, 
+            runs=runs,
+            atlas_type=atlas_type, 
             network_means=network_means,
-            decomp_method=decomp_method
+            decomp_method=decomp_method,
         )
         Z_MDD_PA = load_zFCs(
-            task_type="restPA", 
-            atlas_type=atlas_type, 
-            band_type=band, 
             group="MDD",
+            task_type="restPA", 
+            band_type=band, 
+            runs=runs,
+            atlas_type=atlas_type, 
             network_means=network_means,
-            decomp_method=decomp_method
+            decomp_method=decomp_method,
         )
         Z_HC_AP = load_zFCs(
-            task_type="restAP", 
-            atlas_type=atlas_type, 
-            band_type=band, 
             group="HC", 
+            task_type="restAP", 
+            band_type=band, 
+            runs=runs,
+            atlas_type=atlas_type, 
             network_means=network_means,
-            decomp_method=decomp_method
+            decomp_method=decomp_method,
         )
         Z_MDD_AP = load_zFCs(
-            task_type="restAP", 
-            atlas_type=atlas_type, 
-            band_type=band, 
             group="MDD",
+            task_type="restAP", 
+            band_type=band, 
+            runs=runs,
+            atlas_type=atlas_type, 
             network_means=network_means,
-            decomp_method=decomp_method
+            decomp_method=decomp_method,
         )
 
         if Z_HC_PA.ndim != 3 or Z_MDD_PA.ndim != 3:
