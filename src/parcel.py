@@ -85,15 +85,25 @@ def make_BucknerLR(
     print(f"Saved BucknerLR atlas to {out_path} with labels: {unique_labels}")
 
 
-def create_mask_image(atlas_path: str, bold_path: str) -> nib.Nifti1Image:
+def create_mask_image(atlas_path: str, bold_path: str) -> nib.filebasedimages.FileBasedImage:
+    """
+    Create a binary mask image by resampling the atlas to the BOLD image space.
+
+    Args:
+        atlas_path (str): Path to the atlas NIfTI file.
+        bold_path (str): Path to the BOLD NIfTI file.
+
+    Returns:
+        nib.Nifti1Image: Binary mask image in the BOLD image space.
+    """
     atlas_img = nib.load(atlas_path)
     bold_img = nib.load(bold_path)
 
     resampled_atlas = resample_to_img(atlas_img, bold_img, interpolation="nearest")
     resampled_data = resampled_atlas.get_fdata()
 
-    mask_data = (resampled_data > 0).astype(np.int16)
-    mask_img = new_img_like(bold_img, mask_data, copy_header=True)
+    mask_data = (resampled_data > 0).astype(np.uint8)
+    mask_img = new_img_like(resampled_atlas, mask_data, copy_header=True)
     return mask_img
 
 
@@ -110,17 +120,23 @@ def parcellate_to_BOLD(
         np.ndarray: 2D array of shape (n_timepoints, n_rois) with the parcellated BOLD time series.
     """
     ROIs = []
+    n_timepoints = None
     for atlas in atlas_paths:
         mask = NiftiLabelsMasker(
             labels_img=atlas_paths[atlas],
             mask_img=create_mask_image(atlas_paths[atlas], bold_path),
         )
-        time_series = mask.fit_transform(bold_path).T
+        time_series = mask.fit_transform(bold_path)
+        if n_timepoints is None:
+            n_timepoints = time_series.shape[0]
+        elif time_series.shape[0] != n_timepoints:
+            raise ValueError(f"All atlases must have the same number of timepoints. Atlas {atlas} has {time_series.shape[0]}, expected {n_timepoints}.")
         ROIs.append(time_series)
-    return np.vstack(ROIs)
+    return np.concatenate(ROIs, axis=1)
 
 def load_subject_BOLD_signals(
     runpaths: list[str],
+    atlas_paths: dict = ATLAS_PATHS,
 ) -> dict:
     """
     Load and parcellate BOLD signals for a list of fMRIPrep run file paths.
@@ -132,15 +148,16 @@ def load_subject_BOLD_signals(
     """
     bold_signals = {}
     for runpath in runpaths:
-        bold_signals[runpath] = parcellate_to_BOLD(bold_path=runpath)
+        bold_signals[runpath] = parcellate_to_BOLD(bold_path=runpath, atlas_paths=atlas_paths)
     
     print(f"Parcellated {len(runpaths)} runs.")
     return bold_signals
 
+
 def parcellate_subject(
     subjectkey: str,
     runs: list[str],
-    grouping: str,
+    group: str,
     out_dir: str,
     TR: float = 0.8,
     atlas_paths: dict = ATLAS_PATHS,
@@ -150,7 +167,7 @@ def parcellate_subject(
     Args:
         subjectkey (str): Subject key.
         runs (list[str]): List of fMRIPrep preprocessed BOLD NIfTI file paths for the subject.
-        grouping (str): Subject grouping (e.g., "HC" or "MDD").
+        group (str): Subject group (e.g., "HC" or "MDD").
         out_dir (str): Directory to save the .h5 file.
         TR (float): Repetition time in seconds.
         atlas_paths (dict): Dictionary of atlas names and their NIfTI file paths.
@@ -163,9 +180,9 @@ def parcellate_subject(
         atlas_type = "Yan2023" if "Yan2023" in atlas_paths.keys() else "Schaefer400"
         run_num = "run01" if "run-01" in run else "run02"
         task = "restPA" if "restPA" in run else "restAP"
-        out_path = os.path.join(out_dir, task, f"{grouping}_{subjectkey}_{task}_{run_num}_{atlas_type}_BOLD_signals.h5")
+        out_path = os.path.join(out_dir, task, f"{group}_{subjectkey}_{task}_{run_num}_{atlas_type}_BOLD_signals.h5")
         if os.path.exists(out_path):
-            print(f"[SKIP]: [{grouping}] {subjectkey} already exists.")
+            print(f"[SKIP]: [{group}] {subjectkey} already exists.")
             return
         
         try:
@@ -178,10 +195,10 @@ def parcellate_subject(
                 TR=TR,
                 n_runs=len(runs),
             )
-            print(f"[DONE]: [{grouping}] {subjectkey} {task}")
+            print(f"[DONE]: [{group}] {subjectkey} {task}")
             log_message(f"{subjectkey} finished", log_path)
         except Exception as e:
-            print(f"[ERROR]: [{grouping}] {subjectkey} {task} failed with error: {e}")
+            print(f"[ERROR]: [{group}] {subjectkey} {task} failed with error: {e}")
 
 
 def parcel_data(
@@ -206,6 +223,7 @@ def parcel_data(
         TR (float): Repetition time in seconds.
         n_parallels (int): Number of parallel jobs to run.
         atlas_paths (dict): Dictionary of atlas names and their NIfTI file paths.
+        fmri_run_types (list): List of lists specifying the fMRI run types to include
     """
     os.makedirs(out_dir, exist_ok=True)
     log_path = os.path.join(LOG_DIR, "parcel_data.log")
@@ -235,12 +253,12 @@ def parcel_data(
 
     Parallel(n_jobs=n_parallels)(
         delayed(parcellate_subject)(
-            subjectkey,
-            runs,
-            subject_group,
-            out_dir,
-            TR,
-            atlas_paths,
+            subjectkey=subjectkey,
+            runs=runs,
+            group=subject_group,
+            out_dir=out_dir,
+            TR=TR,
+            atlas_paths=atlas_paths,
         )
         for subjectkey, runs in tqdm(run_dict.items(), desc=f"Parcellating subject {subject_group}")
     )
