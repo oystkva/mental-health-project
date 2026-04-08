@@ -51,15 +51,15 @@ def fdr_correct_pipeline(alpha: float = 0.05):
 
     test_result_dir = os.path.join(DATA_DIR, "permutation_test_results")
     
-    log_path = os.path.join(LOG_DIR, "fdr_correction_log.txt")
+    log_path = os.path.join(LOG_DIR, "fdr_correction.log")
     log_message("Starting FDR correction pipeline...", log_path)
 
     for root, dirs, files in os.walk(test_result_dir):
-        for file in files:
-            if file.startswith("p_values") and file.endswith(".npy"):
-                p_values_path = os.path.join(root, file)
-                p_fdr_values_path = os.path.join(root, file.replace("p_values", "p_fdr_values"))
-                fdr_reject_path = os.path.join(root, file.replace("p_values", "fdr_reject"))
+        for f in files:
+            if f.startswith("p_values") and f.endswith(".npy"):
+                p_values_path = os.path.join(root, f)
+                p_fdr_values_path = os.path.join(root, f.replace("p_values", "p_fdr_values"))
+                fdr_reject_path = os.path.join(root, f.replace("p_values", "fdr_reject"))
 
                 if not os.path.exists(p_fdr_values_path) or not os.path.exists(fdr_reject_path):
                     log_message(f"Performing FDR correction for: {p_values_path}", log_path)
