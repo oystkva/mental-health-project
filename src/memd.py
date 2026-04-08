@@ -21,7 +21,11 @@ from src.config import (
     LOG_DIR,
     #endregion
 )
-from src.utils import extract_run_id, extract_subjectkey_from_subdir
+from src.utils import (
+    extract_run_id, 
+    extract_subjectkey_from_subdir, 
+    log_message
+)
 
 
 #region Memd function
@@ -93,43 +97,40 @@ def memd(*args):
 # =============================================================================
 #endregion
 
-def create_subject_tensor(subject_file: str) -> tuple:
+def create_subject_tensor(subject_file: str) -> tuple[str, np.ndarray]:
     """
-    Create a 3D tensor from fMRI data files for multiple subjects.
+    Create a 3D tensor from fMRI data files for a single subject run.
     Args:
         subject_file (str): Path to the subject's fMRI h5 file.
     Returns:
-        tuple: (list of subject keys, 3D numpy array of fMRI data)
+        tuple: (subject key, 2D numpy array of fMRI data of shape (C, T) which usually is (434, 488))
     """
-    subjectkeys = []
-    data = np.array([])
     fmri_data = load_h5_file(subject_file)
-    for key in fmri_data.keys():
-        bold_signals = fmri_data[key]
-        if bold_signals.shape[0] != 434:
-            continue
-        elif data.size == 0:
-            data = bold_signals[np.newaxis, :, :]
-            subjectkeys.append(key)
-        else:
-            data = np.concatenate((data, bold_signals[np.newaxis, :, :]), axis=0)
-            subjectkeys.append(key)
-    return subjectkeys, data
+    if len(fmri_data) != 1:
+        raise ValueError(f"Expected exactly one run in the fMRI data, but found {len(fmri_data.values())}.")
+    key = next(iter(fmri_data.keys()))
+    return key, fmri_data[key]
+
 
 def subject_memd_decomposition(subjectkey: str, data: np.ndarray, task_type: str, out_dir: str, run_id: str) -> None:
     """
     Find IMFs using MEMD and save the results to disk.
     Args:
         subjectkey (str): Subject key identifier.
-        data (np.ndarray): fMRI data array.
+        data (np.ndarray): fMRI data array of shape (C, T). Usually (434, 488).
         out_dir (str): Directory to save the results.
         run_id (str): Run identifier.
     """
+    log_path = os.path.join(LOG_DIR, "memd.log")
+    log_message(f"Starting MEMD for run {run_id}", log_path)
+
     subject = extract_subjectkey_from_subdir(subjectkey)
     if subject not in run_id:
         raise ValueError(f"Subject key {subjectkey} does not match run ID {run_id}.")
-    imfs = memd(data[0], 4*434)
+    imfs = memd(data, 4*434)
     np.save(os.path.join(out_dir, task_type, f"{run_id}_MEMD_imfs.npy"), imfs)
+
+    log_message(f"{run_id} decomposed", log_path)
     return
 
 #TODO: Add logging
@@ -155,25 +156,33 @@ def run_memd_pipeline(
         None
         Results are saved to data/MEMD_processed/.
     """
-    files = list_bold_h5_file_paths(BOLD_DIR, subject_list, group=group, task_type=task_type, cortical_atlas=cortical_atlas)
-    
+    log_path = os.path.join(LOG_DIR, "memd.log")
+    os.makedirs(log_path, exist_ok=True)
+
+    log_message(f"Starting MEMD pipeline for {group} - {task_type} runs with atlas {cortical_atlas}", log_path)
+    files = list_bold_h5_file_paths(
+        data_dir=BOLD_DIR, 
+        subject_keys=subject_list, 
+        group=group, 
+        task_type=task_type, 
+        cortical_atlas=cortical_atlas
+    )
     data = np.array([])
     subject_keys = []
-    for file in files:
-        subject_key, subject_data = create_subject_tensor(file)
-        subject_keys.extend(subject_key)
+    for f in files:
+        subject_key, subject_data = create_subject_tensor(f)
+        subject_keys.append(subject_key)
         if data.size == 0:
             data = subject_data[np.newaxis, :, :]
         else:
             data = np.concatenate((data, subject_data[np.newaxis, :, :]), axis=0)
-
     Parallel(n_jobs=n_parallels)(
         delayed(subject_memd_decomposition)(
-            subject_keys[idx], 
-            data[idx],
-            task_type,
-            out_dir, 
-            extract_run_id(files[idx])
+            subjectkey=subject_keys[idx], 
+            data=data[idx],
+            task_type=task_type,
+            out_dir=out_dir, 
+            run_id=extract_run_id(files[idx])
         ) for idx in tqdm(range(len(subject_keys)))
     )
     return
