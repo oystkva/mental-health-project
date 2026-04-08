@@ -131,8 +131,9 @@ def calculate_subject_bold_zFC(bold_path: str, out_dir: str) -> None:
     """
     run_id = extract_run_id(bold_path)
     task_type = "restPA" if "restPA" in bold_path else "restAP"
+    atlas = "Yan2023" if "Yan2023" in bold_path else "Schaefer400"
 
-    bold_signals = load_h5_file(os.path.join(BOLD_DIR, task_type, bold_path))
+    bold_signals = load_h5_file(os.path.join(BOLD_DIR, atlas, task_type, bold_path))
     zFC = calculate_zFC_parcel(bold_signals[list(bold_signals.keys())[0]])
     np.save(os.path.join(out_dir, "full_parcels", f"{run_id}_zFC_full.npy"), zFC)
     
@@ -205,7 +206,14 @@ def calculate_subject_bandpass_bold_zFC(bold_path: str, out_dir: str, TR: float 
 
 
 #TODO: Proper handling of all runs. Currently, the code is set up to process only one run type at a time (either restPA or restAP) to avoid mismatches between BOLD and IMF files. This should be improved in the future to allow simultaneous processing of multiple run types without errors. (Also a log message if-else statement that says all can be processed or only specified run types can be processed, which is not currently implemented.) Applies to all functions beneath:
-def run_zFC_pipeline(run_types: list, task_type: str, memd_dir: str, out_dir: str, n_parallels: int = N_CPUs, TR: float = TR) -> None:
+def run_zFC_pipeline(
+    run_types: list, 
+    task_type: str, 
+    memd_dir: str, 
+    out_dir: str, 
+    n_parallels: int = N_CPUs, 
+    TR: float = TR
+) -> None:
     """
     Run the zFC calculation pipeline for all subjects in the processed directory.
     Args:
@@ -221,12 +229,18 @@ def run_zFC_pipeline(run_types: list, task_type: str, memd_dir: str, out_dir: st
     """
     if task_type == "restPA" and "restAP" in run_types or task_type == "restAP" and "restPA" in run_types:
         raise ValueError("Cannot process both 'restPA' and 'restAP' run types simultaneously.")
-    
+    atlas = ""
+    if "Yan2023" in run_types[0]:
+        atlas = "Yan2023"
+    elif "Schaefer400" in run_types[0]:
+        atlas = "Schaefer400"
+    else:
+        raise ValueError("No valid atlas specified.")
     #region Configure output directories
-    save_dir = os.path.join(out_dir, task_type)
+    save_dir = os.path.join(out_dir, atlas, task_type)
     os.makedirs(os.path.join(save_dir, "full_parcels"), exist_ok=True)
     os.makedirs(os.path.join(save_dir, "networks"), exist_ok=True)
-    BOLD_run_dir = os.path.join(BOLD_DIR, task_type)
+    BOLD_run_dir = os.path.join(BOLD_DIR, atlas, task_type)
     IMF_run_dir = os.path.join(memd_dir, task_type)
     zFC_log_file = os.path.join(LOG_DIR, "zFC_matrices.log")
     #endregion
@@ -283,7 +297,12 @@ def run_zFC_pipeline(run_types: list, task_type: str, memd_dir: str, out_dir: st
     #endregion
 
     Parallel(n_jobs=n_parallels)(
-        delayed(calculate_subject_band_zFC)(imf_path, memd_dir, save_dir, TR) for imf_path in tqdm(filtered_imf_paths)
+        delayed(calculate_subject_band_zFC)(
+            imf_path=imf_path, 
+            memd_dir=memd_dir, 
+            save_dir=save_dir, 
+            TR=TR
+        ) for imf_path in tqdm(filtered_imf_paths)
     )
 
     log_message(
@@ -308,7 +327,13 @@ def run_zFC_pipeline(run_types: list, task_type: str, memd_dir: str, out_dir: st
     return
 
 
-def run_bandpass_zFC_pipeline(run_types: list, task_type: str, out_dir: str, n_parallels: int = N_CPUs, TR: float = TR) -> None:
+def run_bandpass_zFC_pipeline(
+    run_types: list, 
+    task_type: str, 
+    out_dir: str, 
+    n_parallels: int = N_CPUs, 
+    TR: float = TR
+) -> None:
     """
     Run the zFC calculation pipeline using band-pass filtered signals for all subjects in the processed directory.
     Args:
