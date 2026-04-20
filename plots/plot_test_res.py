@@ -10,6 +10,7 @@ from tqdm import tqdm
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
+
 from src.config import DATA_DIR
 
 from src.atlas_config import list_networks
