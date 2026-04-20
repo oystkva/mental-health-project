@@ -16,6 +16,10 @@ plots/permutation_test_results.png
 
 # Processed MEMD data
 data/MEMD_processed/
+data/*/old
+
+# Artifacts
+artifacts/
 
 # Plots
 HC_NDAR_INVAL101MH2_Yan2023_MEMD_network_band_comparison.svg
@@ -24,6 +28,7 @@ HC_NDAR_INVAL101MH2_Yan2023_MEMD_slow_band_signals.svg
 mean_network_fc_comparison.svg
 *.png
 *.gif
+*.svg
 
 # Shell script for starting analysis
 start_analysis.sh

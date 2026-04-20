@@ -898,3 +898,736 @@
 [2026-03-10 14:57:54] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
 [2026-03-10 14:57:54] Starting permutation test between atlases for combined, slow3, network_means=True
 [2026-03-10 14:58:18] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-03-30 15:46:01] Starting permutation test for restAP, Yan2023, full, network_means=True, decomp_method=memd
+[2026-03-30 15:48:59] Starting permutation test for restAP, Yan2023, full, network_means=True, decomp_method=memd
+[2026-03-30 15:49:39] Starting permutation test for restAP, Yan2023, full, network_means=True, decomp_method=memd
+[2026-03-30 15:53:00] Starting permutation test for restAP, Yan2023, full, network_means=True, decomp_method=memd
+[2026-03-30 15:53:03] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-03-30 15:53:03] Starting permutation test for restAP, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-03-30 15:53:04] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-03-30 15:53:04] Starting permutation test between slow5 and full band for restAP, Yan2023, network_means=True
+[2026-03-30 15:53:04] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:04] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow5, network_means=True
+[2026-03-30 15:53:04] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:05] Starting permutation test between slow5 and full band for restAP, Schaefer400, network_means=True
+[2026-03-30 15:53:05] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:05] Starting permutation test between MEMD and band-pass for restAP, Schaefer400, slow5, network_means=True
+[2026-03-30 15:53:05] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:05] Starting permutation test between atlases for restAP, slow5, network_means=True
+[2026-03-30 15:53:05] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:05] Starting permutation test for restAP, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-03-30 15:53:06] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-03-30 15:53:06] Starting permutation test between slow4 and full band for restAP, Yan2023, network_means=True
+[2026-03-30 15:53:06] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:06] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow4, network_means=True
+[2026-03-30 15:53:06] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:06] Starting permutation test between slow4 and full band for restAP, Schaefer400, network_means=True
+[2026-03-30 15:53:06] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:07] Starting permutation test between MEMD and band-pass for restAP, Schaefer400, slow4, network_means=True
+[2026-03-30 15:53:07] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:07] Starting permutation test between atlases for restAP, slow4, network_means=True
+[2026-03-30 15:53:07] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:07] Starting permutation test for restAP, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-03-30 15:53:08] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-03-30 15:53:08] Starting permutation test between slow3 and full band for restAP, Yan2023, network_means=True
+[2026-03-30 15:53:08] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:08] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow3, network_means=True
+[2026-03-30 15:53:08] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:08] Starting permutation test between slow3 and full band for restAP, Schaefer400, network_means=True
+[2026-03-30 15:53:08] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:08] Starting permutation test between MEMD and band-pass for restAP, Schaefer400, slow3, network_means=True
+[2026-03-30 15:53:08] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:08] Starting permutation test between atlases for restAP, slow3, network_means=True
+[2026-03-30 15:53:08] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:53:08] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=memd
+[2026-03-30 15:54:10] Starting permutation test for restAP, Yan2023, full, network_means=True, decomp_method=memd
+[2026-03-30 15:54:10] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-03-30 15:54:10] Starting permutation test for restAP, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-03-30 15:54:11] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-03-30 15:54:11] Starting permutation test between slow5 and full band for restAP, Yan2023, network_means=True
+[2026-03-30 15:54:11] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:11] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow5, network_means=True
+[2026-03-30 15:54:11] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:11] Starting permutation test between slow5 and full band for restAP, Schaefer400, network_means=True
+[2026-03-30 15:54:11] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:11] Starting permutation test between MEMD and band-pass for restAP, Schaefer400, slow5, network_means=True
+[2026-03-30 15:54:11] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:11] Starting permutation test between atlases for restAP, slow5, network_means=True
+[2026-03-30 15:54:11] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:11] Starting permutation test for restAP, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-03-30 15:54:12] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-03-30 15:54:12] Starting permutation test between slow4 and full band for restAP, Yan2023, network_means=True
+[2026-03-30 15:54:12] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:12] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow4, network_means=True
+[2026-03-30 15:54:12] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:12] Starting permutation test between slow4 and full band for restAP, Schaefer400, network_means=True
+[2026-03-30 15:54:12] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:12] Starting permutation test between MEMD and band-pass for restAP, Schaefer400, slow4, network_means=True
+[2026-03-30 15:54:12] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:12] Starting permutation test between atlases for restAP, slow4, network_means=True
+[2026-03-30 15:54:12] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:12] Starting permutation test for restAP, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-03-30 15:54:13] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-03-30 15:54:13] Starting permutation test between slow3 and full band for restAP, Yan2023, network_means=True
+[2026-03-30 15:54:13] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:13] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow3, network_means=True
+[2026-03-30 15:54:13] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:13] Starting permutation test between slow3 and full band for restAP, Schaefer400, network_means=True
+[2026-03-30 15:54:13] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:13] Starting permutation test between MEMD and band-pass for restAP, Schaefer400, slow3, network_means=True
+[2026-03-30 15:54:13] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:13] Starting permutation test between atlases for restAP, slow3, network_means=True
+[2026-03-30 15:54:13] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:13] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=memd
+[2026-03-30 15:54:14] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-03-30 15:54:14] Starting permutation test for restPA, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-03-30 15:54:16] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-03-30 15:54:16] Starting permutation test between slow5 and full band for restPA, Yan2023, network_means=True
+[2026-03-30 15:54:16] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:16] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow5, network_means=True
+[2026-03-30 15:54:16] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:16] Starting permutation test between slow5 and full band for restPA, Schaefer400, network_means=True
+[2026-03-30 15:54:16] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:17] Starting permutation test between MEMD and band-pass for restPA, Schaefer400, slow5, network_means=True
+[2026-03-30 15:54:17] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:17] Starting permutation test between atlases for restPA, slow5, network_means=True
+[2026-03-30 15:54:17] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:17] Starting permutation test for restPA, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-03-30 15:54:19] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-03-30 15:54:19] Starting permutation test between slow4 and full band for restPA, Yan2023, network_means=True
+[2026-03-30 15:54:19] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:19] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow4, network_means=True
+[2026-03-30 15:54:19] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:19] Starting permutation test between slow4 and full band for restPA, Schaefer400, network_means=True
+[2026-03-30 15:54:19] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:19] Starting permutation test between MEMD and band-pass for restPA, Schaefer400, slow4, network_means=True
+[2026-03-30 15:54:19] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:19] Starting permutation test between atlases for restPA, slow4, network_means=True
+[2026-03-30 15:54:19] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:19] Starting permutation test for restPA, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-03-30 15:54:21] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-03-30 15:54:21] Starting permutation test between slow3 and full band for restPA, Yan2023, network_means=True
+[2026-03-30 15:54:21] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:21] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow3, network_means=True
+[2026-03-30 15:54:21] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:21] Starting permutation test between slow3 and full band for restPA, Schaefer400, network_means=True
+[2026-03-30 15:54:21] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:21] Starting permutation test between MEMD and band-pass for restPA, Schaefer400, slow3, network_means=True
+[2026-03-30 15:54:21] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 15:54:21] Starting permutation test between atlases for restPA, slow3, network_means=True
+[2026-03-30 15:54:21] Results: delta_delta_obs shape: (), p_values shape: ()
+[2026-03-30 16:00:05] Starting permutation test for combined, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-01 18:52:49] Starting permutation test for combined, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-01 18:56:50] Starting permutation test for combined, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-01 19:03:56] Starting permutation test for combined, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-01 19:03:57] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-01 19:03:57] Starting permutation test for combined, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-01 19:03:58] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-01 19:03:59] Starting permutation test between slow5 and full band for combined, Yan2023, network_means=True
+[2026-04-03 17:27:42] Starting permutation test for combined, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-03 17:27:44] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:27:44] Starting permutation test for combined, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-03 17:27:46] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:27:46] Starting permutation test between slow5 and full band for combined, Yan2023, network_means=True
+[2026-04-03 17:32:36] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-03 17:32:36] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:32:36] Starting permutation test for restPA, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-03 17:32:37] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:32:37] Starting permutation test between slow5 and full band for restPA, Yan2023, network_means=True
+[2026-04-03 17:32:38] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:32:38] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow5, network_means=True
+[2026-04-03 17:35:50] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-03 17:35:50] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:35:50] Starting permutation test for restPA, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-03 17:35:51] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:35:51] Starting permutation test between slow5 and full band for restPA, Yan2023, network_means=True
+[2026-04-03 17:35:51] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:35:51] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow5, network_means=True
+[2026-04-03 17:38:02] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-03 17:38:02] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:38:02] Starting permutation test for restPA, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-03 17:38:03] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:38:03] Starting permutation test between slow5 and full band for restPA, Yan2023, network_means=True
+[2026-04-03 17:38:04] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:38:04] Starting permutation test between slow5 and full band for restPA, Schaefer400, network_means=True
+[2026-04-03 17:38:07] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:38:07] Starting permutation test between atlases for restPA, slow5, network_means=True
+[2026-04-03 17:38:07] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:38:07] Starting permutation test for restPA, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-04-03 17:38:08] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:38:08] Starting permutation test between slow4 and full band for restPA, Yan2023, network_means=True
+[2026-04-03 17:38:09] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:38:09] Starting permutation test between slow4 and full band for restPA, Schaefer400, network_means=True
+[2026-04-03 17:38:11] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:38:11] Starting permutation test between atlases for restPA, slow4, network_means=True
+[2026-04-03 17:38:12] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:38:12] Starting permutation test for restPA, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-04-03 17:38:13] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:38:13] Starting permutation test between slow3 and full band for restPA, Yan2023, network_means=True
+[2026-04-03 17:38:13] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:38:13] Starting permutation test between slow3 and full band for restPA, Schaefer400, network_means=True
+[2026-04-03 17:38:15] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:38:15] Starting permutation test between atlases for restPA, slow3, network_means=True
+[2026-04-03 17:38:16] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:40:24] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-03 17:40:24] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:40:24] Starting permutation test for restPA, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-03 17:40:25] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:40:25] Starting permutation test between slow5 and full band for restPA, Yan2023, network_means=True
+[2026-04-03 17:40:26] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:40:26] Starting permutation test between slow5 and full band for restPA, Schaefer400, network_means=True
+[2026-04-03 17:40:26] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:40:26] Starting permutation test for restPA, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-04-03 17:40:27] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:40:27] Starting permutation test between slow4 and full band for restPA, Yan2023, network_means=True
+[2026-04-03 17:40:28] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:40:28] Starting permutation test between slow4 and full band for restPA, Schaefer400, network_means=True
+[2026-04-03 17:40:29] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:40:29] Starting permutation test for restPA, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-04-03 17:40:30] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:40:30] Starting permutation test between slow3 and full band for restPA, Yan2023, network_means=True
+[2026-04-03 17:40:30] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:40:30] Starting permutation test between slow3 and full band for restPA, Schaefer400, network_means=True
+[2026-04-03 17:40:31] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:10] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-03 17:43:11] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:11] Starting permutation test for restPA, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-03 17:43:11] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:11] Starting permutation test between slow5 and full band for restPA, Yan2023, network_means=True
+[2026-04-03 17:43:12] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:12] Starting permutation test between slow5 and full band for restPA, Schaefer400, network_means=True
+[2026-04-03 17:43:13] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:13] Starting permutation test for restPA, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-04-03 17:43:13] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:13] Starting permutation test between slow4 and full band for restPA, Yan2023, network_means=True
+[2026-04-03 17:43:14] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:14] Starting permutation test between slow4 and full band for restPA, Schaefer400, network_means=True
+[2026-04-03 17:43:15] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:15] Starting permutation test for restPA, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-04-03 17:43:15] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:15] Starting permutation test between slow3 and full band for restPA, Yan2023, network_means=True
+[2026-04-03 17:43:16] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:16] Starting permutation test between slow3 and full band for restPA, Schaefer400, network_means=True
+[2026-04-03 17:43:17] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:43] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-03 17:43:44] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:44] Starting permutation test for restPA, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-03 17:43:44] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:44] Starting permutation test between slow5 and full band for restPA, Yan2023, network_means=True
+[2026-04-03 17:43:45] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:45] Starting permutation test between slow5 and full band for restPA, Schaefer400, network_means=True
+[2026-04-03 17:43:46] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:46] Starting permutation test for restPA, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-04-03 17:43:46] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:46] Starting permutation test between slow4 and full band for restPA, Yan2023, network_means=True
+[2026-04-03 17:43:47] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:47] Starting permutation test between slow4 and full band for restPA, Schaefer400, network_means=True
+[2026-04-03 17:43:48] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:48] Starting permutation test for restPA, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-04-03 17:43:48] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:48] Starting permutation test between slow3 and full band for restPA, Yan2023, network_means=True
+[2026-04-03 17:43:49] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-03 17:43:49] Starting permutation test between slow3 and full band for restPA, Schaefer400, network_means=True
+[2026-04-03 17:43:50] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-08 12:57:29] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-08 12:57:29] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-08 12:57:30] Starting permutation test for restPA, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-08 12:57:31] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-08 12:57:31] Starting permutation test between slow5 and full band for restPA, Yan2023, network_means=True
+[2026-04-08 12:57:32] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-08 12:57:32] Starting permutation test between slow5 and full band for restPA, Schaefer400, network_means=True
+[2026-04-11 23:42:27] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-11 23:42:28] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:42:28] Starting permutation test for restPA, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-11 23:42:28] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:42:28] Starting permutation test between slow5 and full band for restPA, Yan2023, network_means=True
+[2026-04-11 23:42:29] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:42:29] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow5, network_means=True
+[2026-04-11 23:42:30] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:42:30] Starting permutation test between slow5 and full band for restPA, Schaefer400, network_means=True
+[2026-04-11 23:42:33] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:42:33] Starting permutation test between MEMD and band-pass for restPA, Schaefer400, slow5, network_means=True
+[2026-04-11 23:43:37] Starting permutation test for restAP, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-11 23:43:37] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:43:37] Starting permutation test for restAP, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-11 23:43:37] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:43:38] Starting permutation test between slow5 and full band for restAP, Yan2023, network_means=True
+[2026-04-11 23:43:38] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:43:38] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow5, network_means=True
+[2026-04-11 23:43:39] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:43:39] Starting permutation test between slow5 and full band for restAP, Schaefer400, network_means=True
+[2026-04-11 23:43:42] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:43:42] Starting permutation test between MEMD and band-pass for restAP, Schaefer400, slow5, network_means=True
+[2026-04-11 23:45:51] Starting permutation test for restAP, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-11 23:45:51] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:45:51] Starting permutation test for restAP, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-11 23:45:52] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:45:52] Starting permutation test between slow5 and full band for restAP, Yan2023, network_means=True
+[2026-04-11 23:45:53] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:45:53] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow5, network_means=True
+[2026-04-11 23:45:53] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:45:53] Starting permutation test between atlases for restAP, slow5, network_means=True
+[2026-04-11 23:45:54] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:45:54] Starting permutation test for restAP, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-04-11 23:45:55] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:45:55] Starting permutation test between slow4 and full band for restAP, Yan2023, network_means=True
+[2026-04-11 23:45:56] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:45:56] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow4, network_means=True
+[2026-04-11 23:45:56] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:45:56] Starting permutation test between atlases for restAP, slow4, network_means=True
+[2026-04-11 23:45:58] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:45:58] Starting permutation test for restAP, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-04-11 23:45:59] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:45:59] Starting permutation test between slow3 and full band for restAP, Yan2023, network_means=True
+[2026-04-11 23:45:59] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:45:59] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow3, network_means=True
+[2026-04-11 23:46:00] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:46:00] Starting permutation test between atlases for restAP, slow3, network_means=True
+[2026-04-11 23:46:02] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:48:54] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-11 23:48:55] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:48:55] Starting permutation test for restPA, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-11 23:48:56] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:48:56] Starting permutation test between slow5 and full band for restPA, Yan2023, network_means=True
+[2026-04-11 23:48:57] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:48:57] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow5, network_means=True
+[2026-04-11 23:48:58] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:48:58] Starting permutation test between atlases for restPA, slow5, network_means=True
+[2026-04-11 23:48:59] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:49:00] Starting permutation test for restPA, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-04-11 23:49:00] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:49:00] Starting permutation test between slow4 and full band for restPA, Yan2023, network_means=True
+[2026-04-11 23:49:02] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:49:02] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow4, network_means=True
+[2026-04-11 23:49:03] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:49:03] Starting permutation test between atlases for restPA, slow4, network_means=True
+[2026-04-11 23:49:05] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:49:05] Starting permutation test for restPA, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-04-11 23:49:06] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:49:06] Starting permutation test between slow3 and full band for restPA, Yan2023, network_means=True
+[2026-04-11 23:49:07] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:49:07] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow3, network_means=True
+[2026-04-11 23:49:08] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:49:08] Starting permutation test between atlases for restPA, slow3, network_means=True
+[2026-04-11 23:49:10] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:50:52] Starting permutation test for restAP, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-11 23:50:52] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:50:52] Starting permutation test for restAP, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-11 23:51:04] Starting permutation test for restAP, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-11 23:51:05] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:05] Starting permutation test for restAP, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-11 23:51:05] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:05] Starting permutation test between slow5 and full band for restAP, Yan2023, network_means=True
+[2026-04-11 23:51:07] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:07] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow5, network_means=True
+[2026-04-11 23:51:08] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:08] Starting permutation test between atlases for restAP, slow5, network_means=True
+[2026-04-11 23:51:09] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:09] Starting permutation test for restAP, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-04-11 23:51:10] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:10] Starting permutation test between slow4 and full band for restAP, Yan2023, network_means=True
+[2026-04-11 23:51:11] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:11] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow4, network_means=True
+[2026-04-11 23:51:12] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:12] Starting permutation test between atlases for restAP, slow4, network_means=True
+[2026-04-11 23:51:14] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:14] Starting permutation test for restAP, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-04-11 23:51:14] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:14] Starting permutation test between slow3 and full band for restAP, Yan2023, network_means=True
+[2026-04-11 23:51:16] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:16] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow3, network_means=True
+[2026-04-11 23:51:17] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:17] Starting permutation test between atlases for restAP, slow3, network_means=True
+[2026-04-11 23:51:18] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:18] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-11 23:51:19] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:19] Starting permutation test for restPA, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-11 23:51:20] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:20] Starting permutation test between slow5 and full band for restPA, Yan2023, network_means=True
+[2026-04-11 23:51:21] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:21] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow5, network_means=True
+[2026-04-11 23:51:22] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:22] Starting permutation test between atlases for restPA, slow5, network_means=True
+[2026-04-11 23:51:24] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:24] Starting permutation test for restPA, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-04-11 23:51:24] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:24] Starting permutation test between slow4 and full band for restPA, Yan2023, network_means=True
+[2026-04-11 23:51:25] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:25] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow4, network_means=True
+[2026-04-11 23:51:27] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:27] Starting permutation test between atlases for restPA, slow4, network_means=True
+[2026-04-11 23:51:28] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:28] Starting permutation test for restPA, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-04-11 23:51:29] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:29] Starting permutation test between slow3 and full band for restPA, Yan2023, network_means=True
+[2026-04-11 23:51:30] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:30] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow3, network_means=True
+[2026-04-11 23:51:31] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-11 23:51:31] Starting permutation test between atlases for restPA, slow3, network_means=True
+[2026-04-11 23:51:33] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-12 00:03:16] Starting permutation test for restAP, Yan2023, full, network_means=True, decomp_method=bandpass
+[2026-04-12 00:03:16] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-12 00:03:16] Starting permutation test for restAP, Yan2023, slow5, network_means=True, decomp_method=bandpass
+[2026-04-12 00:03:17] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-12 00:03:17] Starting permutation test between slow5 and full band for restAP, Yan2023, network_means=True
+[2026-04-12 00:03:18] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-12 00:03:18] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow5, network_means=True
+[2026-04-12 00:03:18] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-12 00:03:18] Starting permutation test between atlases for restAP, slow5, network_means=True
+[2026-04-13 10:18:31] Starting permutation test for combined, Yan2023, full, network_means=True, decomp_method=bandpass
+[2026-04-13 10:18:31] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:18:31] Starting permutation test for combined, Yan2023, slow5, network_means=True, decomp_method=bandpass
+[2026-04-13 10:18:33] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:18:33] Starting permutation test between slow5 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:18:35] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:18:35] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow5, network_means=True
+[2026-04-13 10:18:37] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:18:37] Starting permutation test between atlases for combined, slow5, network_means=True
+[2026-04-13 10:19:03] Starting permutation test for combined, Yan2023, full, network_means=True, decomp_method=bandpass
+[2026-04-13 10:19:03] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:19:04] Starting permutation test for combined, Yan2023, slow5, network_means=True, decomp_method=bandpass
+[2026-04-13 10:19:04] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:19:04] Starting permutation test between slow5 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:19:06] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:19:06] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow5, network_means=True
+[2026-04-13 10:19:07] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:19:07] Starting permutation test for combined, Yan2023, slow4, network_means=True, decomp_method=bandpass
+[2026-04-13 10:19:09] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:19:09] Starting permutation test between slow4 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:19:10] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:19:10] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow4, network_means=True
+[2026-04-13 10:19:11] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:19:11] Starting permutation test for combined, Yan2023, slow3, network_means=True, decomp_method=bandpass
+[2026-04-13 10:19:13] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:19:13] Starting permutation test between slow3 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:19:15] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:19:15] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow3, network_means=True
+[2026-04-13 10:19:17] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:20:40] Starting permutation test for combined, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-13 10:20:41] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:20:41] Starting permutation test for combined, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-13 10:20:42] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:20:42] Starting permutation test between slow5 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:20:44] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:20:44] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow5, network_means=True
+[2026-04-13 10:20:45] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:20:45] Starting permutation test for combined, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-04-13 10:20:45] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:20:45] Starting permutation test between slow4 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:20:46] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:20:46] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow4, network_means=True
+[2026-04-13 10:20:47] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:20:47] Starting permutation test for combined, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-04-13 10:20:48] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:20:48] Starting permutation test between slow3 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:20:50] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:20:50] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow3, network_means=True
+[2026-04-13 10:20:52] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:25:26] Starting permutation test for combined, Yan2023, full, network_means=True, decomp_method=bandpass
+[2026-04-13 10:25:27] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:25:27] Starting permutation test for combined, Yan2023, slow5, network_means=True, decomp_method=bandpass
+[2026-04-13 10:25:28] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:25:28] Starting permutation test between slow5 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:25:29] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:25:29] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow5, network_means=True
+[2026-04-13 10:25:30] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:25:30] Starting permutation test for combined, Yan2023, slow4, network_means=True, decomp_method=bandpass
+[2026-04-13 10:25:30] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:25:30] Starting permutation test between slow4 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:25:31] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:25:31] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow4, network_means=True
+[2026-04-13 10:25:33] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:25:33] Starting permutation test for combined, Yan2023, slow3, network_means=True, decomp_method=bandpass
+[2026-04-13 10:25:34] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:25:34] Starting permutation test between slow3 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:25:36] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:25:36] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow3, network_means=True
+[2026-04-13 10:25:38] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:27:51] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=bandpass
+[2026-04-13 10:27:52] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:27:52] Starting permutation test for restPA, Yan2023, slow5, network_means=True, decomp_method=bandpass
+[2026-04-13 10:27:53] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:27:54] Starting permutation test between slow5 and full band for restPA, Yan2023, network_means=True
+[2026-04-13 10:27:56] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:27:56] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow5, network_means=True
+[2026-04-13 10:27:57] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:27:57] Starting permutation test for restPA, Yan2023, slow4, network_means=True, decomp_method=bandpass
+[2026-04-13 10:27:58] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:27:58] Starting permutation test between slow4 and full band for restPA, Yan2023, network_means=True
+[2026-04-13 10:27:59] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:27:59] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow4, network_means=True
+[2026-04-13 10:28:00] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:28:00] Starting permutation test for restPA, Yan2023, slow3, network_means=True, decomp_method=bandpass
+[2026-04-13 10:28:01] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:28:01] Starting permutation test between slow3 and full band for restPA, Yan2023, network_means=True
+[2026-04-13 10:28:03] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:28:03] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow3, network_means=True
+[2026-04-13 10:28:05] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:33:05] Starting permutation test for restAP, Yan2023, full, network_means=True, decomp_method=bandpass
+[2026-04-13 10:33:06] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:33:06] Starting permutation test for restAP, Yan2023, slow5, network_means=True, decomp_method=bandpass
+[2026-04-13 10:33:08] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:33:08] Starting permutation test between slow5 and full band for restAP, Yan2023, network_means=True
+[2026-04-13 10:33:09] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:33:09] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow5, network_means=True
+[2026-04-13 10:33:11] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:33:11] Starting permutation test for restAP, Yan2023, slow4, network_means=True, decomp_method=bandpass
+[2026-04-13 10:33:13] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:33:13] Starting permutation test between slow4 and full band for restAP, Yan2023, network_means=True
+[2026-04-13 10:33:15] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:33:15] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow4, network_means=True
+[2026-04-13 10:33:16] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:33:16] Starting permutation test for restAP, Yan2023, slow3, network_means=True, decomp_method=bandpass
+[2026-04-13 10:33:17] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:33:17] Starting permutation test between slow3 and full band for restAP, Yan2023, network_means=True
+[2026-04-13 10:33:18] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:33:18] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow3, network_means=True
+[2026-04-13 10:33:20] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:35:40] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=bandpass
+[2026-04-13 10:35:41] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:35:41] Starting permutation test for restPA, Yan2023, slow5, network_means=True, decomp_method=bandpass
+[2026-04-13 10:35:42] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:35:42] Starting permutation test between slow5 and full band for restPA, Yan2023, network_means=True
+[2026-04-13 10:35:44] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:35:44] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow5, network_means=True
+[2026-04-13 10:35:45] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:35:45] Starting permutation test for restPA, Yan2023, slow4, network_means=True, decomp_method=bandpass
+[2026-04-13 10:35:46] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:35:46] Starting permutation test between slow4 and full band for restPA, Yan2023, network_means=True
+[2026-04-13 10:35:47] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:35:47] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow4, network_means=True
+[2026-04-13 10:35:48] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:35:48] Starting permutation test for restPA, Yan2023, slow3, network_means=True, decomp_method=bandpass
+[2026-04-13 10:35:49] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:35:49] Starting permutation test between slow3 and full band for restPA, Yan2023, network_means=True
+[2026-04-13 10:35:51] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:35:51] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow3, network_means=True
+[2026-04-13 10:35:53] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:35:57] Starting permutation test for combined, Yan2023, full, network_means=True, decomp_method=bandpass
+[2026-04-13 10:35:57] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:35:57] Starting permutation test for combined, Yan2023, slow5, network_means=True, decomp_method=bandpass
+[2026-04-13 10:35:58] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:35:58] Starting permutation test between slow5 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:35:59] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:35:59] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow5, network_means=True
+[2026-04-13 10:36:00] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:01] Starting permutation test for combined, Yan2023, slow4, network_means=True, decomp_method=bandpass
+[2026-04-13 10:36:02] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:02] Starting permutation test between slow4 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:36:05] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:05] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow4, network_means=True
+[2026-04-13 10:36:07] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:07] Starting permutation test for combined, Yan2023, slow3, network_means=True, decomp_method=bandpass
+[2026-04-13 10:36:08] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:08] Starting permutation test between slow3 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:36:10] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:10] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow3, network_means=True
+[2026-04-13 10:36:11] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:26] Starting permutation test for restAP, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-13 10:36:27] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:27] Starting permutation test for restAP, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-13 10:36:28] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:28] Starting permutation test between slow5 and full band for restAP, Yan2023, network_means=True
+[2026-04-13 10:36:30] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:30] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow5, network_means=True
+[2026-04-13 10:36:32] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:32] Starting permutation test for restAP, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-04-13 10:36:32] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:32] Starting permutation test between slow4 and full band for restAP, Yan2023, network_means=True
+[2026-04-13 10:36:33] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:33] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow4, network_means=True
+[2026-04-13 10:36:35] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:35] Starting permutation test for restAP, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-04-13 10:36:36] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:36] Starting permutation test between slow3 and full band for restAP, Yan2023, network_means=True
+[2026-04-13 10:36:38] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:38] Starting permutation test between MEMD and band-pass for restAP, Yan2023, slow3, network_means=True
+[2026-04-13 10:36:40] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:40] Starting permutation test for restPA, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-13 10:36:41] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:41] Starting permutation test for restPA, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-13 10:36:42] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:42] Starting permutation test between slow5 and full band for restPA, Yan2023, network_means=True
+[2026-04-13 10:36:43] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:43] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow5, network_means=True
+[2026-04-13 10:36:45] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:45] Starting permutation test for restPA, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-04-13 10:36:45] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:45] Starting permutation test between slow4 and full band for restPA, Yan2023, network_means=True
+[2026-04-13 10:36:46] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:46] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow4, network_means=True
+[2026-04-13 10:36:49] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:49] Starting permutation test for restPA, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-04-13 10:36:50] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:50] Starting permutation test between slow3 and full band for restPA, Yan2023, network_means=True
+[2026-04-13 10:36:52] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:52] Starting permutation test between MEMD and band-pass for restPA, Yan2023, slow3, network_means=True
+[2026-04-13 10:36:54] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:54] Starting permutation test for combined, Yan2023, full, network_means=True, decomp_method=memd
+[2026-04-13 10:36:55] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:55] Starting permutation test for combined, Yan2023, slow5, network_means=True, decomp_method=memd
+[2026-04-13 10:36:56] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:56] Starting permutation test between slow5 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:36:57] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:57] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow5, network_means=True
+[2026-04-13 10:36:58] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:58] Starting permutation test for combined, Yan2023, slow4, network_means=True, decomp_method=memd
+[2026-04-13 10:36:59] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:36:59] Starting permutation test between slow4 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:37:01] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:37:01] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow4, network_means=True
+[2026-04-13 10:37:03] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:37:03] Starting permutation test for combined, Yan2023, slow3, network_means=True, decomp_method=memd
+[2026-04-13 10:37:04] Results: delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:37:04] Starting permutation test between slow3 and full band for combined, Yan2023, network_means=True
+[2026-04-13 10:37:06] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:37:06] Starting permutation test between MEMD and band-pass for combined, Yan2023, slow3, network_means=True
+[2026-04-13 10:37:08] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:51:27] Starting permutation test between atlases for restAP, slow5, network_means=True
+[2026-04-13 10:51:28] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:51:28] Starting permutation test between atlases for restAP, slow4, network_means=True
+[2026-04-13 10:51:31] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:51:31] Starting permutation test between atlases for restAP, slow3, network_means=True
+[2026-04-13 10:51:33] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:51:33] Starting permutation test between atlases for restPA, slow5, network_means=True
+[2026-04-13 10:51:36] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:51:36] Starting permutation test between atlases for restPA, slow4, network_means=True
+[2026-04-13 10:51:37] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:51:37] Starting permutation test between atlases for restPA, slow3, network_means=True
+[2026-04-13 10:51:39] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:51:39] Starting permutation test between atlases for combined, slow5, network_means=True
+[2026-04-13 10:51:41] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:51:41] Starting permutation test between atlases for combined, slow4, network_means=True
+[2026-04-13 10:51:43] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:51:43] Starting permutation test between atlases for combined, slow3, network_means=True
+[2026-04-13 10:51:45] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:52:18] Starting permutation test between atlases for restAP, slow5, network_means=True
+[2026-04-13 10:52:20] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:52:20] Starting permutation test between atlases for restAP, slow4, network_means=True
+[2026-04-13 10:52:22] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:52:22] Starting permutation test between atlases for restAP, slow3, network_means=True
+[2026-04-13 10:52:24] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:52:24] Starting permutation test between atlases for restPA, slow5, network_means=True
+[2026-04-13 10:52:25] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:52:25] Starting permutation test between atlases for restPA, slow4, network_means=True
+[2026-04-13 10:52:26] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:52:26] Starting permutation test between atlases for restPA, slow3, network_means=True
+[2026-04-13 10:52:28] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:52:28] Starting permutation test between atlases for combined, slow5, network_means=True
+[2026-04-13 10:52:30] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:52:30] Starting permutation test between atlases for combined, slow4, network_means=True
+[2026-04-13 10:52:32] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:52:32] Starting permutation test between atlases for combined, slow3, network_means=True
+[2026-04-13 10:52:34] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 10:53:07] Starting permutation test between atlases for restAP, slow5, network_means=True
+[2026-04-13 11:02:43] Starting permutation test between atlases for restAP, slow5, network_means=True
+[2026-04-13 11:02:44] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:02:44] Starting permutation test between atlases for restAP, slow4, network_means=True
+[2026-04-13 11:02:46] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:02:46] Starting permutation test between atlases for restAP, slow3, network_means=True
+[2026-04-13 11:02:49] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:02:49] Starting permutation test between atlases for restPA, slow5, network_means=True
+[2026-04-13 11:02:51] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:02:51] Starting permutation test between atlases for restPA, slow4, network_means=True
+[2026-04-13 11:02:53] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:02:53] Starting permutation test between atlases for restPA, slow3, network_means=True
+[2026-04-13 11:02:54] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:02:54] Starting permutation test between atlases for combined, slow5, network_means=True
+[2026-04-13 11:02:56] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:02:56] Starting permutation test between atlases for combined, slow4, network_means=True
+[2026-04-13 11:02:57] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:02:57] Starting permutation test between atlases for combined, slow3, network_means=True
+[2026-04-13 11:02:59] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:49:39] Starting permutation test between atlases for restAP, slow5, network_means=True
+[2026-04-13 11:49:40] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:49:40] Starting permutation test between atlases for restAP, slow4, network_means=True
+[2026-04-13 11:49:42] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:49:42] Starting permutation test between atlases for restAP, slow3, network_means=True
+[2026-04-13 11:49:44] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:49:44] Starting permutation test between atlases for restPA, slow5, network_means=True
+[2026-04-13 11:49:46] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:49:46] Starting permutation test between atlases for restPA, slow4, network_means=True
+[2026-04-13 11:49:48] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:49:48] Starting permutation test between atlases for restPA, slow3, network_means=True
+[2026-04-13 11:49:49] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:49:49] Starting permutation test between atlases for combined, slow5, network_means=True
+[2026-04-13 11:49:50] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:49:50] Starting permutation test between atlases for combined, slow4, network_means=True
+[2026-04-13 11:49:51] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:49:51] Starting permutation test between atlases for combined, slow3, network_means=True
+[2026-04-13 11:49:52] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:58:46] Starting permutation test between atlases for restAP, slow5, network_means=True
+[2026-04-13 11:58:47] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:58:47] Starting permutation test between atlases for restAP, slow4, network_means=True
+[2026-04-13 11:58:48] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:58:48] Starting permutation test between atlases for restAP, slow3, network_means=True
+[2026-04-13 11:58:49] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:58:49] Starting permutation test between atlases for restPA, slow5, network_means=True
+[2026-04-13 11:58:51] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:58:51] Starting permutation test between atlases for restPA, slow4, network_means=True
+[2026-04-13 11:59:01] Starting permutation test between atlases for restAP, slow5, network_means=True
+[2026-04-13 11:59:02] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:59:02] Starting permutation test between atlases for restAP, slow4, network_means=True
+[2026-04-13 11:59:04] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:59:04] Starting permutation test between atlases for restAP, slow3, network_means=True
+[2026-04-13 11:59:06] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:59:07] Starting permutation test between atlases for restPA, slow5, network_means=True
+[2026-04-13 11:59:09] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:59:09] Starting permutation test between atlases for restPA, slow4, network_means=True
+[2026-04-13 11:59:11] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:59:11] Starting permutation test between atlases for restPA, slow3, network_means=True
+[2026-04-13 11:59:14] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:59:14] Starting permutation test between atlases for combined, slow5, network_means=True
+[2026-04-13 11:59:16] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:59:16] Starting permutation test between atlases for combined, slow4, network_means=True
+[2026-04-13 11:59:17] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 11:59:17] Starting permutation test between atlases for combined, slow3, network_means=True
+[2026-04-13 11:59:18] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:18:17] Starting permutation test between atlases for restAP, full, network_means=True
+[2026-04-13 12:18:20] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:18:20] Starting permutation test between atlases for restAP, slow5, network_means=True
+[2026-04-13 12:18:22] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:18:22] Starting permutation test between atlases for restAP, slow4, network_means=True
+[2026-04-13 12:18:24] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:18:25] Starting permutation test between atlases for restAP, slow3, network_means=True
+[2026-04-13 12:18:26] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:18:26] Starting permutation test between atlases for restPA, full, network_means=True
+[2026-04-13 12:18:29] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:18:29] Starting permutation test between atlases for restPA, slow5, network_means=True
+[2026-04-13 12:18:30] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:18:30] Starting permutation test between atlases for restPA, slow4, network_means=True
+[2026-04-13 12:18:31] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:18:32] Starting permutation test between atlases for restPA, slow3, network_means=True
+[2026-04-13 12:18:33] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:18:33] Starting permutation test between atlases for combined, full, network_means=True
+[2026-04-13 12:18:34] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:18:34] Starting permutation test between atlases for combined, slow5, network_means=True
+[2026-04-13 12:18:35] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:18:35] Starting permutation test between atlases for combined, slow4, network_means=True
+[2026-04-13 12:18:37] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:18:37] Starting permutation test between atlases for combined, slow3, network_means=True
+[2026-04-13 12:18:39] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:21:04] Starting permutation test between atlases for restAP, full, network_means=True
+[2026-04-13 12:21:05] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:21:05] Starting permutation test between atlases for restAP, slow5, network_means=True
+[2026-04-13 12:21:07] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:21:07] Starting permutation test between atlases for restAP, slow4, network_means=True
+[2026-04-13 12:21:09] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:21:09] Starting permutation test between atlases for restAP, slow3, network_means=True
+[2026-04-13 12:21:11] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:21:11] Starting permutation test between atlases for restPA, full, network_means=True
+[2026-04-13 12:21:13] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:21:13] Starting permutation test between atlases for restPA, slow5, network_means=True
+[2026-04-13 12:21:15] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:21:15] Starting permutation test between atlases for restPA, slow4, network_means=True
+[2026-04-13 12:21:16] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:21:16] Starting permutation test between atlases for restPA, slow3, network_means=True
+[2026-04-13 12:21:17] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:21:17] Starting permutation test between atlases for combined, full, network_means=True
+[2026-04-13 12:21:18] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:21:18] Starting permutation test between atlases for combined, slow5, network_means=True
+[2026-04-13 12:21:19] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:21:19] Starting permutation test between atlases for combined, slow4, network_means=True
+[2026-04-13 12:21:21] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)
+[2026-04-13 12:21:21] Starting permutation test between atlases for combined, slow3, network_means=True
+[2026-04-13 12:21:23] Results: delta_delta_obs shape: (21, 21), p_values shape: (21, 21)

@@ -369,4 +369,683 @@
 [2026-03-27 15:00:26] NDAR_INVZY232VM1 finished
 [2026-03-27 15:00:27] NDAR_INVNB949AXM finished
 [2026-03-27 15:00:27] NDAR_INVDP288XND finished
-[2026-03-27 15:07:25] NDAR_INVBL733HBP finished
+[2026-03-27 15:07:25] NDAR_INVBL733HBP finished[2026-04-08 13:53:22] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-08 13:53:22] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-08 13:53:22] Collected fMRI run paths for all subjects.
+[2026-04-08 13:53:22] Parcellating NDAR_INVDK220VPQ
+[2026-04-08 13:56:33] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-08 13:56:33] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-08 13:56:33] Collected fMRI run paths for all subjects.
+[2026-04-08 13:56:34] Parcellating NDAR_INVKX727WL8
+[2026-04-08 13:56:34] Parcellating NDAR_INVZB896FPZ
+[2026-04-08 13:56:34] Parcellating NDAR_INVDK220VPQ
+[2026-04-08 13:56:34] Parcellating NDAR_INVJT253NWQ
+[2026-04-08 13:56:34] Parcellating NDAR_INVWL810FRT
+[2026-04-08 13:56:34] Parcellating NDAR_INVDC524THW
+[2026-04-08 13:56:34] Parcellating NDAR_INVWE937RD6
+[2026-04-08 13:56:34] Parcellating NDAR_INVXJ707NAE
+[2026-04-08 14:03:34] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-08 14:03:34] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-08 14:03:34] Collected fMRI run paths for all subjects.
+[2026-04-08 14:03:35] Parcellating NDAR_INVJT253NWQ
+[2026-04-08 14:03:35] Parcellating NDAR_INVKX727WL8
+[2026-04-08 14:03:35] Parcellating NDAR_INVZB896FPZ
+[2026-04-08 14:03:35] Parcellating NDAR_INVDC524THW
+[2026-04-08 14:03:35] Parcellating NDAR_INVWL810FRT
+[2026-04-08 14:03:35] Parcellating NDAR_INVWE937RD6
+[2026-04-08 14:03:35] Parcellating NDAR_INVDK220VPQ
+[2026-04-08 14:03:35] Parcellating NDAR_INVXJ707NAE
+[2026-04-08 14:05:13] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-08 14:05:13] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-08 14:05:13] Collected fMRI run paths for all subjects.
+[2026-04-08 14:05:14] Parcellating NDAR_INVWE937RD6
+[2026-04-08 14:05:14] Parcellating NDAR_INVZB896FPZ
+[2026-04-08 14:05:14] Parcellating NDAR_INVDC524THW
+[2026-04-08 14:05:14] Parcellating NDAR_INVXJ707NAE
+[2026-04-08 14:05:15] Parcellating NDAR_INVWL810FRT
+[2026-04-08 14:05:15] Parcellating NDAR_INVKX727WL8
+[2026-04-08 14:05:15] Parcellating NDAR_INVDK220VPQ
+[2026-04-08 14:05:15] Parcellating NDAR_INVJT253NWQ
+[2026-04-08 14:05:55] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-08 14:05:55] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-08 14:05:55] Collected fMRI run paths for all subjects.
+[2026-04-08 14:05:56] Parcellating NDAR_INVDK220VPQ
+[2026-04-08 14:05:57] Parcellating NDAR_INVZB896FPZ
+[2026-04-08 14:05:57] Parcellating NDAR_INVJT253NWQ
+[2026-04-08 14:05:57] Parcellating NDAR_INVKX727WL8
+[2026-04-08 14:05:57] Parcellating NDAR_INVWE937RD6
+[2026-04-08 14:05:57] Parcellating NDAR_INVWL810FRT
+[2026-04-08 14:05:57] Parcellating NDAR_INVDC524THW
+[2026-04-08 14:05:57] Parcellating NDAR_INVXJ707NAE
+[2026-04-08 14:06:19] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-08 14:06:19] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-08 14:06:19] Collected fMRI run paths for all subjects.
+[2026-04-08 14:06:21] Parcellating NDAR_INVDK220VPQ
+[2026-04-08 14:06:21] Parcellating NDAR_INVZB896FPZ
+[2026-04-08 14:06:21] Parcellating NDAR_INVWL810FRT
+[2026-04-08 14:06:21] Parcellating NDAR_INVJT253NWQ
+[2026-04-08 14:06:21] Parcellating NDAR_INVDC524THW
+[2026-04-08 14:06:21] Parcellating NDAR_INVKX727WL8
+[2026-04-08 14:06:21] Parcellating NDAR_INVWE937RD6
+[2026-04-08 14:06:21] Parcellating NDAR_INVXJ707NAE
+[2026-04-08 14:09:24] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-08 14:09:24] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-08 14:09:24] Collected fMRI run paths for all subjects.
+[2026-04-08 14:09:26] Parcellating NDAR_INVJT253NWQ
+[2026-04-08 14:09:26] Parcellating NDAR_INVDK220VPQ
+[2026-04-08 14:09:26] Parcellating NDAR_INVZB896FPZ
+[2026-04-08 14:09:26] Parcellating NDAR_INVWE937RD6
+[2026-04-08 14:09:26] Parcellating NDAR_INVXJ707NAE
+[2026-04-08 14:09:26] Parcellating NDAR_INVWL810FRT
+[2026-04-08 14:15:16] NDAR_INVWE937RD6 finished
+[2026-04-08 14:15:16] Parcellating NDAR_INVKX727WL8
+[2026-04-08 14:15:17] NDAR_INVWL810FRT finished
+[2026-04-08 14:15:17] Parcellating NDAR_INVDC524THW
+[2026-04-08 14:15:18] NDAR_INVDK220VPQ finished
+[2026-04-08 14:15:18] Parcellating NDAR_INVKH965NN0
+[2026-04-08 14:15:20] NDAR_INVXJ707NAE finished
+[2026-04-08 14:15:20] Parcellating NDAR_INVFW143KVU
+[2026-04-08 14:15:20] NDAR_INVZB896FPZ finished
+[2026-04-08 14:15:20] Parcellating NDAR_INVGN082RP7
+[2026-04-08 14:15:26] NDAR_INVJT253NWQ finished
+[2026-04-08 14:15:26] Parcellating NDAR_INVXM223BAP
+[2026-04-08 14:21:04] NDAR_INVKX727WL8 finished
+[2026-04-08 14:21:04] Parcellating NDAR_INVDD155BRR
+[2026-04-08 14:21:09] NDAR_INVDC524THW finished
+[2026-04-08 14:21:09] Parcellating NDAR_INVPG675JPX
+[2026-04-08 14:21:11] NDAR_INVKH965NN0 finished
+[2026-04-08 14:21:11] Parcellating NDAR_INVAL101MH2
+[2026-04-08 14:21:12] NDAR_INVFW143KVU finished
+[2026-04-08 14:21:12] Parcellating NDAR_INVKD900ED7
+[2026-04-08 14:21:13] NDAR_INVGN082RP7 finished
+[2026-04-08 14:21:13] Parcellating NDAR_INVHG032NYJ
+[2026-04-08 14:21:15] NDAR_INVXM223BAP finished
+[2026-04-08 14:21:15] Parcellating NDAR_INVWJ708RM0
+[2026-04-08 14:26:55] NDAR_INVDD155BRR finished
+[2026-04-08 14:26:55] Parcellating NDAR_INVCW125BLA
+[2026-04-08 14:27:04] NDAR_INVPG675JPX finished
+[2026-04-08 14:27:04] Parcellating NDAR_INVDM785DVB
+[2026-04-08 14:27:06] NDAR_INVKD900ED7 finished
+[2026-04-08 14:27:06] Parcellating NDAR_INVUA181LXU
+[2026-04-08 14:27:07] NDAR_INVAL101MH2 finished
+[2026-04-08 14:27:10] NDAR_INVWJ708RM0 finished
+[2026-04-08 14:27:10] NDAR_INVHG032NYJ finished
+[2026-04-08 14:32:31] NDAR_INVCW125BLA finished
+[2026-04-08 14:32:41] NDAR_INVDM785DVB finished
+[2026-04-08 14:32:41] NDAR_INVUA181LXU finished
+[2026-04-08 14:32:41] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-08 14:32:41] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/mdd_subjects.txt
+[2026-04-08 14:32:42] Collected fMRI run paths for all subjects.
+[2026-04-08 14:32:42] Parcellating NDAR_INVLT949NAG
+[2026-04-08 14:32:42] Parcellating NDAR_INVLD269XMU
+[2026-04-08 14:32:42] Parcellating NDAR_INVWU297KRB
+[2026-04-08 14:33:03] Parcellating NDAR_INVUX642KUY
+[2026-04-08 14:33:03] Parcellating NDAR_INVHW100CDA
+[2026-04-08 14:33:03] Parcellating NDAR_INVEY681MZ7
+[2026-04-08 14:38:26] NDAR_INVLD269XMU finished
+[2026-04-08 14:38:26] Parcellating NDAR_INVTR059ATR
+[2026-04-08 14:38:27] NDAR_INVLT949NAG finished
+[2026-04-08 14:38:27] Parcellating NDAR_INVRC807HPA
+[2026-04-08 14:38:28] NDAR_INVWU297KRB finished
+[2026-04-08 14:38:28] Parcellating NDAR_INVUY799LKJ
+[2026-04-08 14:38:50] NDAR_INVUX642KUY finished
+[2026-04-08 14:38:50] Parcellating NDAR_INVKH279ZDZ
+[2026-04-08 14:38:51] NDAR_INVHW100CDA finished
+[2026-04-08 14:38:51] Parcellating NDAR_INVVP179WTP
+[2026-04-08 14:38:51] NDAR_INVEY681MZ7 finished
+[2026-04-08 14:38:51] Parcellating NDAR_INVUZ656BRT
+[2026-04-08 14:44:09] NDAR_INVTR059ATR finished
+[2026-04-08 14:44:09] Parcellating NDAR_INVXA261ZAL
+[2026-04-08 14:44:12] NDAR_INVUY799LKJ finished
+[2026-04-08 14:44:12] NDAR_INVRC807HPA finished
+[2026-04-08 14:44:12] Parcellating NDAR_INVRX371YHK
+[2026-04-08 14:44:12] Parcellating NDAR_INVWR872ZDB
+[2026-04-08 14:44:35] NDAR_INVKH279ZDZ finished
+[2026-04-08 14:44:35] Parcellating NDAR_INVZU586UPF
+[2026-04-08 14:44:36] NDAR_INVVP179WTP finished
+[2026-04-08 14:44:37] Parcellating NDAR_INVNB949AXM
+[2026-04-08 14:44:37] NDAR_INVUZ656BRT finished
+[2026-04-08 14:44:37] Parcellating NDAR_INVJP751NXV
+[2026-04-08 14:49:53] NDAR_INVXA261ZAL finished
+[2026-04-08 14:49:53] Parcellating NDAR_INVZY232VM1
+[2026-04-08 14:49:56] NDAR_INVRX371YHK finished
+[2026-04-08 14:49:56] Parcellating NDAR_INVDP288XND
+[2026-04-08 14:49:57] NDAR_INVWR872ZDB finished
+[2026-04-08 14:49:57] Parcellating NDAR_INVBL733HBP
+[2026-04-08 14:50:18] NDAR_INVZU586UPF finished
+[2026-04-08 14:50:21] NDAR_INVNB949AXM finished
+[2026-04-08 14:50:23] NDAR_INVJP751NXV finished
+[2026-04-08 14:55:27] NDAR_INVZY232VM1 finished
+[2026-04-08 14:55:30] NDAR_INVDP288XND finished
+[2026-04-08 14:55:30] NDAR_INVBL733HBP finished
+[2026-04-08 14:55:30] Starting parcellation of specification [['task-restPA', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-08 14:55:31] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-08 14:55:31] Collected fMRI run paths for all subjects.
+[2026-04-08 14:55:31] Parcellating NDAR_INVDK220VPQ
+[2026-04-08 14:55:31] Parcellating NDAR_INVJT253NWQ
+[2026-04-08 14:55:31] Parcellating NDAR_INVZB896FPZ
+[2026-04-08 14:55:56] Parcellating NDAR_INVWE937RD6
+[2026-04-08 14:55:56] Parcellating NDAR_INVWL810FRT
+[2026-04-08 14:55:56] Parcellating NDAR_INVXJ707NAE
+[2026-04-08 15:01:08] NDAR_INVDK220VPQ finished
+[2026-04-08 15:01:08] Parcellating NDAR_INVKX727WL8
+[2026-04-08 15:01:09] NDAR_INVZB896FPZ finished
+[2026-04-08 15:01:09] Parcellating NDAR_INVDC524THW
+[2026-04-08 15:01:11] NDAR_INVJT253NWQ finished
+[2026-04-08 15:01:11] Parcellating NDAR_INVKH965NN0
+[2026-04-08 15:01:36] NDAR_INVXJ707NAE finished
+[2026-04-08 15:01:36] NDAR_INVWE937RD6 finished
+[2026-04-08 15:01:36] Parcellating NDAR_INVFW143KVU
+[2026-04-08 15:01:36] Parcellating NDAR_INVGN082RP7
+[2026-04-08 15:01:36] NDAR_INVWL810FRT finished
+[2026-04-08 15:01:36] Parcellating NDAR_INVXM223BAP
+[2026-04-09 12:11:23] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-09 12:11:23] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-09 12:11:24] Collected fMRI run paths for all subjects.
+[2026-04-09 12:11:31] Parcellating NDAR_INVXJ707NAE
+[2026-04-09 12:11:31] Parcellating NDAR_INVWL810FRT
+[2026-04-09 12:11:31] Parcellating NDAR_INVZB896FPZ
+[2026-04-09 12:11:31] Parcellating NDAR_INVWE937RD6
+[2026-04-09 12:11:31] Parcellating NDAR_INVDK220VPQ
+[2026-04-09 12:11:31] Parcellating NDAR_INVJT253NWQ
+[2026-04-09 12:11:31] Parcellating NDAR_INVKX727WL8
+[2026-04-09 12:11:31] Parcellating NDAR_INVFW143KVU
+[2026-04-09 12:11:31] Parcellating NDAR_INVGN082RP7
+[2026-04-09 12:11:31] Parcellating NDAR_INVPG675JPX
+[2026-04-09 12:11:31] Parcellating NDAR_INVKD900ED7
+[2026-04-09 12:11:31] Parcellating NDAR_INVHG032NYJ
+[2026-04-09 12:11:31] Parcellating NDAR_INVKH965NN0
+[2026-04-09 12:11:31] Parcellating NDAR_INVAL101MH2
+[2026-04-09 12:11:31] Parcellating NDAR_INVXM223BAP
+[2026-04-09 12:11:31] Parcellating NDAR_INVDD155BRR
+[2026-04-09 12:11:31] Parcellating NDAR_INVDC524THW
+[2026-04-09 12:11:31] Parcellating NDAR_INVDM785DVB
+[2026-04-09 12:11:31] Parcellating NDAR_INVUA181LXU
+[2026-04-09 12:11:31] Parcellating NDAR_INVWJ708RM0
+[2026-04-09 12:11:31] Parcellating NDAR_INVCW125BLA
+[2026-04-09 12:11:31] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-09 12:11:31] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/mdd_subjects.txt
+[2026-04-09 12:11:32] Collected fMRI run paths for all subjects.
+[2026-04-09 12:11:32] Parcellating NDAR_INVLD269XMU
+[2026-04-09 12:11:32] Parcellating NDAR_INVWU297KRB
+[2026-04-09 12:11:32] Parcellating NDAR_INVLT949NAG
+[2026-04-09 12:11:32] Parcellating NDAR_INVHW100CDA
+[2026-04-09 12:11:32] Parcellating NDAR_INVEY681MZ7
+[2026-04-09 12:11:32] Parcellating NDAR_INVUX642KUY
+[2026-04-09 12:11:32] Parcellating NDAR_INVTR059ATR
+[2026-04-09 12:11:32] Parcellating NDAR_INVKH279ZDZ
+[2026-04-09 12:11:32] Parcellating NDAR_INVRC807HPA
+[2026-04-09 12:11:32] Parcellating NDAR_INVUY799LKJ
+[2026-04-09 12:11:32] Parcellating NDAR_INVVP179WTP
+[2026-04-09 12:11:32] Parcellating NDAR_INVUZ656BRT
+[2026-04-09 12:11:32] Parcellating NDAR_INVRX371YHK
+[2026-04-09 12:11:32] Parcellating NDAR_INVZU586UPF
+[2026-04-09 12:11:32] Parcellating NDAR_INVWR872ZDB
+[2026-04-09 12:11:32] Parcellating NDAR_INVXA261ZAL
+[2026-04-09 12:11:32] Parcellating NDAR_INVJP751NXV
+[2026-04-09 12:11:32] Parcellating NDAR_INVNB949AXM
+[2026-04-09 12:11:32] Parcellating NDAR_INVZY232VM1
+[2026-04-09 12:11:32] Parcellating NDAR_INVBL733HBP
+[2026-04-09 12:11:32] Parcellating NDAR_INVDP288XND
+[2026-04-09 12:11:32] Starting parcellation of specification [['task-restPA', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-09 12:11:32] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-09 12:11:32] Collected fMRI run paths for all subjects.
+[2026-04-09 12:11:32] Parcellating NDAR_INVJT253NWQ
+[2026-04-09 12:11:32] Parcellating NDAR_INVZB896FPZ
+[2026-04-09 12:11:32] Parcellating NDAR_INVDK220VPQ
+[2026-04-09 12:11:32] Parcellating NDAR_INVWL810FRT
+[2026-04-09 12:11:32] Parcellating NDAR_INVKX727WL8
+[2026-04-09 12:11:32] Parcellating NDAR_INVXJ707NAE
+[2026-04-09 12:11:32] Parcellating NDAR_INVWE937RD6
+[2026-04-09 12:11:32] Parcellating NDAR_INVDC524THW
+[2026-04-09 12:11:32] Parcellating NDAR_INVKH965NN0
+[2026-04-09 12:11:32] Parcellating NDAR_INVFW143KVU
+[2026-04-09 12:11:32] Parcellating NDAR_INVGN082RP7
+[2026-04-09 12:11:32] Parcellating NDAR_INVXM223BAP
+[2026-04-09 12:14:54] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-09 12:14:54] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-09 12:14:54] Collected fMRI run paths for all subjects.
+[2026-04-10 11:52:25] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 11:52:25] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-10 11:52:25] Collected fMRI run paths for all subjects.
+[2026-04-10 11:52:33] Parcellating NDAR_INVJT253NWQ
+[2026-04-10 11:52:33] Parcellating NDAR_INVZB896FPZ
+[2026-04-10 11:52:33] Parcellating NDAR_INVDK220VPQ
+[2026-04-10 11:52:33] Parcellating NDAR_INVWL810FRT
+[2026-04-10 11:52:33] Parcellating NDAR_INVXJ707NAE
+[2026-04-10 11:52:34] Parcellating NDAR_INVWE937RD6
+[2026-04-10 11:52:34] Parcellating NDAR_INVDC524THW
+[2026-04-10 11:52:34] Parcellating NDAR_INVFW143KVU
+[2026-04-10 11:52:34] Parcellating NDAR_INVGN082RP7
+[2026-04-10 11:52:34] Parcellating NDAR_INVXM223BAP
+[2026-04-10 11:52:34] Parcellating NDAR_INVDD155BRR
+[2026-04-10 11:52:34] Parcellating NDAR_INVPG675JPX
+[2026-04-10 11:52:34] Parcellating NDAR_INVAL101MH2
+[2026-04-10 11:52:34] Parcellating NDAR_INVKD900ED7
+[2026-04-10 11:52:34] Parcellating NDAR_INVHG032NYJ
+[2026-04-10 11:52:34] Parcellating NDAR_INVWJ708RM0
+[2026-04-10 11:52:34] Parcellating NDAR_INVCW125BLA
+[2026-04-10 11:52:34] Parcellating NDAR_INVDM785DVB
+[2026-04-10 11:52:34] Parcellating NDAR_INVUA181LXU
+[2026-04-10 11:52:34] Parcellating NDAR_INVKX727WL8
+[2026-04-10 11:52:34] Parcellating NDAR_INVKH965NN0
+[2026-04-10 11:52:34] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 11:52:34] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/mdd_subjects.txt
+[2026-04-10 11:52:34] Collected fMRI run paths for all subjects.
+[2026-04-10 11:52:34] Parcellating NDAR_INVEY681MZ7
+[2026-04-10 11:52:34] Parcellating NDAR_INVHW100CDA
+[2026-04-10 11:52:34] Parcellating NDAR_INVRC807HPA
+[2026-04-10 11:52:34] Parcellating NDAR_INVUY799LKJ
+[2026-04-10 11:52:34] Parcellating NDAR_INVKH279ZDZ
+[2026-04-10 11:52:34] Parcellating NDAR_INVVP179WTP
+[2026-04-10 11:52:34] Parcellating NDAR_INVUZ656BRT
+[2026-04-10 11:52:34] Parcellating NDAR_INVXA261ZAL
+[2026-04-10 11:52:34] Parcellating NDAR_INVWU297KRB
+[2026-04-10 11:52:34] Parcellating NDAR_INVLT949NAG
+[2026-04-10 11:52:34] Parcellating NDAR_INVUX642KUY
+[2026-04-10 11:52:34] Parcellating NDAR_INVLD269XMU
+[2026-04-10 11:52:34] Parcellating NDAR_INVTR059ATR
+[2026-04-10 11:52:34] Parcellating NDAR_INVRX371YHK
+[2026-04-10 11:52:34] Parcellating NDAR_INVZY232VM1
+[2026-04-10 11:52:34] Parcellating NDAR_INVBL733HBP
+[2026-04-10 11:52:34] Parcellating NDAR_INVWR872ZDB
+[2026-04-10 11:52:34] Parcellating NDAR_INVZU586UPF
+[2026-04-10 11:52:34] Parcellating NDAR_INVNB949AXM
+[2026-04-10 11:52:34] Parcellating NDAR_INVJP751NXV
+[2026-04-10 11:52:34] Parcellating NDAR_INVDP288XND
+[2026-04-10 11:52:34] Starting parcellation of specification [['task-restPA', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 11:52:34] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-10 11:52:34] Collected fMRI run paths for all subjects.
+[2026-04-10 11:52:34] Parcellating NDAR_INVWE937RD6
+[2026-04-10 11:52:34] Parcellating NDAR_INVDK220VPQ
+[2026-04-10 11:52:34] Parcellating NDAR_INVDC524THW
+[2026-04-10 11:52:34] Parcellating NDAR_INVJT253NWQ
+[2026-04-10 11:52:34] Parcellating NDAR_INVKH965NN0
+[2026-04-10 11:52:34] Parcellating NDAR_INVZB896FPZ
+[2026-04-10 11:52:34] Parcellating NDAR_INVFW143KVU
+[2026-04-10 11:52:34] Parcellating NDAR_INVWL810FRT
+[2026-04-10 11:52:34] Parcellating NDAR_INVGN082RP7
+[2026-04-10 11:52:34] Parcellating NDAR_INVXJ707NAE
+[2026-04-10 11:52:34] Parcellating NDAR_INVKX727WL8
+[2026-04-10 11:52:34] Parcellating NDAR_INVXM223BAP
+[2026-04-10 12:24:22] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 12:24:22] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-10 12:24:22] Collected fMRI run paths for all subjects.
+[2026-04-10 12:24:22] Parcellating NDAR_INVDK220VPQ
+[2026-04-10 12:33:21] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 12:33:21] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-10 12:33:21] Collected fMRI run paths for all subjects.
+[2026-04-10 12:33:21] Parcellating NDAR_INVDK220VPQ
+[2026-04-10 12:39:22] NDAR_INVDK220VPQ finished
+[2026-04-10 12:39:22] Parcellating NDAR_INVJT253NWQ
+[2026-04-10 13:26:17] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 13:26:17] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-10 13:26:17] Collected fMRI run paths for all subjects.
+[2026-04-10 13:26:18] Parcellating NDAR_INVJT253NWQ
+[2026-04-10 13:26:18] Parcellating NDAR_INVXJ707NAE
+[2026-04-10 13:26:18] Parcellating NDAR_INVDK220VPQ
+[2026-04-10 13:26:18] Parcellating NDAR_INVWE937RD6
+[2026-04-10 13:26:18] Parcellating NDAR_INVZB896FPZ
+[2026-04-10 13:26:18] Parcellating NDAR_INVDC524THW
+[2026-04-10 13:26:18] Parcellating NDAR_INVKX727WL8
+[2026-04-10 13:26:18] Parcellating NDAR_INVWL810FRT
+[2026-04-10 13:26:19] Parcellating NDAR_INVKH965NN0
+[2026-04-10 13:32:34] NDAR_INVKH965NN0 finished
+[2026-04-10 13:32:34] NDAR_INVWE937RD6 finished
+[2026-04-10 13:32:34] NDAR_INVXJ707NAE finished
+[2026-04-10 13:32:34] NDAR_INVJT253NWQ finished
+[2026-04-10 13:32:34] NDAR_INVWL810FRT finished
+[2026-04-10 13:32:34] NDAR_INVZB896FPZ finished
+[2026-04-10 13:32:34] Parcellating NDAR_INVFW143KVU
+[2026-04-10 13:32:34] Parcellating NDAR_INVGN082RP7
+[2026-04-10 13:32:34] Parcellating NDAR_INVXM223BAP
+[2026-04-10 13:32:34] Parcellating NDAR_INVDD155BRR
+[2026-04-10 13:32:34] Parcellating NDAR_INVPG675JPX
+[2026-04-10 13:32:34] Parcellating NDAR_INVAL101MH2
+[2026-04-10 13:32:34] NDAR_INVKX727WL8 finished
+[2026-04-10 13:32:34] Parcellating NDAR_INVKD900ED7
+[2026-04-10 13:32:37] NDAR_INVDC524THW finished
+[2026-04-10 13:32:37] Parcellating NDAR_INVHG032NYJ
+[2026-04-10 13:38:56] NDAR_INVFW143KVU finished
+[2026-04-10 13:38:56] Parcellating NDAR_INVWJ708RM0
+[2026-04-10 13:39:01] NDAR_INVPG675JPX finished
+[2026-04-10 13:39:01] Parcellating NDAR_INVCW125BLA
+[2026-04-10 13:39:01] NDAR_INVGN082RP7 finished
+[2026-04-10 13:39:01] Parcellating NDAR_INVDM785DVB
+[2026-04-10 13:39:01] NDAR_INVXM223BAP finished
+[2026-04-10 13:39:01] Parcellating NDAR_INVUA181LXU
+[2026-04-10 13:39:02] NDAR_INVAL101MH2 finished
+[2026-04-10 13:39:03] NDAR_INVKD900ED7 finished
+[2026-04-10 13:39:03] NDAR_INVDD155BRR finished
+[2026-04-10 13:39:05] NDAR_INVHG032NYJ finished
+[2026-04-10 13:44:33] NDAR_INVWJ708RM0 finished
+[2026-04-10 13:44:37] NDAR_INVDM785DVB finished
+[2026-04-10 13:44:38] NDAR_INVCW125BLA finished
+[2026-04-10 13:44:39] NDAR_INVUA181LXU finished
+[2026-04-10 13:44:39] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 13:44:39] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/mdd_subjects.txt
+[2026-04-10 13:44:39] Collected fMRI run paths for all subjects.
+[2026-04-10 13:44:39] Parcellating NDAR_INVLT949NAG
+[2026-04-10 13:44:39] Parcellating NDAR_INVLD269XMU
+[2026-04-10 13:44:39] Parcellating NDAR_INVUX642KUY
+[2026-04-10 13:44:39] Parcellating NDAR_INVWU297KRB
+[2026-04-10 13:44:51] Parcellating NDAR_INVRC807HPA
+[2026-04-10 13:44:51] Parcellating NDAR_INVHW100CDA
+[2026-04-10 13:44:51] Parcellating NDAR_INVTR059ATR
+[2026-04-10 13:44:51] Parcellating NDAR_INVEY681MZ7
+[2026-04-10 13:50:46] NDAR_INVLT949NAG finished
+[2026-04-10 13:50:46] Parcellating NDAR_INVUY799LKJ
+[2026-04-10 13:50:48] NDAR_INVUX642KUY finished
+[2026-04-10 13:50:48] Parcellating NDAR_INVKH279ZDZ
+[2026-04-10 13:50:50] NDAR_INVWU297KRB finished
+[2026-04-10 13:50:50] Parcellating NDAR_INVVP179WTP
+[2026-04-10 13:50:51] NDAR_INVLD269XMU finished
+[2026-04-10 13:50:51] Parcellating NDAR_INVUZ656BRT
+[2026-04-10 13:51:01] NDAR_INVRC807HPA finished
+[2026-04-10 13:51:02] Parcellating NDAR_INVXA261ZAL
+[2026-04-10 13:51:02] NDAR_INVTR059ATR finished
+[2026-04-10 13:51:02] Parcellating NDAR_INVRX371YHK
+[2026-04-10 13:51:03] NDAR_INVEY681MZ7 finished
+[2026-04-10 13:51:03] Parcellating NDAR_INVWR872ZDB
+[2026-04-10 13:51:10] NDAR_INVHW100CDA finished
+[2026-04-10 13:51:10] Parcellating NDAR_INVZU586UPF
+[2026-04-10 13:56:58] NDAR_INVUY799LKJ finished
+[2026-04-10 13:56:58] Parcellating NDAR_INVNB949AXM
+[2026-04-10 13:57:09] NDAR_INVKH279ZDZ finished
+[2026-04-10 13:57:09] Parcellating NDAR_INVJP751NXV
+[2026-04-10 13:57:11] NDAR_INVUZ656BRT finished
+[2026-04-10 13:57:11] Parcellating NDAR_INVZY232VM1
+[2026-04-10 13:57:19] NDAR_INVRX371YHK finished
+[2026-04-10 13:57:19] Parcellating NDAR_INVDP288XND
+[2026-04-10 13:57:20] NDAR_INVVP179WTP finished
+[2026-04-10 13:57:20] Parcellating NDAR_INVBL733HBP
+[2026-04-10 13:57:21] NDAR_INVXA261ZAL finished
+[2026-04-10 13:57:25] NDAR_INVWR872ZDB finished
+[2026-04-10 13:57:33] NDAR_INVZU586UPF finished
+[2026-04-10 14:02:48] NDAR_INVNB949AXM finished
+[2026-04-10 14:03:01] NDAR_INVJP751NXV finished
+[2026-04-10 14:03:04] NDAR_INVZY232VM1 finished
+[2026-04-10 14:03:08] NDAR_INVDP288XND finished
+[2026-04-10 14:03:19] NDAR_INVBL733HBP finished
+[2026-04-10 14:03:19] Starting parcellation of specification [['task-restPA', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 14:03:19] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-10 14:03:19] Collected fMRI run paths for all subjects.
+[2026-04-10 14:03:19] Parcellating NDAR_INVDK220VPQ
+[2026-04-10 14:03:19] Parcellating NDAR_INVJT253NWQ
+[2026-04-10 14:03:19] Parcellating NDAR_INVWL810FRT
+[2026-04-10 14:03:19] Parcellating NDAR_INVZB896FPZ
+[2026-04-10 14:03:19] Parcellating NDAR_INVXJ707NAE
+[2026-04-10 14:03:20] Parcellating NDAR_INVKX727WL8
+[2026-04-10 14:03:20] Parcellating NDAR_INVWE937RD6
+[2026-04-10 14:03:20] Parcellating NDAR_INVDC524THW
+[2026-04-10 14:09:35] NDAR_INVXJ707NAE finished
+[2026-04-10 14:09:35] Parcellating NDAR_INVKH965NN0
+[2026-04-10 14:09:37] NDAR_INVJT253NWQ finished
+[2026-04-10 14:09:37] NDAR_INVZB896FPZ finished
+[2026-04-10 14:09:37] Parcellating NDAR_INVFW143KVU
+[2026-04-10 14:09:37] Parcellating NDAR_INVGN082RP7
+[2026-04-10 14:09:37] NDAR_INVDK220VPQ finished
+[2026-04-10 14:09:37] Parcellating NDAR_INVXM223BAP
+[2026-04-10 14:09:37] NDAR_INVDC524THW finished
+[2026-04-10 14:09:37] Parcellating NDAR_INVDD155BRR
+[2026-04-10 14:09:38] NDAR_INVKX727WL8 finished
+[2026-04-10 14:09:38] NDAR_INVWE937RD6 finished
+[2026-04-10 14:09:38] Parcellating NDAR_INVPG675JPX
+[2026-04-10 14:09:38] Parcellating NDAR_INVAL101MH2
+[2026-04-10 14:09:39] NDAR_INVWL810FRT finished
+[2026-04-10 14:09:39] Parcellating NDAR_INVKD900ED7
+[2026-04-10 14:16:04] NDAR_INVXM223BAP finished
+[2026-04-10 14:16:04] NDAR_INVKH965NN0 finished
+[2026-04-10 14:16:04] NDAR_INVFW143KVU finished
+[2026-04-10 14:16:04] NDAR_INVPG675JPX finished
+[2026-04-10 14:16:05] Parcellating NDAR_INVHG032NYJ
+[2026-04-10 14:16:05] Parcellating NDAR_INVCW125BLA
+[2026-04-10 14:16:05] Parcellating NDAR_INVWJ708RM0
+[2026-04-10 14:16:05] Parcellating NDAR_INVDM785DVB
+[2026-04-10 14:16:05] NDAR_INVDD155BRR finished
+[2026-04-10 14:16:05] Parcellating NDAR_INVUA181LXU
+[2026-04-10 14:16:06] NDAR_INVGN082RP7 finished
+[2026-04-10 14:16:06] NDAR_INVAL101MH2 finished
+[2026-04-10 14:16:08] NDAR_INVKD900ED7 finished
+[2026-04-10 14:22:11] NDAR_INVHG032NYJ finished
+[2026-04-10 14:22:12] NDAR_INVDM785DVB finished
+[2026-04-10 14:22:13] NDAR_INVCW125BLA finished
+[2026-04-10 14:22:13] NDAR_INVWJ708RM0 finished
+[2026-04-10 14:22:13] NDAR_INVUA181LXU finished
+[2026-04-10 14:22:13] Starting parcellation of specification [['task-restPA', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 14:22:13] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/mdd_subjects.txt
+[2026-04-10 14:22:13] Collected fMRI run paths for all subjects.
+[2026-04-10 14:22:13] Parcellating NDAR_INVLT949NAG
+[2026-04-10 14:22:13] Parcellating NDAR_INVLD269XMU
+[2026-04-10 14:22:13] Parcellating NDAR_INVUX642KUY
+[2026-04-10 14:22:13] Parcellating NDAR_INVWU297KRB
+[2026-04-10 14:22:13] Parcellating NDAR_INVEY681MZ7
+[2026-04-10 14:22:43] Parcellating NDAR_INVTR059ATR
+[2026-04-10 14:22:43] Parcellating NDAR_INVRC807HPA
+[2026-04-10 14:22:43] Parcellating NDAR_INVHW100CDA
+[2026-04-10 14:28:36] NDAR_INVLT949NAG finished
+[2026-04-10 14:28:36] Parcellating NDAR_INVUY799LKJ
+[2026-04-10 14:28:37] NDAR_INVEY681MZ7 finished
+[2026-04-10 14:28:38] Parcellating NDAR_INVKH279ZDZ
+[2026-04-10 14:28:38] NDAR_INVWU297KRB finished
+[2026-04-10 14:28:38] Parcellating NDAR_INVVP179WTP
+[2026-04-10 14:28:38] NDAR_INVLD269XMU finished
+[2026-04-10 14:28:38] Parcellating NDAR_INVUZ656BRT
+[2026-04-10 14:28:40] NDAR_INVUX642KUY finished
+[2026-04-10 14:28:40] Parcellating NDAR_INVXA261ZAL
+[2026-04-10 14:28:56] NDAR_INVHW100CDA finished
+[2026-04-10 14:28:56] Parcellating NDAR_INVRX371YHK
+[2026-04-10 14:28:57] NDAR_INVTR059ATR finished
+[2026-04-10 14:28:57] Parcellating NDAR_INVWR872ZDB
+[2026-04-10 14:28:57] NDAR_INVRC807HPA finished
+[2026-04-10 14:28:57] Parcellating NDAR_INVZU586UPF
+[2026-04-10 14:34:34] NDAR_INVUY799LKJ finished
+[2026-04-10 14:34:35] Parcellating NDAR_INVNB949AXM
+[2026-04-10 14:34:42] NDAR_INVVP179WTP finished
+[2026-04-10 14:34:42] Parcellating NDAR_INVJP751NXV
+[2026-04-10 14:34:44] NDAR_INVKH279ZDZ finished
+[2026-04-10 14:34:44] NDAR_INVUZ656BRT finished
+[2026-04-10 14:34:44] Parcellating NDAR_INVZY232VM1
+[2026-04-10 14:34:44] Parcellating NDAR_INVDP288XND
+[2026-04-10 14:34:45] NDAR_INVXA261ZAL finished
+[2026-04-10 14:34:45] Parcellating NDAR_INVBL733HBP
+[2026-04-10 14:34:54] NDAR_INVWR872ZDB finished
+[2026-04-10 14:34:55] NDAR_INVRX371YHK finished
+[2026-04-10 14:34:56] NDAR_INVZU586UPF finished
+[2026-04-10 14:40:36] NDAR_INVNB949AXM finished
+[2026-04-10 14:40:44] NDAR_INVJP751NXV finished
+[2026-04-10 14:40:50] NDAR_INVZY232VM1 finished
+[2026-04-10 14:40:50] NDAR_INVDP288XND finished
+[2026-04-10 14:40:52] NDAR_INVBL733HBP finished
+[2026-04-10 15:10:08] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 15:10:08] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-10 15:10:08] Collected fMRI run paths for all subjects.
+[2026-04-10 15:10:09] Parcellating NDAR_INVDK220VPQ
+[2026-04-10 15:10:09] Parcellating NDAR_INVWE937RD6
+[2026-04-10 15:10:09] Parcellating NDAR_INVJT253NWQ
+[2026-04-10 15:10:09] Parcellating NDAR_INVXJ707NAE
+[2026-04-10 15:10:09] Parcellating NDAR_INVDC524THW
+[2026-04-10 15:10:09] Parcellating NDAR_INVZB896FPZ
+[2026-04-10 15:10:09] Parcellating NDAR_INVWL810FRT
+[2026-04-10 15:10:09] Parcellating NDAR_INVKX727WL8
+[2026-04-10 15:10:09] Parcellating NDAR_INVKH965NN0
+[2026-04-10 15:10:09] Parcellating NDAR_INVFW143KVU
+[2026-04-10 15:10:09] Parcellating NDAR_INVGN082RP7
+[2026-04-10 15:10:09] Parcellating NDAR_INVXM223BAP
+[2026-04-10 15:10:09] Parcellating NDAR_INVDD155BRR
+[2026-04-10 15:10:09] Parcellating NDAR_INVPG675JPX
+[2026-04-10 15:10:09] Parcellating NDAR_INVAL101MH2
+[2026-04-10 15:10:09] Parcellating NDAR_INVKD900ED7
+[2026-04-10 15:10:09] Parcellating NDAR_INVWJ708RM0
+[2026-04-10 15:10:09] Parcellating NDAR_INVHG032NYJ
+[2026-04-10 15:10:09] Parcellating NDAR_INVCW125BLA
+[2026-04-10 15:10:09] Parcellating NDAR_INVDM785DVB
+[2026-04-10 15:10:09] Parcellating NDAR_INVUA181LXU
+[2026-04-10 15:10:09] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 15:10:09] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/mdd_subjects.txt
+[2026-04-10 15:10:09] Collected fMRI run paths for all subjects.
+[2026-04-10 15:10:09] Parcellating NDAR_INVLT949NAG
+[2026-04-10 15:10:09] Parcellating NDAR_INVWU297KRB
+[2026-04-10 15:10:09] Parcellating NDAR_INVUX642KUY
+[2026-04-10 15:10:09] Parcellating NDAR_INVLD269XMU
+[2026-04-10 15:10:09] Parcellating NDAR_INVHW100CDA
+[2026-04-10 15:10:09] Parcellating NDAR_INVEY681MZ7
+[2026-04-10 15:10:09] Parcellating NDAR_INVTR059ATR
+[2026-04-10 15:10:09] Parcellating NDAR_INVRC807HPA
+[2026-04-10 15:10:09] Parcellating NDAR_INVUY799LKJ
+[2026-04-10 15:10:09] Parcellating NDAR_INVWR872ZDB
+[2026-04-10 15:10:09] Parcellating NDAR_INVKH279ZDZ
+[2026-04-10 15:10:09] Parcellating NDAR_INVVP179WTP
+[2026-04-10 15:10:09] Parcellating NDAR_INVZU586UPF
+[2026-04-10 15:10:09] Parcellating NDAR_INVRX371YHK
+[2026-04-10 15:10:09] Parcellating NDAR_INVUZ656BRT
+[2026-04-10 15:10:09] Parcellating NDAR_INVJP751NXV
+[2026-04-10 15:10:09] Parcellating NDAR_INVNB949AXM
+[2026-04-10 15:10:09] Parcellating NDAR_INVXA261ZAL
+[2026-04-10 15:10:09] Parcellating NDAR_INVZY232VM1
+[2026-04-10 15:10:09] Parcellating NDAR_INVBL733HBP
+[2026-04-10 15:10:09] Parcellating NDAR_INVDP288XND
+[2026-04-10 15:10:09] Starting parcellation of specification [['task-restPA', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 15:10:09] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-10 15:10:09] Collected fMRI run paths for all subjects.
+[2026-04-10 15:10:09] Parcellating NDAR_INVDK220VPQ
+[2026-04-10 15:10:09] Parcellating NDAR_INVJT253NWQ
+[2026-04-10 15:10:09] Parcellating NDAR_INVWE937RD6
+[2026-04-10 15:10:09] Parcellating NDAR_INVKX727WL8
+[2026-04-10 15:10:09] Parcellating NDAR_INVXJ707NAE
+[2026-04-10 15:10:09] Parcellating NDAR_INVZB896FPZ
+[2026-04-10 15:10:09] Parcellating NDAR_INVDC524THW
+[2026-04-10 15:10:09] Parcellating NDAR_INVWL810FRT
+[2026-04-10 15:10:09] Parcellating NDAR_INVGN082RP7
+[2026-04-10 15:10:09] Parcellating NDAR_INVFW143KVU
+[2026-04-10 15:10:09] Parcellating NDAR_INVKH965NN0
+[2026-04-10 15:10:09] Parcellating NDAR_INVDD155BRR
+[2026-04-10 15:10:09] Parcellating NDAR_INVXM223BAP
+[2026-04-10 15:10:09] Parcellating NDAR_INVAL101MH2
+[2026-04-10 15:10:09] Parcellating NDAR_INVPG675JPX
+[2026-04-10 15:10:09] Parcellating NDAR_INVKD900ED7
+[2026-04-10 15:10:09] Parcellating NDAR_INVWJ708RM0
+[2026-04-10 15:10:09] Parcellating NDAR_INVHG032NYJ
+[2026-04-10 15:10:09] Parcellating NDAR_INVCW125BLA
+[2026-04-10 15:10:09] Parcellating NDAR_INVDM785DVB
+[2026-04-10 15:10:09] Parcellating NDAR_INVUA181LXU
+[2026-04-10 15:10:09] Starting parcellation of specification [['task-restPA', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 15:10:09] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/mdd_subjects.txt
+[2026-04-10 15:10:09] Collected fMRI run paths for all subjects.
+[2026-04-10 15:10:09] Parcellating NDAR_INVLT949NAG
+[2026-04-10 15:10:09] Parcellating NDAR_INVTR059ATR
+[2026-04-10 15:10:09] Parcellating NDAR_INVLD269XMU
+[2026-04-10 15:10:09] Parcellating NDAR_INVHW100CDA
+[2026-04-10 15:10:09] Parcellating NDAR_INVEY681MZ7
+[2026-04-10 15:10:09] Parcellating NDAR_INVUX642KUY
+[2026-04-10 15:10:09] Parcellating NDAR_INVWU297KRB
+[2026-04-10 15:10:09] Parcellating NDAR_INVRC807HPA
+[2026-04-10 15:10:09] Parcellating NDAR_INVUY799LKJ
+[2026-04-10 15:10:09] Parcellating NDAR_INVRX371YHK
+[2026-04-10 15:10:09] Parcellating NDAR_INVWR872ZDB
+[2026-04-10 15:10:09] Parcellating NDAR_INVZU586UPF
+[2026-04-10 15:10:09] Parcellating NDAR_INVKH279ZDZ
+[2026-04-10 15:10:09] Parcellating NDAR_INVUZ656BRT
+[2026-04-10 15:10:09] Parcellating NDAR_INVVP179WTP
+[2026-04-10 15:10:09] Parcellating NDAR_INVNB949AXM
+[2026-04-10 15:10:09] Parcellating NDAR_INVXA261ZAL
+[2026-04-10 15:10:09] Parcellating NDAR_INVJP751NXV
+[2026-04-10 15:10:09] Parcellating NDAR_INVBL733HBP
+[2026-04-10 15:10:09] Parcellating NDAR_INVDP288XND
+[2026-04-10 15:10:09] Parcellating NDAR_INVZY232VM1
+[2026-04-10 15:13:41] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 15:13:41] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-10 15:13:41] Collected fMRI run paths for all subjects.
+[2026-04-10 15:13:42] Parcellating NDAR_INVDK220VPQ
+[2026-04-10 15:13:42] Parcellating NDAR_INVJT253NWQ
+[2026-04-10 15:13:42] Parcellating NDAR_INVKH965NN0
+[2026-04-10 15:13:42] Parcellating NDAR_INVFW143KVU
+[2026-04-10 15:13:42] Parcellating NDAR_INVGN082RP7
+[2026-04-10 15:13:42] Parcellating NDAR_INVXM223BAP
+[2026-04-10 15:13:42] Parcellating NDAR_INVDD155BRR
+[2026-04-10 15:13:42] Parcellating NDAR_INVPG675JPX
+[2026-04-10 15:13:42] Parcellating NDAR_INVAL101MH2
+[2026-04-10 15:13:42] Parcellating NDAR_INVKD900ED7
+[2026-04-10 15:13:42] Parcellating NDAR_INVHG032NYJ
+[2026-04-10 15:13:42] Parcellating NDAR_INVWJ708RM0
+[2026-04-10 15:13:42] Parcellating NDAR_INVCW125BLA
+[2026-04-10 15:13:42] Parcellating NDAR_INVDM785DVB
+[2026-04-10 15:13:42] Parcellating NDAR_INVUA181LXU
+[2026-04-10 15:13:42] Parcellating NDAR_INVXJ707NAE
+[2026-04-10 15:13:42] Parcellating NDAR_INVWE937RD6
+[2026-04-10 15:13:42] Parcellating NDAR_INVZB896FPZ
+[2026-04-10 15:13:42] Parcellating NDAR_INVWL810FRT
+[2026-04-10 15:13:42] Parcellating NDAR_INVKX727WL8
+[2026-04-10 15:13:42] Parcellating NDAR_INVDC524THW
+[2026-04-10 15:13:42] Starting parcellation of specification [['task-restAP', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 15:13:42] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/mdd_subjects.txt
+[2026-04-10 15:13:42] Collected fMRI run paths for all subjects.
+[2026-04-10 15:13:42] Parcellating NDAR_INVLT949NAG
+[2026-04-10 15:13:42] Parcellating NDAR_INVWU297KRB
+[2026-04-10 15:13:42] Parcellating NDAR_INVEY681MZ7
+[2026-04-10 15:13:42] Parcellating NDAR_INVUX642KUY
+[2026-04-10 15:13:42] Parcellating NDAR_INVHW100CDA
+[2026-04-10 15:13:42] Parcellating NDAR_INVTR059ATR
+[2026-04-10 15:13:42] Parcellating NDAR_INVRC807HPA
+[2026-04-10 15:13:42] Parcellating NDAR_INVUY799LKJ
+[2026-04-10 15:13:42] Parcellating NDAR_INVLD269XMU
+[2026-04-10 15:13:42] Parcellating NDAR_INVKH279ZDZ
+[2026-04-10 15:13:42] Parcellating NDAR_INVUZ656BRT
+[2026-04-10 15:13:42] Parcellating NDAR_INVVP179WTP
+[2026-04-10 15:13:42] Parcellating NDAR_INVWR872ZDB
+[2026-04-10 15:13:42] Parcellating NDAR_INVRX371YHK
+[2026-04-10 15:13:42] Parcellating NDAR_INVXA261ZAL
+[2026-04-10 15:13:42] Parcellating NDAR_INVZU586UPF
+[2026-04-10 15:13:42] Parcellating NDAR_INVNB949AXM
+[2026-04-10 15:13:42] Parcellating NDAR_INVJP751NXV
+[2026-04-10 15:13:42] Parcellating NDAR_INVZY232VM1
+[2026-04-10 15:13:42] Parcellating NDAR_INVDP288XND
+[2026-04-10 15:13:42] Parcellating NDAR_INVBL733HBP
+[2026-04-10 15:13:42] Starting parcellation of specification [['task-restPA', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 15:13:42] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/hc_subjects.txt
+[2026-04-10 15:13:42] Collected fMRI run paths for all subjects.
+[2026-04-10 15:13:42] Parcellating NDAR_INVDK220VPQ
+[2026-04-10 15:13:42] Parcellating NDAR_INVWE937RD6
+[2026-04-10 15:13:42] Parcellating NDAR_INVKX727WL8
+[2026-04-10 15:13:42] Parcellating NDAR_INVWL810FRT
+[2026-04-10 15:13:42] Parcellating NDAR_INVZB896FPZ
+[2026-04-10 15:13:42] Parcellating NDAR_INVXJ707NAE
+[2026-04-10 15:13:42] Parcellating NDAR_INVJT253NWQ
+[2026-04-10 15:13:42] Parcellating NDAR_INVDC524THW
+[2026-04-10 15:13:42] Parcellating NDAR_INVKH965NN0
+[2026-04-10 15:13:42] Parcellating NDAR_INVFW143KVU
+[2026-04-10 15:13:42] Parcellating NDAR_INVGN082RP7
+[2026-04-10 15:13:42] Parcellating NDAR_INVXM223BAP
+[2026-04-10 15:13:42] Parcellating NDAR_INVDD155BRR
+[2026-04-10 15:13:42] Parcellating NDAR_INVPG675JPX
+[2026-04-10 15:13:42] Parcellating NDAR_INVAL101MH2
+[2026-04-10 15:13:42] Parcellating NDAR_INVKD900ED7
+[2026-04-10 15:13:42] Parcellating NDAR_INVUA181LXU
+[2026-04-10 15:13:42] Parcellating NDAR_INVWJ708RM0
+[2026-04-10 15:13:42] Parcellating NDAR_INVCW125BLA
+[2026-04-10 15:13:42] Parcellating NDAR_INVHG032NYJ
+[2026-04-10 15:13:42] Parcellating NDAR_INVDM785DVB
+[2026-04-10 15:13:42] Starting parcellation of specification [['task-restPA', 'run-01', 'space-MNI152NLin2009cAsym_res-2_desc-preproc_bold']]
+[2026-04-10 15:13:42] Loaded subject list with 21 subjects from the file: /cluster/home/oystkva/project/code/data/subject_lists/mdd_subjects.txt
+[2026-04-10 15:13:42] Collected fMRI run paths for all subjects.
+[2026-04-10 15:13:42] Parcellating NDAR_INVLT949NAG
+[2026-04-10 15:13:42] Parcellating NDAR_INVLD269XMU
+[2026-04-10 15:13:42] Parcellating NDAR_INVEY681MZ7
+[2026-04-10 15:13:42] Parcellating NDAR_INVRC807HPA
+[2026-04-10 15:13:42] Parcellating NDAR_INVUX642KUY
+[2026-04-10 15:13:42] Parcellating NDAR_INVWU297KRB
+[2026-04-10 15:13:42] Parcellating NDAR_INVHW100CDA
+[2026-04-10 15:13:42] Parcellating NDAR_INVUY799LKJ
+[2026-04-10 15:13:42] Parcellating NDAR_INVXA261ZAL
+[2026-04-10 15:13:42] Parcellating NDAR_INVKH279ZDZ
+[2026-04-10 15:13:42] Parcellating NDAR_INVUZ656BRT
+[2026-04-10 15:13:42] Parcellating NDAR_INVVP179WTP
+[2026-04-10 15:13:42] Parcellating NDAR_INVRX371YHK
+[2026-04-10 15:13:42] Parcellating NDAR_INVWR872ZDB
+[2026-04-10 15:13:42] Parcellating NDAR_INVTR059ATR
+[2026-04-10 15:13:42] Parcellating NDAR_INVZU586UPF
+[2026-04-10 15:13:42] Parcellating NDAR_INVJP751NXV
+[2026-04-10 15:13:42] Parcellating NDAR_INVNB949AXM
+[2026-04-10 15:13:42] Parcellating NDAR_INVDP288XND
+[2026-04-10 15:13:42] Parcellating NDAR_INVBL733HBP
+[2026-04-10 15:13:42] Parcellating NDAR_INVZY232VM1

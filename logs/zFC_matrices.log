@@ -111,3 +111,90 @@ Processing specified run types: [['', 'restAP', '', 'Schaefer400']].
 [2026-01-09 18:08:46] Completed calculation of zFC matrices for the bold signals.
 Beginning slow band signal extraction and zFC calculation for each band.
 [2026-01-09 18:08:47] Completed calculation of zFC matrices for the slow band signals.
+[2026-03-28 23:22:16] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-03-28 23:22:18] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-03-28 23:22:38] Completed calculation of zFC matrices for the slow band signals.
+[2026-03-28 23:22:58] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restPA', '', 'Yan2023']].
+[2026-03-28 23:23:02] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-03-28 23:23:45] Completed calculation of zFC matrices for the slow band signals.
+[2026-03-30 13:37:16] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-03-30 13:37:23] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-03-30 13:37:43] Completed calculation of zFC matrices for the slow band signals.
+[2026-03-30 13:43:51] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-03-30 13:43:52] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-03-30 13:44:08] Completed calculation of zFC matrices for the slow band signals.
+[2026-04-01 19:10:13] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-03 16:44:25] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-03 16:59:37] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-03 17:01:13] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-03 17:02:51] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-03 17:03:06] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-03 17:03:55] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-03 17:04:29] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-03 17:24:13] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-03 17:26:51] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-03 17:26:56] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-04-03 17:27:23] Completed calculation of zFC matrices for the slow band signals.
+[2026-04-03 17:30:01] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-03 17:30:04] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-04-03 17:31:17] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restPA', '', 'Yan2023']].
+[2026-04-03 17:31:27] Starting zFC calculation pipeline with 1 parallel jobs.
+Processing specified run types: [['', 'restPA', '', 'Yan2023']].
+[2026-04-03 17:31:33] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-04-11 17:22:06] Starting zFC calculation pipeline with 8 parallel jobs.
+Processing specified run types: [['', 'restPA', '', 'Yan2023']].
+[2026-04-11 17:22:30] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-04-11 21:01:26] Starting zFC calculation pipeline with 8 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-11 21:01:50] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-04-11 23:22:34] Starting zFC calculation pipeline with 8 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-11 23:22:36] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-04-11 23:32:58] Starting zFC calculation pipeline with 8 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-11 23:32:59] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-04-11 23:35:34] Starting zFC calculation pipeline with 8 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-11 23:35:35] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-04-11 23:36:47] Starting zFC calculation pipeline with 8 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-11 23:36:48] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-04-11 23:39:40] Starting zFC calculation pipeline with 8 parallel jobs.
+Processing specified run types: [['', 'restAP', '', 'Yan2023']].
+[2026-04-11 23:39:40] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-04-11 23:39:44] Completed calculation of zFC matrices for the slow band signals.
+[2026-04-11 23:40:08] Starting zFC calculation pipeline with 8 parallel jobs.
+Processing specified run types: [['', 'restPA', '', 'Yan2023']].
+[2026-04-11 23:40:09] Completed calculation of zFC matrices for the bold signals.
+Beginning slow band signal extraction and zFC calculation for each band.
+[2026-04-11 23:40:12] Completed calculation of zFC matrices for the slow band signals.
