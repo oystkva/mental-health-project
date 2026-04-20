@@ -13,7 +13,12 @@ from PIL import Image
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
-from src.config import PROJECT_ROOT, FMRI_DIR, LOG_DIR
+
+from src.config import (
+    PROJECT_ROOT, 
+    FMRI_DIR, 
+    LOG_DIR,
+)
 from src.data_loader import (
     load_subject_list, 
     list_fmri_nii_file_paths, 
@@ -126,13 +131,14 @@ def parcellate_to_BOLD(
             labels_img=atlas_paths[atlas],
             mask_img=create_mask_image(atlas_paths[atlas], bold_path),
         )
-        time_series = mask.fit_transform(bold_path)
+        time_series = mask.fit_transform(bold_path).T
+        print(atlas, time_series.shape)
         if n_timepoints is None:
-            n_timepoints = time_series.shape[0]
-        elif time_series.shape[0] != n_timepoints:
+            n_timepoints = time_series.shape[1]
+        elif time_series.shape[1] != n_timepoints:
             raise ValueError(f"All atlases must have the same number of timepoints. Atlas {atlas} has {time_series.shape[0]}, expected {n_timepoints}.")
         ROIs.append(time_series)
-    return np.concatenate(ROIs, axis=1)
+    return np.vstack(ROIs)
 
 def load_subject_BOLD_signals(
     runpaths: list[str],
@@ -180,13 +186,18 @@ def parcellate_subject(
         atlas_type = "Yan2023" if "Yan2023" in atlas_paths.keys() else "Schaefer400"
         run_num = "run01" if "run-01" in run else "run02"
         task = "restPA" if "restPA" in run else "restAP"
-        out_path = os.path.join(out_dir, task, f"{group}_{subjectkey}_{task}_{run_num}_{atlas_type}_BOLD_signals.h5")
+        out_path = os.path.join(out_dir, atlas_type, task, f"{group}_{subjectkey}_{task}_{run_num}_{atlas_type}_BOLD_signals.h5")
         if os.path.exists(out_path):
             print(f"[SKIP]: [{group}] {subjectkey} already exists.")
             return
         
         try:
-            bold_signals = load_subject_BOLD_signals(runpaths=[run])
+            # bold_signals = load_subject_BOLD_signals(runpaths=[run])
+            bold_signals = {}
+            for runpath in [run]:
+                bold_signals[runpath] = parcellate_to_BOLD(bold_path=runpath, atlas_paths=atlas_paths)
+            
+            print(f"Parcellated {len([run])} runs.")
             save_BOLD_signals_h5(
                 bold_signals=bold_signals,
                 out_dir=out_path,
@@ -226,6 +237,8 @@ def parcel_data(
         fmri_run_types (list): List of lists specifying the fMRI run types to include
     """
     os.makedirs(out_dir, exist_ok=True)
+    os.makedirs(os.path.join(out_dir, "Yan2023", "restAP"), exist_ok=True)
+    os.makedirs(os.path.join(out_dir, "Yan2023", "restPA"), exist_ok=True)
     log_path = os.path.join(LOG_DIR, "parcel_data.log")
 
     log_message(f"Starting parcellation of specification {fmri_run_types}", log_path)
@@ -266,7 +279,7 @@ def parcel_data(
     return
 
 
-def make_gifs_schaefer_vs_bold(bold_path, atlas_path=None, out_prefix="schaefer_vs_bold"):
+def make_gifs_schaefer_vs_bold(bold_path, atlas_path=None, out_prefix="yan_vs_bold"):
     """
     Create GIFs of axial, coronal, and sagittal slices comparing the Schaefer atlas
     and a single fMRI image (mean over time).
@@ -282,7 +295,6 @@ def make_gifs_schaefer_vs_bold(bold_path, atlas_path=None, out_prefix="schaefer_
     """
     if atlas_path is None:
         atlas_path = ATLAS_PATHS["Yan2023"]
-
     # --- Load atlas ---
     atlas_img = nib.load(atlas_path)
 
@@ -319,7 +331,7 @@ def make_gifs_schaefer_vs_bold(bold_path, atlas_path=None, out_prefix="schaefer_
         "sagittal": [bold_mean[x, :, :] for x in range(0, X, 5)],
     }
 
-    print("Labels in Schaefer atlas:", np.unique(atlas_data).astype(int))
+    print("Labels in Schaefer atlas:", len(np.unique(atlas_data).astype(int)), '\n', np.unique(atlas_data).astype(int))
 
     # --- Create GIFs for each orientation ---
     for direction, atlas_slice_list in slices_atlas.items():
@@ -334,7 +346,7 @@ def make_gifs_schaefer_vs_bold(bold_path, atlas_path=None, out_prefix="schaefer_
             cmap = cm.get_cmap("PiYG")
             cmap.set_under("black")  # for zero values
             ax[0].imshow(np.rot90(s_atlas), cmap=cmap, vmin=1, vmax=400)
-            ax[0].set_title("Schaefer400")
+            ax[0].set_title("Yan2023")
             ax[0].axis("off")
 
             # Right: fMRI mean image

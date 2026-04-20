@@ -155,8 +155,9 @@ def calculate_subject_band_zFC(imf_path: str, memd_dir: str, out_dir: str, TR: f
     """
     run_id = extract_run_id(imf_path)
     task_type = "restPA" if "restPA" in imf_path else "restAP"
+    atlas = "Yan2023" if "Yan2023" in imf_path else "Schaefer400"
 
-    imfs = np.load(os.path.join(memd_dir, task_type, imf_path))
+    imfs = np.load(os.path.join(memd_dir, atlas, task_type, imf_path))
     band_signals = seperate_slow_band_signals(run_id, imfs, TR=TR)
 
     ### Calculate zFC for each band with all parcels and save
@@ -177,7 +178,11 @@ def calculate_subject_band_zFC(imf_path: str, memd_dir: str, out_dir: str, TR: f
     return
 
 
-def calculate_subject_bandpass_bold_zFC(bold_path: str, out_dir: str, TR: float = TR) -> None:
+def calculate_subject_bandpass_bold_zFC(
+    bold_path: str, 
+    out_dir: str, 
+    TR: float = TR
+) -> None:
     """
     Calculate and save the zFC parcel and mean network matrices for a subject's band-pass filtered BOLD signals.
     Args:
@@ -190,12 +195,13 @@ def calculate_subject_bandpass_bold_zFC(bold_path: str, out_dir: str, TR: float 
         - {run_id}_zFC_bandpass_full.npy : Full parcel zFC matrix for band-pass filtered signals.
         - {run_id}_zFC_bandpass_full_mean.npy : Mean network zFC matrix for band-pass filtered signals.
     """
-    bands = ['slow-5', 'slow-4', 'slow-3']
+    bands = ['slow5', 'slow4', 'slow3']
     run_id = extract_run_id(bold_path)
     task_type = "restPA" if "restPA" in bold_path else "restAP"
-
-    bold_signals = load_h5_file(os.path.join(BOLD_DIR, task_type, bold_path))
-    band_signals = extract_slow_band_signals(run_id, bold_signals[list(bold_signals.keys())[0]], TR=TR)
+    atlas = "Schaefer400" if "Schaefer400" in bold_path else "Yan2023"
+    bold_signals = load_h5_file(os.path.join(BOLD_DIR, atlas, task_type, bold_path))
+    band_signals = extract_slow_band_signals(run_id, bold_signals
+    [list(bold_signals.keys())[0]], TR=TR)
     for band in bands:
         zFC_band = calculate_zFC_parcel(band_signals[band])
         np.save(os.path.join(out_dir, "full_parcels", f"{run_id}_zFC_bandpass_{band}.npy"), zFC_band)
@@ -241,7 +247,8 @@ def run_zFC_pipeline(
     os.makedirs(os.path.join(save_dir, "full_parcels"), exist_ok=True)
     os.makedirs(os.path.join(save_dir, "networks"), exist_ok=True)
     BOLD_run_dir = os.path.join(BOLD_DIR, atlas, task_type)
-    IMF_run_dir = os.path.join(memd_dir, task_type)
+    IMF_run_dir = os.path.join(memd_dir, atlas, task_type)
+    print(IMF_run_dir)
     zFC_log_file = os.path.join(LOG_DIR, "zFC_matrices.log")
     #endregion
     #region Initial log message
@@ -265,7 +272,6 @@ def run_zFC_pipeline(
                 filtered_bold_paths.append(bold_files[i])
             else:
                 continue
-    print(filtered_bold_paths[0])
     print(f"Processing {len(filtered_bold_paths)} BOLD files for full zFC calculation.")
     #endregion
 
@@ -287,8 +293,6 @@ def run_zFC_pipeline(
     else:
         for i in range(len(imf_files)):
             GROUP, TASK, RUN, ATLAS = run_types[0][0], run_types[0][1], run_types[0][2], run_types[0][3]
-            print(GROUP, TASK, RUN, ATLAS)
-            print(imf_files[i])
             if GROUP in imf_files[i] and ATLAS in imf_files[i] and RUN in imf_files[i] and TASK in imf_files[i]:
                 filtered_imf_paths.append(imf_files[i])
             else:
@@ -300,7 +304,7 @@ def run_zFC_pipeline(
         delayed(calculate_subject_band_zFC)(
             imf_path=imf_path, 
             memd_dir=memd_dir, 
-            save_dir=save_dir, 
+            out_dir=save_dir, 
             TR=TR
         ) for imf_path in tqdm(filtered_imf_paths)
     )
@@ -349,12 +353,18 @@ def run_bandpass_zFC_pipeline(
     """
     if task_type == "restPA" and "restAP" in run_types or task_type == "restAP" and "restPA" in run_types:
         raise ValueError("Cannot process both 'restPA' and 'restAP' run types simultaneously.")
-    
+    atlas = ""
+    if "Yan2023" in run_types[0]:
+        atlas = "Yan2023"
+    elif "Schaefer400" in run_types[0]:
+        atlas = "Schaefer400"
+    else:
+        raise ValueError("No valid atlas specified.")
     #region Configure output directories
-    save_dir = os.path.join(out_dir, f"{task_type}_bandpass")
+    save_dir = os.path.join(out_dir, atlas, f"{task_type}_bandpass")
     os.makedirs(os.path.join(save_dir, "full_parcels"), exist_ok=True)
     os.makedirs(os.path.join(save_dir, "networks"), exist_ok=True)
-    BOLD_run_dir = os.path.join(BOLD_DIR, task_type)
+    BOLD_run_dir = os.path.join(BOLD_DIR, atlas, task_type)
     zFC_log_file = os.path.join(LOG_DIR, "zFC_matrices_bandpass.log")
     #endregion
     #region Initial log message

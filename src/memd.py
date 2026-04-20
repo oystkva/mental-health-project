@@ -112,13 +112,22 @@ def create_subject_tensor(subject_file: str) -> tuple[str, np.ndarray]:
     return key, fmri_data[key]
 
 
-def subject_memd_decomposition(subjectkey: str, data: np.ndarray, task_type: str, out_dir: str, run_id: str) -> None:
+def subject_memd_decomposition(
+    subjectkey: str, 
+    data: np.ndarray, 
+    out_dir: str, 
+    task_type: str,
+    atlas: str,  
+    run_id: str
+) -> None:
     """
     Find IMFs using MEMD and save the results to disk.
     Args:
         subjectkey (str): Subject key identifier.
         data (np.ndarray): fMRI data array of shape (C, T). Usually (434, 488).
         out_dir (str): Directory to save the results.
+        task_type (str): Type of fMRI task (restAP/restPA).
+        cortical_atlas (str): Name of the cortical atlas used.
         run_id (str): Run identifier.
     """
     log_path = os.path.join(LOG_DIR, "memd.log")
@@ -128,7 +137,7 @@ def subject_memd_decomposition(subjectkey: str, data: np.ndarray, task_type: str
     if subject not in run_id:
         raise ValueError(f"Subject key {subjectkey} does not match run ID {run_id}.")
     imfs = memd(data, 4*434)
-    np.save(os.path.join(out_dir, task_type, f"{run_id}_MEMD_imfs.npy"), imfs)
+    np.save(os.path.join(out_dir, atlas, task_type, f"{run_id}_MEMD_imfs.npy"), imfs)
 
     log_message(f"{run_id} decomposed", log_path)
     return
@@ -148,7 +157,7 @@ def run_memd_pipeline(
     Args:
         subject_list (list[str]): List of subject keys.
         group (str): Subject group identifier (e.g., "MDD" or "HC").
-        task_type (str): Type of fMRI task (e.g., "restPA").
+        task_type (str): Type of fMRI task (restAP/restPA).
         cortical_atlas (str): Name of the cortical atlas used.
         out_dir (str): Directory to save the processed results.
         n_parallels (int): Number of parallel jobs to run.
@@ -157,7 +166,6 @@ def run_memd_pipeline(
         Results are saved to data/MEMD_processed/.
     """
     log_path = os.path.join(LOG_DIR, "memd.log")
-    os.makedirs(log_path, exist_ok=True)
 
     log_message(f"Starting MEMD pipeline for {group} - {task_type} runs with atlas {cortical_atlas}", log_path)
     files = list_bold_h5_file_paths(
@@ -180,8 +188,9 @@ def run_memd_pipeline(
         delayed(subject_memd_decomposition)(
             subjectkey=subject_keys[idx], 
             data=data[idx],
-            task_type=task_type,
             out_dir=out_dir, 
+            task_type=task_type,
+            atlas=cortical_atlas,
             run_id=extract_run_id(files[idx])
         ) for idx in tqdm(range(len(subject_keys)))
     )

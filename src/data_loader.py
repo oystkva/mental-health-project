@@ -65,11 +65,11 @@ def list_bold_h5_file_paths(
     fmri_files = []
     files_found = {subject: [] for subject in subject_keys}
     for subject in subject_keys:
-        if os.path.exists(os.path.join(data_dir, task_type, f"{group}_{subject}_{task_type}_run01_{cortical_atlas}_BOLD_signals.h5")):
-            fmri_files.append(os.path.join(data_dir, task_type, f"{group}_{subject}_{task_type}_run01_{cortical_atlas}_BOLD_signals.h5"))
+        if os.path.exists(os.path.join(data_dir, cortical_atlas, task_type, f"{group}_{subject}_{task_type}_run01_{cortical_atlas}_BOLD_signals.h5")):
+            fmri_files.append(os.path.join(data_dir, cortical_atlas, task_type, f"{group}_{subject}_{task_type}_run01_{cortical_atlas}_BOLD_signals.h5"))
             files_found[subject].append(1)
-        if os.path.exists(os.path.join(data_dir, task_type, f"{group}_{subject}_{task_type}_run02_{cortical_atlas}_BOLD_signals.h5")):
-            fmri_files.append(os.path.join(data_dir, task_type, f"{group}_{subject}_{task_type}_run02_{cortical_atlas}_BOLD_signals.h5"))
+        if os.path.exists(os.path.join(data_dir, cortical_atlas, task_type, f"{group}_{subject}_{task_type}_run02_{cortical_atlas}_BOLD_signals.h5")):
+            fmri_files.append(os.path.join(data_dir, cortical_atlas, task_type, f"{group}_{subject}_{task_type}_run02_{cortical_atlas}_BOLD_signals.h5"))
             files_found[subject].append(1)
         if not any(files_found[subject]):
             files_found[subject].append(0)
@@ -93,8 +93,7 @@ def list_fmri_nii_file_paths(
     Args:
         data_dir (str): Base directory containing subject folders.
         subject_keys (list[str]): List of subject keys.
-        fmri_run_types (list[list[str]]): List of fMRI run type specifications. Each specification is a list of strings that should be part of the filename.
-        List should be structured as [['restAP', 'run-01', 'MNI152NLin2009cAsym_res-2_desc-preproc_bold']] where restAP/restPA and space-MNI152NLin2009cAsym_res-2_desc-preproc_bold should be included and run-01/run-02 can used if desired.
+        fmri_run_types (list[list[str]]): List of fMRI run type specifications. Each specification is a list of strings that should be part of the filename. List should be structured as [['restAP', 'run-01', 'MNI152NLin2009cAsym_res-2_desc-preproc_bold']] where restAP/restPA and space-MNI152NLin2009cAsym_res-2_desc-preproc_bold should be included and run-01/run-02 can used if desired.
     Returns:
         list[str]: List of fMRI NIfTI file paths.
     """
@@ -105,10 +104,10 @@ def list_fmri_nii_file_paths(
         print(f"No func directory for subject {subdir} at {subject_dir}, skipping.")
 
     for root, _, files in os.walk(subject_dir):
-        for file in files:
-            if file.endswith(".nii.gz"):
-                if any(all(run_type_part in file for run_type_part in run_type) for run_type in fmri_run_types):
-                    fmri_file_paths.append(os.path.join(root, file))
+        for f in files:
+            if f.endswith(".nii.gz"):
+                if any(all(run_type_part in f for run_type_part in run_type) for run_type in fmri_run_types):
+                    fmri_file_paths.append(os.path.join(root, f))
     print(f"Found {len(fmri_file_paths)} NIfTI files for {subjectkey}.")
     return fmri_file_paths
 
@@ -231,11 +230,11 @@ def load_mean_zFCs(
                     zFC_PA = np.load(file_path)[np.newaxis, ...]
                     if runs > 1:
                         zFC_PA = np.mean(np.concatenate((zFC_PA, np.load(file_path.replace("run01", "run02")))), axis=0) # avg runs first
-                    avg_zFC = np.mean(np.concatenate(zFC_AP, zFC_PA), axis=0)                                            # avg AP and PA
+                    avg_zFC = np.mean(np.concatenate((zFC_AP, zFC_PA), axis=0), axis=0)                                            # avg AP and PA
                     if mean_zFCs.size == 0:
-                        mean_zFCs = avg_zFC
+                        mean_zFCs = avg_zFC[np.newaxis, ...]
                     else:
-                        mean_zFCs = np.concatenate((mean_zFCs, avg_zFC), axis=0)
+                        mean_zFCs = np.concatenate((mean_zFCs, avg_zFC[np.newaxis, ...]), axis=0)
     if vectorize:
         return vectorize_zFCs(mean_zFCs)
     return mean_zFCs
@@ -339,9 +338,10 @@ def load_zFC_df(
     
     if band_type == 'all':
         feature_labels = []
-        for band_label in ['s3', 's4', 's5']:    
-            for idx, i in enumerate(n):
-                feature_labels.extend([f'{i} - {j} ({band_label})' for j in n[idx:]])
+        # for band_label in ['s3', 's4', 's5']: 
+        band_label = "3 bands"   
+        for idx, i in enumerate(n):
+            feature_labels.extend([f'{i} - {j} ({band_label})' for j in n[idx:]])
         if task_type == 'all':
             X_HC = np.concatenate([
                 load_zFCs(group='HC', task_type='restAP', band_type='slow3', runs=runs, vectorize=True),
@@ -350,7 +350,7 @@ def load_zFC_df(
                 load_zFCs(group='HC', task_type='restPA', band_type='slow3', runs=runs, vectorize=True),
                 load_zFCs(group='HC', task_type='restPA', band_type='slow4', runs=runs, vectorize=True),
                 load_zFCs(group='HC', task_type='restPA', band_type='slow5', runs=runs, vectorize=True) 
-            ], axis=1)
+            ], axis=0)
             X_MDD = np.concatenate([
                 load_zFCs(group='MDD', task_type='restAP', band_type='slow3', runs=runs, vectorize=True),
                 load_zFCs(group='MDD', task_type='restAP', band_type='slow4', runs=runs, vectorize=True),
@@ -358,18 +358,18 @@ def load_zFC_df(
                 load_zFCs(group='MDD', task_type='restPA', band_type='slow3', runs=runs, vectorize=True),
                 load_zFCs(group='MDD', task_type='restPA', band_type='slow4', runs=runs, vectorize=True),
                 load_zFCs(group='MDD', task_type='restPA', band_type='slow5', runs=runs, vectorize=True) 
-            ], axis=1)
+            ], axis=0)
         else:
             X_HC = np.concatenate([
                 load_zFCs(group='HC', task_type=task_type, band_type='slow3', runs=runs, vectorize=True),
                 load_zFCs(group='HC', task_type=task_type, band_type='slow4', runs=runs, vectorize=True),
                 load_zFCs(group='HC', task_type=task_type, band_type='slow5', runs=runs, vectorize=True) 
-            ], axis=1)
+            ], axis=0)
             X_MDD = np.concatenate([
                 load_zFCs(group='MDD', task_type=task_type, band_type='slow3', runs=runs, vectorize=True),
                 load_zFCs(group='MDD', task_type=task_type, band_type='slow4', runs=runs, vectorize=True),
                 load_zFCs(group='MDD', task_type=task_type, band_type='slow5', runs=runs, vectorize=True) 
-            ], axis=1)
+            ], axis=0)
     else:
         band_label = band_type[0]+band_type[-1]
         feature_labels = []
@@ -399,7 +399,5 @@ def load_zFC_df(
     # subjectkeys = []
     # df.insert(loc=0, column='subjectkey', value=subjectkeys)
     df['MDD'] = labels
-
-    print(df)
 
     return df
