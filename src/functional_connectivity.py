@@ -1,8 +1,9 @@
 import os, sys
 from joblib import Parallel, delayed
 import numpy as np
+import torch
 from tqdm import tqdm
-from typing import Tuple
+from typing import Tuple, Union
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
@@ -21,26 +22,36 @@ from src.config import (
 from src.data_loader import load_h5_file
 from src.slow_band_extraction import seperate_slow_band_signals, extract_slow_band_signals
 
+ArrayLike = Union[np.ndarray, torch.Tensor]
+
 #region fisher Z transformation functions
-def fisher_r2z(r: np.ndarray, eps: float = 1e-7) -> np.ndarray:
+def fisher_r2z(r: ArrayLike, eps: float = 1e-7) -> ArrayLike:
     """
     Apply Fisher r-to-z transformation.
     Args:
-        r (np.ndarray): Correlation coefficients.
+        r (ArrayLike): Correlation coefficients.
     Returns:
-        np.ndarray: Fisher Z-transformed values.
+        ArrayLike: Fisher Z-transformed values.
     """
-    return np.arctanh(np.clip(r, -1 + eps, 1 - eps))
+    if isinstance(r, np.ndarray):
+        return np.arctanh(np.clip(r, -1 + eps, 1 - eps))
+    if isinstance(r, torch.Tensor):
+        return torch.arctanh(torch.clamp(r, -1 + eps, 1 - eps))
+    raise TypeError(f"Expected input to be np.ndarray pr torch.Tensor, got {type(r)}")
 
-def fisher_z2r(z: np.ndarray) -> np.ndarray:
+def fisher_z2r(z: ArrayLike) -> ArrayLike:
     """
     Apply inverse Fisher z-to-r transformation.
     Args:
-        z (np.ndarray): Fisher Z-transformed values.
+        z (ArrayLike): Fisher Z-transformed values.
     Returns:
-        np.ndarray: Correlation coefficients.
+        ArrayLike: Correlation coefficients.
     """
-    return np.tanh(z)
+    if isinstance(z, np.ndarray):
+        return np.tanh(z)
+    if isinstance(z, torch.Tensor):
+        return torch.tanh(z)
+    raise TypeError(f"Expected input to be np.ndarray pr torch.Tensor, got {type(r)}")
 #endregion
 
 #region zFC calculation functions
