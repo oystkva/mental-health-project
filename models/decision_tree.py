@@ -301,6 +301,12 @@ class FCDecisionTreeClassifier(DecisionTreeClassifier):
 
     def _build_info(self) -> dict:
         has_scores = hasattr(self, 'eval_scores_')
+
+        tree = self.tree_
+        split_mask = tree.feature >= 0
+        split_features = tree.feature[split_mask]
+        unique_split_features = np.unique(split_features)
+
         return {
             "identity": {
                 "task_type": str(self.task_type),
@@ -308,12 +314,18 @@ class FCDecisionTreeClassifier(DecisionTreeClassifier):
             },
             "hyperparameters": self.get_params(),
             "structure": {
-                "n_leaves":   int(self.get_n_leaves()),
-                "max_depth":  int(self.get_depth()),
+                "n_nodes": int(tree.node_count),
+                "n_split_nodes": int(split_mask.sum()),
+                "n_leaves": int(self.get_n_leaves()),
+                "max_depth": int(self.get_depth()),
+                "n_features_used": int(len(unique_split_features)),
+                "features_used_fraction": round(
+                    len(unique_split_features) / self.n_features_in_, 4
+                ),
             },
             "eval_scores": (
                 {k: round(v, 4) for k, v in self.eval_scores_.items()}
                 if has_scores else "not evaluated — call evaluate() first"
             ),
-            "saved_at": datetime.now().isoformat(timespec='seconds') + "Z",
+            "saved_at": datetime.now().astimezone().isoformat(timespec='seconds'),
         }
