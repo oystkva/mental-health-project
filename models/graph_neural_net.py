@@ -7,6 +7,8 @@ import torch.nn.functional as F
 from torch_geometric.nn import GCNConv, global_mean_pool
 from torch_geometric.utils import dense_to_sparse
 from torch_geometric.data import Data
+from torchmetrics.classification import BinaryAccuracy, BinaryF1Score
+from tqdm.auto import tqdm
 # from torch_geometric.loader import DataLoader
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
@@ -147,10 +149,176 @@ class FCGCN(torch.nn.Module):
     def predict(self, data, return_probabilities = True):
         self.eval()
         with torch.no_grad():
-            logits = self.forward(data)
+            logits = self(data.x)
             probs = F.softmax(logits, dim=1)
             preds = probs.argmax(dim=1)
         
         if return_probabilities:
             return preds, probs
         return preds
+    
+    def fit(
+        self, 
+        train_loader, 
+        val_loader=None, 
+        epochs=100, 
+        lr=0.001,
+        device = None,
+        log_every = 10,
+    ):
+        if device is None:
+            device = next(self.parameters()).device
+
+        self.to(device)
+
+        optimizer = torch.optim.Adam(self.parameters(), lr=lr)
+        criterion = torch.nn.CrossEntropyLoss()
+
+        train_acc_metric = BinaryAccuracy()
+        train_f1_metric = BinaryF1Score()
+
+        history = []
+
+        pbar = tqdm(range(epochs), desc="Training")
+
+
+        for epoch in pbar:
+            self.train()
+    
+            train_acc_metric.reset()
+            train_f1_metric.reset()
+            
+            train_loss_total = 0.0
+            n_train = 0
+
+            for batch in train_loader:
+                batch = batch.to(device)
+                
+                optimizer.zero_grad()
+
+                logits = self(batch)
+                y = batch.y.view(-1).long()
+                
+                loss = criterion(logits, batch.y)
+
+                loss.backward()
+                optimizer.step()
+
+                batch_size = y.numel()
+                train_loss_total += loss.item() * batch_size
+                n_train += batch_size
+
+                preds = logits.argmax(dim=1)
+
+                train_acc_metric.update(preds, batch.y)
+                train_f1_metric.update(preds, batch.y)
+            
+            train_loss = train_loss_total / n_train
+            train_acc = train_acc_metric.compute().item()
+            train_f1 = train_f1_metric.compute().item()
+
+            epoch_result = {
+                "epoch": epoch + 1,
+                "train_loss": train_loss,
+                "train_acc": train_acc,
+                "train_f1": train_f1,
+            }
+            postfix = {
+                "loss": f"{train_loss:.4f}",
+                "acc": f"{train_acc:.3f}",
+                "f1": f"{train_f1:.3f}",
+            }
+
+            if val_loader is not None:
+                val_loss, val_acc, val_f1 = self._evaluate_loader(
+                    val_loader,
+                    criterion=criterion,
+                    device=device,
+                )
+
+                epoch_result.update(
+                    {
+                        "val_loss": val_loss,
+                        "val_acc": val_acc,
+                        "val_f1": val_f1,
+                    }
+                )
+
+                postfix.update(
+                    {
+                        "val_loss": f"{val_loss:.4f}",
+                        "val_acc": f"{val_acc:.3f}",
+                        "val_f1": f"{val_f1:.3f}",
+                    }
+                )
+
+            history.append(epoch_result)
+
+            pbar.set_postfix(postfix)
+            
+            if (epoch + 1) % log_every == 0:
+                tqdm.write(
+                    f"Epoch {epoch+1:03d} | "
+                    f"Loss: {train_loss:.4f} | "
+                    f"Acc: {train_acc:.3f} | "
+                    f"F1: {train_f1:.3f}"
+                )
+
+        return history
+
+    def save(self, path):
+        torch.save(self.state_dict(), path)
+
+    def load(self, path, device=None):
+        if device is None:
+            device = next(self.parameters()).device
+
+        state_dict = torch.load(path, map_location=device, weights_only=True)
+        self.load_state_dict(state_dict)
+        return self
+
+    def evaluate(self, data, device=None):
+        self.eval()
+        with torch.no_grad():
+            preds = self.predict(data)
+            acc = (preds == data.y).float().mean().item()
+        print(f'Accuracy: {acc:.4f}')
+
+    def _evaluate_loader(self, loader, criterion=None, device=None):
+        if device is None:
+            device = next(self.parameters()).device
+
+        if criterion is None:
+            criterion = torch.nn.CrossEntropyLoss()
+
+        acc_metric = BinaryAccuracy().to(device)
+        f1_metric = BinaryF1Score().to(device)
+
+        self.eval()
+
+        loss_total = 0.0
+        n_samples = 0
+
+        with torch.no_grad():
+            for batch in loader:
+                batch = batch.to(device)
+
+                logits = self(batch)
+                y = batch.y.view(-1).long()
+
+                loss = criterion(logits, y)
+
+                batch_size = y.numel()
+                loss_total += loss.item() * batch_size
+                n_samples += batch_size
+
+                preds = logits.argmax(dim=1)
+
+                acc_metric.update(preds, y)
+                f1_metric.update(preds, y)
+
+        avg_loss = loss_total / n_samples
+        acc = acc_metric.compute().item()
+        f1 = f1_metric.compute().item()
+
+        return avg_loss, acc, f1
