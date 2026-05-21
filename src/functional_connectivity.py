@@ -93,9 +93,11 @@ def calculate_zFC_parcel(fmri_data: np.ndarray) -> np.ndarray:
     zfc_matrix, _ = calculate_zFC(fmri_data)
     return zfc_matrix
 
+
 def calculate_zFC_network(fmri_data: np.ndarray, atlas: str = "Yan2023") -> np.ndarray:
     """
     Calculate mean FC values within and between networks.
+    NB: This function assumes symmetric FC matrices.
     Args:
         fmri_data (np.ndarray): 2D array where each row is a brain parcel's time series.
     Returns:
@@ -115,15 +117,18 @@ def calculate_zFC_network(fmri_data: np.ndarray, atlas: str = "Yan2023") -> np.n
         for j, label_j in enumerate(network_labels[:i+1]):
             regions_j = networks[label_j]
             submatrix = zfc_matrix[np.ix_(regions_i, regions_j)]
-            mean_fc = np.mean(submatrix)
-            mean_zfc_matrix[i, j] = mean_fc
-            mean_zfc_matrix[j, i] = mean_fc  # Symmetric matrix
-            # se_z = 1 / np.sqrt(n_samples - 3)
-            # z_score = mean_fc / se_z
-            # p_val = 2 * (1 - norm.cdf(abs(z_score)))
-            # p_val_matrix[i, j] = p_val
-            # p_val_matrix[j, i] = p_val  # Symmetric matrix
-
+            
+            if i == j:
+                triu_idx = np.triu_indices(len(regions_i), k=1)
+                if len(triu_idx[0]) > 0:
+                    mean_zfc = np.mean(submatrix[triu_idx])
+                else:
+                    mean_zfc = 0
+            else:
+                mean_zfc = np.mean(submatrix)
+            mean_zfc_matrix[i, j] = mean_zfc
+            mean_zfc_matrix[j, i] = mean_zfc  # Symmetric matrix
+            
     return mean_zfc_matrix
 #endregion
 
@@ -259,7 +264,7 @@ def run_zFC_pipeline(
     os.makedirs(os.path.join(save_dir, "networks"), exist_ok=True)
     BOLD_run_dir = os.path.join(BOLD_DIR, atlas, task_type)
     IMF_run_dir = os.path.join(memd_dir, atlas, task_type)
-    print(IMF_run_dir)
+    
     zFC_log_file = os.path.join(LOG_DIR, "zFC_matrices.log")
     #endregion
     #region Initial log message
