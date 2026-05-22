@@ -175,23 +175,37 @@ def run_memd_pipeline(
         task_type=task_type, 
         cortical_atlas=cortical_atlas
     )
-    data = np.array([])
-    subject_keys = []
+    
+    
+    memd_out_dir = os.path.join(out_dir, cortical_atlas, task_type)
+    os.makedirs(memd_out_dir, exist_ok=True)
+
+    jobs = []
+
     for f in files:
+        run_id = extract_run_id(f)
+        out_file = f"{run_id}_MEMD_imfs.npy"
+
+        if out_file in os.listdir(memd_out_dir):
+            log_message(f"Skipping {run_id} as it has already been processed.", log_path)
+            continue
+
         subject_key, subject_data = create_subject_tensor(f)
-        subject_keys.append(subject_key)
-        if data.size == 0:
-            data = subject_data[np.newaxis, :, :]
-        else:
-            data = np.concatenate((data, subject_data[np.newaxis, :, :]), axis=0)
+
+        jobs.append({
+            "subjectkey": subject_key,
+            "data": subject_data,
+            "run_id": run_id,
+        })    
+    
     Parallel(n_jobs=n_parallels)(
         delayed(subject_memd_decomposition)(
-            subjectkey=subject_keys[idx], 
-            data=data[idx],
-            out_dir=out_dir, 
+            subjectkey=job["subjectkey"],
+            data=job["data"],
+            out_dir=out_dir,
             task_type=task_type,
             atlas=cortical_atlas,
-            run_id=extract_run_id(files[idx])
-        ) for idx in tqdm(range(len(subject_keys)))
+            run_id=job["run_id"]
+        ) for job in tqdm(jobs)
     )
     return
