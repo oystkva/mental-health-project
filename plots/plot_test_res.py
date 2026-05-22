@@ -108,12 +108,13 @@ def plot_perm_test_result(
     test_type: str,
     task_type: str,
     band_type: str,
-    out_dir: str = DATA_DIR,
     network_means: bool = True,
+    include_all_runs: bool = False,
+    out_dir: str = DATA_DIR,
     alpha: tuple = (0.05, 0.01, 0.001),
     atlas_type: Optional[str] = None,
     title: Optional[str] = None,
-    decomp_method: str = "memd"
+    decomp_method: str = "memd",
 ):
     """
     Plot permutation test result matrix (delta or delta-delta) with optional significance overlay.
@@ -123,8 +124,9 @@ def plot_perm_test_result(
         task_type: 'restAP'/'restPA'
         atlas_type: 'Schaefer400'/'Yan2023' (ignored for atlas_comparison if desired)
         band_type: 'full'/'slow5'/'slow4'/'slow3'
-        out_dir: directory to save figure
         network_means: use network-level results
+        include_all_runs (bool): Whether to use all available runs for each subject or just the first (run-01).        
+        out_dir: directory to save figure
         alpha: significance threshold
         title: optional plot title
         decomp_method: decomposition method used ('memd', 'bandpass', etc.) to determine the directory structure for loading results
@@ -135,7 +137,8 @@ def plot_perm_test_result(
         band_type=band_type,
         atlas_type=atlas_type,
         network_means=network_means,
-        decomp_method=decomp_method
+        decomp_method=decomp_method,
+        include_all_runs=include_all_runs,
     )
 
     plt.figure(figsize=(7, 6))
@@ -175,8 +178,9 @@ def plot_perm_test_result(
     #endregion
 
     #region save path
+    run_dir = "all_runs" if include_all_runs else "single_run"  
     decomp_dir = decomp_method if test_type != "method_comparison" else "method_comparison"
-    save_path = os.path.join(out_dir, "permutation_test_results", decomp_dir, "plots", test_type if test_type != "method_comparison" else "")
+    save_path = os.path.join(out_dir, "permutation_test_results", run_dir, decomp_dir, "plots", test_type if test_type != "method_comparison" else "")
     os.makedirs(save_path, exist_ok=True)
     file_name = f"perm_test_{test_type}_{task_type}_{f'{atlas_type}_' if atlas_type else ''}{band_type}_{'networks' if network_means else 'full_parcels'}.svg"
     save_path = os.path.join(save_path, file_name)
@@ -198,6 +202,7 @@ def plot_combined_with_runs(
     atlas_type: str,
     band_type: str,
     decomp_method: str,
+    include_all_runs: bool = False,
     out_dir: str = DATA_DIR,
     upper_triangle_only: bool = True,
     use_fdr_pvals: bool = False,
@@ -211,14 +216,14 @@ def plot_combined_with_runs(
         [ Combined | PA ]   [colorbar]
 
     Args:
-        test_type: 'hc_mdd', 'atlas_comparison', 'band_comparison', or 'method_comparison'
-        atlas_type: 'Schaefer400'/'Yan2023' (ignored for atlas_comparison if desired)
-        band_type: 'full'/'slow5'/'slow4'/'slow3'
-        decomp_method: decomposition method used ('memd', 'bandpass', etc.) to determine the directory structure for loading results
-        title_combined, title_AP, title_PA: panel titles.
-        cbar_label: colorbar label.
-        cmap: matplotlib colormap.
-        out_path: optional save path.
+        test_type (str): 'hc_mdd', 'atlas_comparison', 'band_comparison', or 'method_comparison'
+        atlas_type (str): 'Schaefer400'/'Yan2023' (ignored for atlas_comparison if desired)
+        band_type (str): 'full'/'slow5'/'slow4'/'slow3'
+        decomp_method (str): decomposition method used ('memd', 'bandpass', etc.) to determine the directory structure for loading results
+        include_all_runs (bool): Whether to use all available runs for each subject or just the first (run-01).        
+        out_path (str): optional save path.
+        upper_triangle_only (bool): Whether to plot matrices as upper triangles only.
+        use_fdr_pvals (bool): Whether to use FDR corrected values.
     """
 
     #region load data
@@ -228,7 +233,8 @@ def plot_combined_with_runs(
         band_type=band_type,
         atlas_type=atlas_type,
         decomp_method=decomp_method,
-        use_fdr_pvals=use_fdr_pvals
+        use_fdr_pvals=use_fdr_pvals,
+        include_all_runs=include_all_runs,
     )
 
     delta_obs_PA, p_values_PA = load_perm_test_results(
@@ -237,7 +243,8 @@ def plot_combined_with_runs(
         band_type=band_type,
         atlas_type=atlas_type,
         decomp_method=decomp_method,
-        use_fdr_pvals=use_fdr_pvals
+        use_fdr_pvals=use_fdr_pvals,
+        include_all_runs=include_all_runs,
     )
 
     delta_obs_AP, p_values_AP = load_perm_test_results(
@@ -246,7 +253,8 @@ def plot_combined_with_runs(
         band_type=band_type,
         atlas_type=atlas_type,
         decomp_method=decomp_method,
-        use_fdr_pvals=use_fdr_pvals
+        use_fdr_pvals=use_fdr_pvals,
+        include_all_runs=include_all_runs,
     )
     #endregion
 
@@ -446,8 +454,9 @@ def plot_combined_with_runs(
 
     plt.tight_layout(rect=(0, 0, 1, 0.96))
 
+    run_dir = "all_runs" if include_all_runs else "single_run" 
     decomp_dir = decomp_method if test_type != "method_comparison" else "method_comparison"
-    save_path = os.path.join(out_dir, "permutation_test_results", decomp_dir, "plots", test_type if test_type != "method_comparison" else "")
+    save_path = os.path.join(out_dir, "permutation_test_results", run_dir, decomp_dir, "plots", test_type if test_type != "method_comparison" else "")
     os.makedirs(save_path, exist_ok=True)
 
     if use_fdr_pvals:
@@ -469,7 +478,7 @@ def plot_perm_test_results_grid(
     test_stat_sign: str = "hc_mdd",
     out_dir: str = DATA_DIR,
     decomp_method: str = "memd",
-    runs: int = 1
+    include_all_runs: bool = False
 ) -> str:
     """
     Creates a 4x3 grid plot:
@@ -494,7 +503,7 @@ def plot_perm_test_results_grid(
             Z_HC = load_mean_zFCs(
                 group="HC", 
                 band_type=band, 
-                runs=runs,
+                include_all_runs=include_all_runs,
                 atlas_type=atlas_type, 
                 network_means=network_means,
                 decomp_method=decomp_method,
@@ -502,7 +511,7 @@ def plot_perm_test_results_grid(
             Z_MDD = load_mean_zFCs(
                 group="MDD",
                 band_type=band, 
-                runs=runs,
+                include_all_runs=include_all_runs,
                 atlas_type=atlas_type, 
                 network_means=network_means,
                 decomp_method=decomp_method,
@@ -512,7 +521,7 @@ def plot_perm_test_results_grid(
                 group="HC", 
                 task_type=task_type, 
                 band_type=band, 
-                runs=runs,
+                include_all_runs=include_all_runs,
                 atlas_type=atlas_type, 
                 network_means=network_means,
                 decomp_method=decomp_method,
@@ -521,7 +530,7 @@ def plot_perm_test_results_grid(
                 group="MDD",
                 task_type=task_type, 
                 band_type=band, 
-                runs=runs,
+                include_all_runs=include_all_runs,
                 atlas_type=atlas_type, 
                 network_means=network_means,
                 decomp_method=decomp_method,
@@ -627,7 +636,7 @@ def plot_perm_test_results_grid(
         fontsize=16,
     )
     #endregion
-
+    run_dir = "all_runs" if include_all_runs else "single_run" 
     out_name = f"perm_grid_{task_type}_{atlas_type}_{'networks' if network_means else 'parcels'}.svg"
     out_path = os.path.join(out_dir, "permutation_test_results", decomp_method, "plots", "hc_mdd", out_name)
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
@@ -645,7 +654,7 @@ def plot_perm_test_results_grid_AP_PA(
     test_stat_sign: str = "hc_mdd",
     out_dir: str = DATA_DIR,
     decomp_method: str = "memd",
-    runs: int = 1
+    include_all_runs: bool = False
 ) -> str:
     """
     Creates two side-by-side 4x3 grid plots for restAP and restPA:
@@ -674,7 +683,7 @@ def plot_perm_test_results_grid_AP_PA(
             group="HC", 
             task_type="restPA", 
             band_type=band, 
-            runs=runs,
+            include_all_runs=include_all_runs,
             atlas_type=atlas_type, 
             network_means=network_means,
             decomp_method=decomp_method,
@@ -683,7 +692,7 @@ def plot_perm_test_results_grid_AP_PA(
             group="MDD",
             task_type="restPA", 
             band_type=band, 
-            runs=runs,
+            include_all_runs=include_all_runs,
             atlas_type=atlas_type, 
             network_means=network_means,
             decomp_method=decomp_method,
@@ -692,7 +701,7 @@ def plot_perm_test_results_grid_AP_PA(
             group="HC", 
             task_type="restAP", 
             band_type=band, 
-            runs=runs,
+            include_all_runs=include_all_runs,
             atlas_type=atlas_type, 
             network_means=network_means,
             decomp_method=decomp_method,
@@ -701,7 +710,7 @@ def plot_perm_test_results_grid_AP_PA(
             group="MDD",
             task_type="restAP", 
             band_type=band, 
-            runs=runs,
+            include_all_runs=include_all_runs,
             atlas_type=atlas_type, 
             network_means=network_means,
             decomp_method=decomp_method,
@@ -946,6 +955,7 @@ def plot_perm_test_results_grid_AP_PA(
                     ax4.text(c, r, "*", ha="center", va="center", fontsize=7, color='white')
     #endregion
     
+    run_dir = "all_runs" if include_all_runs else "single_run" 
     out_name = f"perm_grid_PA_AP_{atlas_type}_{'networks' if network_means else 'parcels'}.svg"
     out_path = os.path.join(out_dir, "permutation_test_results", decomp_method, "plots", "hc_mdd", out_name)
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
@@ -961,7 +971,8 @@ def plot_delta_atlas_comp(
     network_means: bool = True,
     alpha: tuple[float, float, float] = (0.05, 0.01, 0.001),
     out_dir: str = DATA_DIR,
-    decomp_method: str = "memd"
+    decomp_method: str = "memd",
+    include_all_runs: bool = False
 ):
     """
     Creates a 2x4 grid plot:
@@ -1067,6 +1078,7 @@ def plot_delta_atlas_comp(
     )
     #endregion
 
+    run_dir = "all_runs" if include_all_runs else "single_run" 
     out_name = f"perm_delta_atlas_comp_{task_type}_{'networks' if network_means else 'parcels'}.svg"
     out_path = os.path.join(out_dir, "permutation_test_results", decomp_method, "plots", "atlas_comparison", out_name)
     os.makedirs(os.path.dirname(out_path), exist_ok=True)

@@ -69,7 +69,7 @@ def zFC_to_graph(
 def load_fc_graph_dataset(
     task_type: str,
     band_type: str,
-    runs: int,
+    include_all_runs: bool,
     atlas_type: str = "Yan2023",
     network_means: bool = True,
     decomp_method: str = "memd",
@@ -84,7 +84,7 @@ def load_fc_graph_dataset(
             group=group,
             task_type=task_type,
             band_type=band_type,
-            runs=runs,
+            include_all_runs=include_all_runs,
             atlas_type=atlas_type,
             network_means=network_means,
             decomp_method=decomp_method,

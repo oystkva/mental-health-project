@@ -50,7 +50,7 @@ def list_bold_h5_file_paths(
     subject_keys: list[str], 
     group: str, 
     task_type: str, 
-    cortical_atlas: str = "Schaefer400"
+    cortical_atlas: str = "Yan2023"
 ) -> list[str]:
     """
     List fMRI file paths for given subject keys and run types. Prints suubjects where no files were found.
@@ -149,7 +149,7 @@ def load_zFCs(
     group: str, 
     task_type: str, 
     band_type: str, 
-    runs: int,
+    include_all_runs: bool = False,
     atlas_type: str = "Yan2023",
     network_means: bool = True,
     decomp_method: str = "memd",
@@ -161,7 +161,7 @@ def load_zFCs(
         group (str): Group identifier ('MDD'/'HC').
         task_type (str): Task type ('restAP'/'restPA').
         band_type (str): Band type ('full'/'slow5'/'slow4'/'slow3').
-        runs (list): amount of runs to include per subject (maximum)
+        include_all_runs (bool): Whether to use all available runs for each subject or just the first (run-01).
         atlas_type (str): Atlas type ('Schaefer400'/'Yan2023').
         network_means (bool): Whether to use network means or parcel-level data (default: True).
         decomp_method (str): Decomposition method used ('memd', 'bandpass', etc.) to determine the directory structure.
@@ -171,11 +171,11 @@ def load_zFCs(
     """
     parcellation = "networks" if network_means else "full_parcels"
     if decomp_method == "memd" or band_type == "full":
-        load_dir = os.path.join(DATA_DIR, "zFC_matrices", atlas_type, task_type, parcellation)
+        load_dir = os.path.join(DATA_DIR, "zFC_matrices", "with_diagonal", atlas_type, task_type, parcellation)
     elif decomp_method == "bandpass" and band_type != "full":
-        load_dir = os.path.join(DATA_DIR, "zFC_matrices", atlas_type, task_type + "_bandpass", parcellation)
+        load_dir = os.path.join(DATA_DIR, "zFC_matrices", "with_diagonal", atlas_type, task_type + "_bandpass", parcellation)
     zFCs = np.empty((0, ))
-    run = "run01" if runs == 1 else ""
+    run = "run01" if not include_all_runs else ""
     for root, _, files in list(os.walk(load_dir)):
         for f in files:
             if f.endswith(".npy"):
@@ -194,7 +194,7 @@ def load_zFCs(
 def load_mean_zFCs(
     group: str,
     band_type: str,
-    runs: int = 1,
+    include_all_runs: bool = False,
     atlas_type: str = "Yan2023",
     network_means: bool = True,
     decomp_method: str = "memd",
@@ -204,7 +204,7 @@ def load_mean_zFCs(
     Args:
         group (str): Group identifier ('MDD'/'HC').
         band_type (str): Band type ('full'/'slow5'/'slow4'/'slow3').
-        runs (list): amount of runs to include per subject per run type (maximum)
+        include_all_runs (bool): Whether to use all available runs for each subject or just the first (run-01).
         atlas_type (str): Atlas type ('Schaefer400'/'Yan2023').
         network_means (bool): Whether to use network means or parcel-level data (default: True).
         decomp_method (str): Decomposition method used ('memd', 'bandpass', etc.) to determine the directory structure.
@@ -224,12 +224,12 @@ def load_mean_zFCs(
                 if all(param in f for param in [group, atlas_type, band_type, "run01"]):
                     file_path = os.path.join(root, f)
                     zFC_AP = np.load(file_path)[np.newaxis, ...]
-                    if runs > 1:
-                        zFC_AP = np.mean(np.concatenate((zFC_AP, np.load(file_path.replace("run01", "run02")))), axis=0) # avg runs first
+                    if include_all_runs and os.path.isfile(file_path.replace("run01", "run02")):
+                        zFC_AP = np.mean(np.concatenate((zFC_AP, np.load(file_path.replace("run01", "run02"))[np.newaxis, ...])), axis=0)[np.newaxis, ...] # avg runs first
                     file_path = file_path.replace("restAP", "restPA")
                     zFC_PA = np.load(file_path)[np.newaxis, ...]
-                    if runs > 1:
-                        zFC_PA = np.mean(np.concatenate((zFC_PA, np.load(file_path.replace("run01", "run02")))), axis=0) # avg runs first
+                    if include_all_runs and os.path.isfile(file_path.replace("run01", "run02")):
+                        zFC_PA = np.mean(np.concatenate((zFC_PA, np.load(file_path.replace("run01", "run02"))[np.newaxis, ...])), axis=0)[np.newaxis, ...] # avg runs first
                     avg_zFC = np.mean(np.concatenate((zFC_AP, zFC_PA), axis=0), axis=0)                                            # avg AP and PA
                     if mean_zFCs.size == 0:
                         mean_zFCs = avg_zFC[np.newaxis, ...]
@@ -247,7 +247,8 @@ def load_perm_test_results(
     atlas_type: Optional[str] = None, 
     network_means: bool = True,
     decomp_method: str = "memd",
-    use_fdr_pvals: bool = False
+    use_fdr_pvals: bool = False,
+    include_all_runs: bool = False
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Load permutation test results for given task, atlas, and band type.
@@ -258,6 +259,7 @@ def load_perm_test_results(
         atlas_type (str | None): Atlas type ('Schaefer400'/'Yan2023') or None if not applicable (atlas comparison).
         network_means (bool): Whether to use network means or parcel-level data (default: True).
         decomp_method (str): Decomposition method used ('memd', 'bandpass', etc.).
+        include_all_runs (bool): Whether to use all available runs for each subject or just the first (run-01).
     Returns:
         delta_obs (np.ndarray): Observed difference in means between groups.
         p_values (np.ndarray): P-values from the permutation test.
@@ -289,14 +291,16 @@ def load_perm_test_results(
     elif test_type == "method_comparison":
         decomp_dir = ""  # method comparison results are stored under their own directory since they involve both methods
 
+    run_dir = "all_runs" if include_all_runs else "single_run" 
+
     delta_obs_path = os.path.join(
-        DATA_DIR, "permutation_test_results",
-        decomp_dir, test_type,
+        DATA_DIR, "permutation_test_results", 
+        run_dir, decomp_dir, test_type,
         f"delta{'_delta' if test_type != 'hc_mdd' else ''}_obs_{file_name_id}.npy"
     )
     p_values_path = os.path.join(
         DATA_DIR, "permutation_test_results", 
-        decomp_dir, test_type, 
+        run_dir, decomp_dir, test_type, 
         f"p_{'fdr_' if use_fdr_pvals else ''}values_{file_name_id}.npy"
     )
     delta_obs = np.load(delta_obs_path)
@@ -332,7 +336,7 @@ def vectorize_zFCs(zFCs: np.ndarray) -> np.ndarray:
 def load_zFC_df(
     band_type: str = 'all',
     task_type: str = 'restAP',
-    runs: int = 1
+    include_all_runs: bool = False
 ):
     n = list(list_networks().keys())
     
@@ -344,31 +348,31 @@ def load_zFC_df(
             feature_labels.extend([f'{i} - {j} ({band_label})' for j in n[idx:]])
         if task_type == 'all':
             X_HC = np.concatenate([
-                load_zFCs(group='HC', task_type='restAP', band_type='slow3', runs=runs, vectorize=True),
-                load_zFCs(group='HC', task_type='restAP', band_type='slow4', runs=runs, vectorize=True),
-                load_zFCs(group='HC', task_type='restAP', band_type='slow5', runs=runs, vectorize=True),
-                load_zFCs(group='HC', task_type='restPA', band_type='slow3', runs=runs, vectorize=True),
-                load_zFCs(group='HC', task_type='restPA', band_type='slow4', runs=runs, vectorize=True),
-                load_zFCs(group='HC', task_type='restPA', band_type='slow5', runs=runs, vectorize=True) 
+                load_zFCs(group='HC', task_type='restAP', band_type='slow3', include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='HC', task_type='restAP', band_type='slow4', include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='HC', task_type='restAP', band_type='slow5', include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='HC', task_type='restPA', band_type='slow3', include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='HC', task_type='restPA', band_type='slow4', include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='HC', task_type='restPA', band_type='slow5', include_all_runs=include_all_runs, vectorize=True) 
             ], axis=0)
             X_MDD = np.concatenate([
-                load_zFCs(group='MDD', task_type='restAP', band_type='slow3', runs=runs, vectorize=True),
-                load_zFCs(group='MDD', task_type='restAP', band_type='slow4', runs=runs, vectorize=True),
-                load_zFCs(group='MDD', task_type='restAP', band_type='slow5', runs=runs, vectorize=True),
-                load_zFCs(group='MDD', task_type='restPA', band_type='slow3', runs=runs, vectorize=True),
-                load_zFCs(group='MDD', task_type='restPA', band_type='slow4', runs=runs, vectorize=True),
-                load_zFCs(group='MDD', task_type='restPA', band_type='slow5', runs=runs, vectorize=True) 
+                load_zFCs(group='MDD', task_type='restAP', band_type='slow3', include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='MDD', task_type='restAP', band_type='slow4', include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='MDD', task_type='restAP', band_type='slow5', include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='MDD', task_type='restPA', band_type='slow3', include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='MDD', task_type='restPA', band_type='slow4', include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='MDD', task_type='restPA', band_type='slow5', include_all_runs=include_all_runs, vectorize=True) 
             ], axis=0)
         else:
             X_HC = np.concatenate([
-                load_zFCs(group='HC', task_type=task_type, band_type='slow3', runs=runs, vectorize=True),
-                load_zFCs(group='HC', task_type=task_type, band_type='slow4', runs=runs, vectorize=True),
-                load_zFCs(group='HC', task_type=task_type, band_type='slow5', runs=runs, vectorize=True) 
+                load_zFCs(group='HC', task_type=task_type, band_type='slow3', include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='HC', task_type=task_type, band_type='slow4', include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='HC', task_type=task_type, band_type='slow5', include_all_runs=include_all_runs, vectorize=True) 
             ], axis=0)
             X_MDD = np.concatenate([
-                load_zFCs(group='MDD', task_type=task_type, band_type='slow3', runs=runs, vectorize=True),
-                load_zFCs(group='MDD', task_type=task_type, band_type='slow4', runs=runs, vectorize=True),
-                load_zFCs(group='MDD', task_type=task_type, band_type='slow5', runs=runs, vectorize=True) 
+                load_zFCs(group='MDD', task_type=task_type, band_type='slow3', include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='MDD', task_type=task_type, band_type='slow4', include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='MDD', task_type=task_type, band_type='slow5', include_all_runs=include_all_runs, vectorize=True) 
             ], axis=0)
     else:
         band_label = band_type[0]+band_type[-1]
@@ -377,16 +381,16 @@ def load_zFC_df(
             feature_labels.extend([f'{i} - {j} ({band_label})' for j in n[idx:]])
         if task_type == 'all':
             X_HC = np.concatenate([
-                load_zFCs(group='HC', task_type='restAP', band_type=band_type, runs=runs, vectorize=True),
-                load_zFCs(group='HC', task_type='restPA', band_type=band_type, runs=runs, vectorize=True)
+                load_zFCs(group='HC', task_type='restAP', band_type=band_type, include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='HC', task_type='restPA', band_type=band_type, include_all_runs=include_all_runs, vectorize=True)
             ])
             X_MDD = np.concatenate([
-                load_zFCs(group='MDD', task_type='restAP', band_type=band_type, runs=runs, vectorize=True),
-                load_zFCs(group='MDD', task_type='restPA', band_type=band_type, runs=runs, vectorize=True)
+                load_zFCs(group='MDD', task_type='restAP', band_type=band_type, include_all_runs=include_all_runs, vectorize=True),
+                load_zFCs(group='MDD', task_type='restPA', band_type=band_type, include_all_runs=include_all_runs, vectorize=True)
             ])
         else:
-            X_HC = load_zFCs(group='HC', task_type=task_type, band_type=band_type, runs=runs, vectorize=True)
-            X_MDD = load_zFCs(group='MDD', task_type=task_type, band_type=band_type, runs=runs, vectorize=True)
+            X_HC = load_zFCs(group='HC', task_type=task_type, band_type=band_type, include_all_runs=include_all_runs, vectorize=True)
+            X_MDD = load_zFCs(group='MDD', task_type=task_type, band_type=band_type, include_all_runs=include_all_runs, vectorize=True)
     
     X = np.concatenate([X_HC, X_MDD], axis=0)
     df = pd.DataFrame(X, columns=feature_labels)
