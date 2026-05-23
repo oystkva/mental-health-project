@@ -7,7 +7,7 @@ import torch.nn.functional as F
 from torch_geometric.nn import GCNConv, global_mean_pool
 from torch_geometric.utils import dense_to_sparse
 from torch_geometric.data import Data
-from torchmetrics.classification import BinaryAccuracy, BinaryF1Score
+from torchmetrics.classification import BinaryAccuracy, BinaryF1Score, BinaryRecall
 from tqdm.auto import tqdm
 # from torch_geometric.loader import DataLoader
 
@@ -19,6 +19,7 @@ from src.config import (
 )
 from src.data_loader import load_zFCs
 from src.functional_connectivity import fisher_z2r
+from datetime import datetime
 
 num_node_features = 21**2 ## ?
 num_classes = 2
@@ -127,6 +128,8 @@ class FCGCN(torch.nn.Module):
 
         self.classifier = Linear(hidden_channels, num_classes)
 
+        self.model_dir = self._create_model_dir()
+
     def forward(self, data):
         x =  data.x
         edge_index = data.edge_index
@@ -165,6 +168,8 @@ class FCGCN(torch.nn.Module):
         lr=0.001,
         device = None,
         log_every = 10,
+        save_interval: int = 10,
+        save_start_epoch: int = 10,
     ):
         if device is None:
             device = next(self.parameters()).device
@@ -175,6 +180,7 @@ class FCGCN(torch.nn.Module):
         criterion = torch.nn.CrossEntropyLoss()
 
         train_acc_metric = BinaryAccuracy()
+        train_recall_metric = BinaryRecall()
         train_f1_metric = BinaryF1Score()
 
         history = []
@@ -186,6 +192,7 @@ class FCGCN(torch.nn.Module):
             self.train()
     
             train_acc_metric.reset()
+            train_recall_metric.reset()
             train_f1_metric.reset()
             
             train_loss_total = 0.0
@@ -211,26 +218,30 @@ class FCGCN(torch.nn.Module):
                 preds = logits.argmax(dim=1)
 
                 train_acc_metric.update(preds, batch.y)
+                train_recall_metric.update(preds, batch.y)
                 train_f1_metric.update(preds, batch.y)
             
             train_loss = train_loss_total / n_train
             train_acc = train_acc_metric.compute().item()
+            train_recall = train_recall_metric.compute().item()
             train_f1 = train_f1_metric.compute().item()
 
             epoch_result = {
                 "epoch": epoch + 1,
                 "train_loss": train_loss,
                 "train_acc": train_acc,
+                "train_recall": train_recall,
                 "train_f1": train_f1,
             }
             postfix = {
                 "loss": f"{train_loss:.4f}",
                 "acc": f"{train_acc:.3f}",
+                "recall": f"{train_recall:.3f}",
                 "f1": f"{train_f1:.3f}",
             }
 
             if val_loader is not None:
-                val_loss, val_acc, val_f1 = self._evaluate_loader(
+                val_loss, val_acc, val_recall, val_f1 = self._evaluate_loader(
                     val_loader,
                     criterion=criterion,
                     device=device,
@@ -240,6 +251,7 @@ class FCGCN(torch.nn.Module):
                     {
                         "val_loss": val_loss,
                         "val_acc": val_acc,
+                        "val_recall": val_recall,
                         "val_f1": val_f1,
                     }
                 )
@@ -248,9 +260,14 @@ class FCGCN(torch.nn.Module):
                     {
                         "val_loss": f"{val_loss:.4f}",
                         "val_acc": f"{val_acc:.3f}",
+                        "val_recall": f"{val_recall:.3f}",
                         "val_f1": f"{val_f1:.3f}",
                     }
                 )
+
+            if (epoch - save_start_epoch + 1) % save_interval == 0 and epoch >= save_start_epoch:
+                model_path = os.path.join(self.model_dir, f"model_epoch_{epoch+1}.pt")
+                self.save(model_path)
 
             history.append(epoch_result)
 
@@ -261,6 +278,7 @@ class FCGCN(torch.nn.Module):
                     f"Epoch {epoch+1:03d} | "
                     f"Loss: {train_loss:.4f} | "
                     f"Acc: {train_acc:.3f} | "
+                    f"Recall {train_recall:.3f} | "
                     f"F1: {train_f1:.3f}"
                 )
 
@@ -284,6 +302,31 @@ class FCGCN(torch.nn.Module):
             acc = (preds == data.y).float().mean().item()
         print(f'Accuracy: {acc:.4f}')
 
+
+    def _get_next_model_name(self, base_name: str = "gcn") -> str:
+        
+        gnn_dir = os.path.join(ARTIFACT_DIR, "gcns")
+        
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        prefix = base_name
+        
+        existing_dirs = [
+            d for d in os.listdir(gnn_dir) 
+            if os.path.isdir(os.path.join(gnn_dir, d)) and d.startswith(prefix)
+        ]
+        
+        counter = 1
+        while f"{prefix}_{counter}" in existing_dirs:
+            counter += 1
+        
+        model_name = f"{prefix}_{counter}_{timestamp}"
+        return model_name
+
+    def _create_model_dir(self):
+        model_dir = os.path.join(ARTIFACT_DIR, 'gcns', self._get_next_model_name())
+        os.makedirs(model_dir, exist_ok=True)
+        return model_dir
+
     def _evaluate_loader(self, loader, criterion=None, device=None):
         if device is None:
             device = next(self.parameters()).device
@@ -292,6 +335,7 @@ class FCGCN(torch.nn.Module):
             criterion = torch.nn.CrossEntropyLoss()
 
         acc_metric = BinaryAccuracy().to(device)
+        recall_metric = BinaryRecall().to(device)
         f1_metric = BinaryF1Score().to(device)
 
         self.eval()
@@ -315,10 +359,12 @@ class FCGCN(torch.nn.Module):
                 preds = logits.argmax(dim=1)
 
                 acc_metric.update(preds, y)
+                recall_metric.update(preds, y)
                 f1_metric.update(preds, y)
 
         avg_loss = loss_total / n_samples
         acc = acc_metric.compute().item()
+        recall = recall_metric.compute().item()
         f1 = f1_metric.compute().item()
 
-        return avg_loss, acc, f1
+        return avg_loss, acc, recall, f1
