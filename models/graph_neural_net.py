@@ -1,8 +1,12 @@
+import json
 import os, sys
 from pathlib import Path
+from typing import Optional
 import numpy as np
+import pandas as pd
 import torch
 from torch.nn import Linear
+import torch.nn as nn
 import torch.nn.functional as F
 from torch_geometric.nn import GCNConv, global_mean_pool
 from torch_geometric.utils import dense_to_sparse
@@ -21,8 +25,9 @@ from src.data_loader import load_zFCs
 from src.functional_connectivity import fisher_z2r
 from datetime import datetime
 
-num_node_features = 21**2 ## ?
-num_classes = 2
+
+# num_node_features = 434 # edges in matrix
+# num_classes = 2
 
 GROUP_TO_LABEL = {
     "HC": 0,
@@ -30,11 +35,102 @@ GROUP_TO_LABEL = {
 }
 
 
+class CrossEntropyRecallPenaltyLoss(nn.Module):
+    def __init__(
+        self,
+        recall_weight: float = 0.25,
+        positive_class: int = 1,
+        class_weights=None,
+        eps: float = 1e-8,
+    ):
+        super().__init__()
+        self.ce = nn.CrossEntropyLoss(weight=class_weights)
+        self.recall_weight = recall_weight
+        self.positive_class = positive_class
+        self.eps = eps
+
+    def forward(self, logits, targets):
+        targets = targets.view(-1).long()
+
+        ce_loss = self.ce(logits, targets)
+
+        probs = F.softmax(logits, dim=1)[:, self.positive_class]
+        targets_pos = (targets == self.positive_class).float()
+
+        n_pos = targets_pos.sum()
+
+        if n_pos == 0:
+            recall_penalty = torch.tensor(0.0, device=logits.device)
+        else:
+            recall_penalty = ((1.0 - probs) * targets_pos).sum() / (n_pos + self.eps)
+
+        return ce_loss + self.recall_weight * recall_penalty
+
+class SoftFBetaLoss(nn.Module):
+    def __init__(self, beta=2.0, positive_class=1, eps=1e-8):
+        super().__init__()
+        self.beta = beta
+        self.positive_class = positive_class
+        self.eps = eps
+
+    def forward(self, logits, targets):
+        targets = targets.view(-1)
+        
+        probs = F.softmax(logits, dim=1)[:, self.positive_class]
+        targets = (targets == self.positive_class).float()
+
+        tp = (probs * targets).sum()
+        fp = (probs * (1 - targets)).sum()
+        fn = ((1 - probs) * targets).sum()
+
+        beta2 = self.beta ** 2
+
+        soft_fbeta = ((1 + beta2) * tp + self.eps) / (
+            (1 + beta2) * tp + beta2 * fn + fp + self.eps
+        )
+
+        return 1 - soft_fbeta
+
+class CompoundProbabilityRecallLoss(nn.Module):
+    """
+    Compound loss combining a base probability/classification loss
+    with a soft F-beta loss.
+
+    Useful when you want:
+        - meaningful prob_MDD values
+        - stronger emphasis on MDD recall
+    """
+
+    def __init__(
+        self,
+        beta: float = 2.0,
+        fbeta_weight: float = 0.25,
+        positive_class: int = 1,
+        class_weights=None,
+    ):
+        super().__init__()
+
+    
+        self.base_loss = nn.CrossEntropyLoss(weight=class_weights)
+
+        self.fbeta_loss = SoftFBetaLoss(
+            beta=beta,
+            positive_class=positive_class,
+        )
+
+        self.fbeta_weight = fbeta_weight
+
+    def forward(self, logits, targets):
+        base = self.base_loss(logits, targets)
+        fbeta = self.fbeta_loss(logits, targets)
+
+        return base + self.fbeta_weight * fbeta
+
+
 def zFC_to_graph(
     zFC,
     label: int,
     threshold: float = 0.2,
-    remove_self_loops: bool = True
 ):
     """
     Convert zFC matrix into a PyTorch Geometric graph.
@@ -48,20 +144,17 @@ def zFC_to_graph(
     Returns:
         torch_geometric.data.Data
     """
-    x = torch.as_tensor(zFC, dtype=torch.float32)
-
-    if remove_self_loops:
-        x.fill_diagonal_(0.0)
+    x = torch.as_tensor(zFC, dtype=torch.float32).clone()
     
     adj = fisher_z2r(x.clone())
-    adj = adj.abs()*(adj > threshold)
+    adj = adj*(adj.abs() > threshold)
 
-    edge_index, edge_weight = dense_to_sparse(adj)
+    edge_index, edge_weight = dense_to_sparse(adj.abs())
 
     y = torch.as_tensor([label], dtype=torch.long)
 
     return Data(
-        x=x,
+        x=fisher_z2r(x),
         edge_index=edge_index,
         edge_weight=edge_weight,
         y=y,
@@ -71,11 +164,11 @@ def load_fc_graph_dataset(
     task_type: str,
     band_type: str,
     include_all_runs: bool,
-    atlas_type: str = "Yan2023",
+    atlas_type: str = "Schaefer400",
     network_means: bool = True,
     decomp_method: str = "memd",
     groups: tuple[str, ...] = ("HC", "MDD"),
-    threshold: float = 0.2,
+    threshold: float = 0.5,
     remove_self_loops: bool = True,
 ):
     dataset = []
@@ -104,7 +197,6 @@ def load_fc_graph_dataset(
                 zFC=zFC,
                 label=label,
                 threshold=threshold,
-                remove_self_loops=remove_self_loops
             )
             dataset.append(graph)
 
@@ -114,11 +206,23 @@ def load_fc_graph_dataset(
 class FCGCN(torch.nn.Module):
     def __init__(
         self,
+        task: str,
+        band: str,
+        atlas: str,
         num_node_features: int,
         hidden_channels: int = 64,
         num_classes: int = 2,
+        model_dir=None,
+        dropout: float = 0.3,
     ):
         super().__init__()
+        # THese are only to keep track of what data is used if testing diffent fMRI data or frequency bands
+        self._task = task
+        self._band = band
+        self._atlas = atlas
+
+        self._model_dir = model_dir
+
         self.num_node_features = num_node_features
         self.hidden_channels = hidden_channels
         self.num_classes = num_classes
@@ -128,7 +232,9 @@ class FCGCN(torch.nn.Module):
 
         self.classifier = Linear(hidden_channels, num_classes)
 
-        self.model_dir = self._create_model_dir()
+        self.dropout = dropout
+
+        self._save_model_info()
 
     def forward(self, data):
         x =  data.x
@@ -138,7 +244,7 @@ class FCGCN(torch.nn.Module):
 
         x = self.conv1(x, edge_index, edge_weight=edge_weight)
         x = F.relu(x)
-        x = F.dropout(x, training=self.training)
+        x = F.dropout(x, p=self.dropout, training=self.training)
         
         x = self.conv2(x , edge_index, edge_weight=edge_weight)
         x = F.relu(x)
@@ -149,44 +255,53 @@ class FCGCN(torch.nn.Module):
 
         return logits
     
-    def predict(self, data, return_probabilities = True):
-        self.eval()
-        with torch.no_grad():
-            logits = self(data.x)
-            probs = F.softmax(logits, dim=1)
-            preds = probs.argmax(dim=1)
-        
-        if return_probabilities:
-            return preds, probs
-        return preds
-    
     def fit(
         self, 
         train_loader, 
         val_loader=None, 
         epochs=100, 
+        label_smoothing=0.0, 
         lr=0.001,
-        device = None,
-        log_every = 10,
-        save_interval: int = 10,
-        save_start_epoch: int = 10,
+        log_every=10,
+        weight_decay=1e-4,
+        crit='CE'
     ):
-        if device is None:
-            device = next(self.parameters()).device
-
+        
+        device = torch.device("cpu")
         self.to(device)
 
-        optimizer = torch.optim.Adam(self.parameters(), lr=lr)
-        criterion = torch.nn.CrossEntropyLoss()
 
-        train_acc_metric = BinaryAccuracy()
-        train_recall_metric = BinaryRecall()
-        train_f1_metric = BinaryF1Score()
+        optimizer = torch.optim.Adam(self.parameters(), lr=lr, weight_decay=weight_decay)
+        
+        if crit == 'SB':
+            criterion = SoftFBetaLoss(beta=1.1)
+
+        elif crit == 'CESB':
+            criterion = CompoundProbabilityRecallLoss(beta=1)
+
+        elif crit == 'CERP':
+            criterion = CrossEntropyRecallPenaltyLoss(recall_weight=0.25)
+
+        else:
+            criterion = nn.CrossEntropyLoss(label_smoothing=label_smoothing, weight=torch.tensor([1.0, 1.7]))
+
+        self._save_train_info(
+            criterion=type(criterion).__name__,
+            optimizer=type(optimizer).__name__,
+            label_smoothing=label_smoothing,
+            lr=lr,
+            weight_decay=weight_decay,
+            epochs=epochs,
+            batch_size=train_loader.batch_size,
+        )
+
+        train_acc_metric = BinaryAccuracy().to(device)
+        train_recall_metric = BinaryRecall().to(device)
+        train_f1_metric = BinaryF1Score().to(device)
 
         history = []
 
         pbar = tqdm(range(epochs), desc="Training")
-
 
         for epoch in pbar:
             self.train()
@@ -195,8 +310,9 @@ class FCGCN(torch.nn.Module):
             train_recall_metric.reset()
             train_f1_metric.reset()
             
-            train_loss_total = 0.0
+            train_loss = 0.0
             n_train = 0
+
 
             for batch in train_loader:
                 batch = batch.to(device)
@@ -206,45 +322,41 @@ class FCGCN(torch.nn.Module):
                 logits = self(batch)
                 y = batch.y.view(-1).long()
                 
-                loss = criterion(logits, batch.y)
+                loss = criterion(logits, y)
 
                 loss.backward()
                 optimizer.step()
 
                 batch_size = y.numel()
-                train_loss_total += loss.item() * batch_size
+                train_loss += loss.item() * batch_size
                 n_train += batch_size
 
                 preds = logits.argmax(dim=1)
 
-                train_acc_metric.update(preds, batch.y)
-                train_recall_metric.update(preds, batch.y)
-                train_f1_metric.update(preds, batch.y)
+                train_acc_metric.update(preds, y)
+                train_recall_metric.update(preds, y)
+                train_f1_metric.update(preds, y)
             
-            train_loss = train_loss_total / n_train
+            train_loss /= n_train
             train_acc = train_acc_metric.compute().item()
             train_recall = train_recall_metric.compute().item()
             train_f1 = train_f1_metric.compute().item()
 
+            #region epoch book-keeping, validation, tqdm progress, and checkpoints
+            epoch_num = epoch + 1
+
             epoch_result = {
-                "epoch": epoch + 1,
+                "epoch": epoch_num,
                 "train_loss": train_loss,
                 "train_acc": train_acc,
                 "train_recall": train_recall,
                 "train_f1": train_f1,
-            }
-            postfix = {
-                "loss": f"{train_loss:.4f}",
-                "acc": f"{train_acc:.3f}",
-                "recall": f"{train_recall:.3f}",
-                "f1": f"{train_f1:.3f}",
             }
 
             if val_loader is not None:
                 val_loss, val_acc, val_recall, val_f1 = self._evaluate_loader(
                     val_loader,
                     criterion=criterion,
-                    device=device,
                 )
 
                 epoch_result.update(
@@ -256,57 +368,285 @@ class FCGCN(torch.nn.Module):
                     }
                 )
 
-                postfix.update(
-                    {
-                        "val_loss": f"{val_loss:.4f}",
-                        "val_acc": f"{val_acc:.3f}",
-                        "val_recall": f"{val_recall:.3f}",
-                        "val_f1": f"{val_f1:.3f}",
-                    }
+            if (epoch_num) % log_every == 0:
+                checkpoint_path = os.path.join(
+                    str(self.model_dir),
+                    f"checkpoint_epoch_{epoch_num:03d}.pt"
                 )
+                self.save_checkpoint(optimizer=optimizer, path=checkpoint_path, epoch=epoch)
 
-            if (epoch - save_start_epoch + 1) % save_interval == 0 and epoch >= save_start_epoch:
-                model_path = os.path.join(self.model_dir, f"model_epoch_{epoch+1}.pt")
-                self.save(model_path)
+            pbar.set_postfix(self._format_epoch_postfix(epoch_result))
+            
+            if (epoch_num) % log_every == 0:
+                self._print_epoch_result(epoch_result)
 
             history.append(epoch_result)
-
-            pbar.set_postfix(postfix)
-            
-            if (epoch + 1) % log_every == 0:
-                tqdm.write(
-                    f"Epoch {epoch+1:03d} | "
-                    f"Loss: {train_loss:.4f} | "
-                    f"Acc: {train_acc:.3f} | "
-                    f"Recall {train_recall:.3f} | "
-                    f"F1: {train_f1:.3f}"
-                )
-
+            #endregion
+        self.save(epoch=epochs)
         return history
 
-    def save(self, path):
-        torch.save(self.state_dict(), path)
+    def predict(self, loader, return_probabilities=True):
+        device = self._get_device()
 
-    def load(self, path, device=None):
-        if device is None:
-            device = next(self.parameters()).device
-
-        state_dict = torch.load(path, map_location=device, weights_only=True)
-        self.load_state_dict(state_dict)
-        return self
-
-    def evaluate(self, data, device=None):
         self.eval()
+
+        all_preds = []
+        all_probs = []
+
         with torch.no_grad():
-            preds = self.predict(data)
-            acc = (preds == data.y).float().mean().item()
-        print(f'Accuracy: {acc:.4f}')
+            for batch in loader:
+                batch = batch.to(device)
 
+                logits = self(batch)
+                probs = F.softmax(logits, dim=1)
+                preds = probs.argmax(dim=1)
 
-    def _get_next_model_name(self, base_name: str = "gcn") -> str:
+                all_preds.append(preds.cpu())
+                all_probs.append(probs.cpu())
+
+        preds = torch.cat(all_preds, dim=0)
+        probs = torch.cat(all_probs, dim=0)
+
+        if return_probabilities:
+            return preds, probs
+        return preds    
+
+    def evaluate(self, loader):
+        loss, acc, recall, f1 = self._evaluate_loader(loader)
+
+        print(
+            f"Loss: {loss:.4f} | "
+            f"Accuracy: {acc:.4f} | "
+            f"Recall: {recall:.4f} | "
+            f"F1: {f1:.4f}"
+        )
+
+        return {
+            "loss": loss,
+            "acc": acc,
+            "recall": recall,
+            "f1": f1,
+        }
+
+    def save(self, path=None, epoch=None):
+        model_dir = self._ensure_model_dir()
+
+        if path is None:
+            path = os.path.join(model_dir, "model_final.pt")
+
+        checkpoint = {
+            "state_dict": self.state_dict(),
+            "config": {
+                "task": self.task,
+                "band": self.band,
+                "atlas": self.atlas,
+                "num_node_features": self.num_node_features,
+                "hidden_channels": self.hidden_channels,
+                "num_classes": self.num_classes,
+            },
+            "epoch": epoch,
+            "model_type": "final",
+        }
+
+        torch.save(checkpoint, path)
+    
+    def save_checkpoint(self, optimizer, path=None, epoch=None, history=None):
+        model_dir = self._ensure_model_dir()
+
+        if path is None:
+            if epoch is None:
+                path = os.path.join(model_dir, "checkpoint.pt")
+            else:
+                path = os.path.join(model_dir, f"checkpoint_epoch_{epoch:03d}.pt")
+
+        checkpoint = {
+            "state_dict": self.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+            "config": {
+                "task": self.task,
+                "band": self.band,
+                "atlas": self.atlas,
+                "num_node_features": self.num_node_features,
+                "hidden_channels": self.hidden_channels,
+                "num_classes": self.num_classes,
+            },
+            "epoch": epoch,
+            "history": history,
+            "model_type": "checkpoint",
+        }
+
+        torch.save(checkpoint, path)
+    
+    def get_subject_prediction_scores(self, loader):
+        """
+        Return a compact per-sample prediction summary.
+
+        Assumes:
+            0 = HC
+            1 = MDD
+        """
+        device = self._get_device()
+        self.eval()
+
+        label_names = {
+            0: "HC",
+            1: "MDD",
+        }
+
+        rows = []
+        subject_number = 1
+
+        with torch.inference_mode():
+            for batch in loader:
+                batch = batch.to(device)
+
+                logits = self(batch)
+                probs = F.softmax(logits, dim=1)
+                preds = probs.argmax(dim=1)
+
+                y = batch.y.view(-1).long()
+
+                for i in range(y.numel()):
+                    true_label = int(y[i].cpu())
+                    pred_label = int(preds[i].cpu())
+
+                    rows.append({
+                        "subject": subject_number,
+                        "true": label_names[true_label],
+                        "pred": label_names[pred_label],
+                        "prob_MDD": float(probs[i, 1].cpu()),
+                        "correct": pred_label == true_label,
+                    })
+
+                    subject_number += 1
+
+        return pd.DataFrame(rows)
+
+    @classmethod
+    def load_model(cls, path, device=None):
+        if device is None:
+            device = "cpu"
+
+        checkpoint = torch.load(path, map_location=device, weights_only=False)
+
+        config = checkpoint["config"]
+
+        model = cls(
+            task=config["task"],
+            band=config["band"],
+            atlas=config["atlas"],
+            num_node_features=config["num_node_features"],
+            hidden_channels=config["hidden_channels"],
+            num_classes=config["num_classes"],
+            model_dir=os.path.dirname(path),
+        )
+
+        model.load_state_dict(checkpoint["state_dict"])
+        model.to(device)
+
+        return model
+    
+    @classmethod
+    def load_checkpoint(cls, path, lr=0.001, device=None):
+        if device is None:
+            device = "cpu"
+
+        checkpoint = torch.load(path, map_location=device, weights_only=False)
+        config = checkpoint["config"]
+
+        model = cls(
+            task=config["task"],
+            band=config["band"],
+            atlas=config["atlas"],
+            num_node_features=config["num_node_features"],
+            hidden_channels=config["hidden_channels"],
+            num_classes=config["num_classes"],
+            model_dir=os.path.dirname(path),
+        )
+
+        model.load_state_dict(checkpoint["state_dict"])
+        model.to(device)
+
+        optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+        optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+
+        start_epoch = checkpoint["epoch"] + 1
+        history = checkpoint.get("history", [])
+
+        return model, optimizer, start_epoch, history
+
+    @property
+    def band(self) -> str:
+        return self._band
+
+    @property
+    def task(self) -> str:
+        return self._task
+    
+    @property
+    def atlas(self) -> str:
+        return self._atlas
+    
+    @property
+    def model_dir(self):
+        return self._model_dir
+
+    def _get_device(self):
+        return next(self.parameters()).device
+
+    def _save_model_info(self):
+        model_dir = self._ensure_model_dir()
+
+        info = {"gcn_model_info":
+            {
+                "task": self.task,
+                "band": self.band,
+                "atlas": self.atlas,
+                "num_node_features": self.num_node_features,
+                "hidden_channels": self.hidden_channels,
+                "num_classes": self.num_classes,
+                "dropout": self.dropout,
+            }
+        }
         
-        gnn_dir = os.path.join(ARTIFACT_DIR, "gcns")
+        info_path = os.path.join(model_dir, "_info.json")
+        with open(info_path, 'w') as f:
+            json.dump(info, f, indent=4)
+
+    def _save_train_info(
+        self,
+        criterion: str,
+        optimizer: str,
+        lr: float,
+        label_smoothing: float,
+        weight_decay: float,
+        epochs: int,
+        batch_size: int,
+    ):
+        model_dir = self._ensure_model_dir()
+        info_path = os.path.join(model_dir, "_info.json")
+
+        with open(info_path, 'r') as f:
+            info = json.load(f)
+
+        info["train_info"] = {
+            "criterion": criterion,
+            "label_smoothing": label_smoothing,
+            "optimizer": optimizer,
+            "lr": lr,
+            "weight_decay": weight_decay,
+            "epochs": epochs,
+            "batch_size": batch_size,
+        }
+
+        with open(info_path, 'w') as f:
+            json.dump(info, f, indent=4)
+
+    def _generate_model_name(self, base_name: str = "gcn") -> str:
         
+        gnn_dir = os.path.join(ARTIFACT_DIR, "models", "gcns")
+        os.makedirs(gnn_dir, exist_ok=True)
+
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         prefix = base_name
         
@@ -315,21 +655,28 @@ class FCGCN(torch.nn.Module):
             if os.path.isdir(os.path.join(gnn_dir, d)) and d.startswith(prefix)
         ]
         
-        counter = 1
-        while f"{prefix}_{counter}" in existing_dirs:
-            counter += 1
+        model_id = "001"
+        if existing_dirs:
+            model_id = max(
+                [d.split("_")[1] for d in existing_dirs if len(d.split("_")) > 1]
+                + [model_id]            )
+            model_id = str(int(model_id) + 1).zfill(3)
         
-        model_name = f"{prefix}_{counter}_{timestamp}"
+        model_name = f"{prefix}_{model_id}_{timestamp}"
         return model_name
 
     def _create_model_dir(self):
-        model_dir = os.path.join(ARTIFACT_DIR, 'gcns', self._get_next_model_name())
+        model_dir = str(os.path.join(ARTIFACT_DIR, "models", "gcns", self._generate_model_name()))
         os.makedirs(model_dir, exist_ok=True)
         return model_dir
 
-    def _evaluate_loader(self, loader, criterion=None, device=None):
-        if device is None:
-            device = next(self.parameters()).device
+    def _ensure_model_dir(self):
+        if self._model_dir is None:
+            self._model_dir = self._create_model_dir()
+        return self._model_dir
+
+    def _evaluate_loader(self, loader, criterion=None):
+        device = self._get_device()
 
         if criterion is None:
             criterion = torch.nn.CrossEntropyLoss()
@@ -368,3 +715,41 @@ class FCGCN(torch.nn.Module):
         f1 = f1_metric.compute().item()
 
         return avg_loss, acc, recall, f1
+
+    def _format_epoch_postfix(self, epoch_result):
+        display_names = {
+            "train_loss": "loss",
+            "train_acc": "acc",
+            "train_recall": "recall",
+            "train_f1": "f1",
+            "val_loss": "val_loss",
+            "val_acc": "val_acc",
+            "val_recall": "val_recall",
+            "val_f1": "val_f1",
+        }
+
+        return {
+            display_names[key]: f"{epoch_result[key]:.4f}"
+            for key in display_names
+            if key in epoch_result
+        }
+    
+    def _print_epoch_result(self, epoch_result):
+        keys = [
+            "train_loss",
+            "train_acc",
+            "train_recall",
+            "train_f1",
+            "val_loss",
+            "val_acc",
+            "val_recall",
+            "val_f1",
+        ]
+
+        parts = [f"Epoch {epoch_result['epoch']:03d}"]
+
+        for key in keys:
+            if key in epoch_result:
+                parts.append(f"{key}: {epoch_result[key]:.4f}")
+
+        tqdm.write(" | ".join(parts))
