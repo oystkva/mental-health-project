@@ -336,11 +336,12 @@ def vectorize_zFCs(zFCs: np.ndarray) -> np.ndarray:
 def load_zFC_df(
     band_type: str = 'all',
     task_type: str = 'restAP',
-    include_all_runs: bool = False
+    include_all_runs: bool = False,
+    network_means: bool = False,
 ):
     n = list(list_networks().keys())
     
-    if band_type == 'all':
+    if band_type == 'all' and network_means:
         feature_labels = []
         # for band_label in ['s3', 's4', 's5']: 
         band_label = "3 bands"   
@@ -348,49 +349,53 @@ def load_zFC_df(
             feature_labels.extend([f'{i} - {j} ({band_label})' for j in n[idx:]])
         if task_type == 'all':
             X_HC = np.concatenate([
-                load_zFCs(group='HC', task_type='restAP', band_type='slow3', include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='HC', task_type='restAP', band_type='slow4', include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='HC', task_type='restAP', band_type='slow5', include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='HC', task_type='restPA', band_type='slow3', include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='HC', task_type='restPA', band_type='slow4', include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='HC', task_type='restPA', band_type='slow5', include_all_runs=include_all_runs, vectorize=True) 
+                load_zFCs(group='HC', task_type='restAP', band_type='slow3', include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='HC', task_type='restAP', band_type='slow4', include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='HC', task_type='restAP', band_type='slow5', include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='HC', task_type='restPA', band_type='slow3', include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='HC', task_type='restPA', band_type='slow4', include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='HC', task_type='restPA', band_type='slow5', include_all_runs=include_all_runs, vectorize=True, network_means=network_means) 
             ], axis=0)
             X_MDD = np.concatenate([
-                load_zFCs(group='MDD', task_type='restAP', band_type='slow3', include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='MDD', task_type='restAP', band_type='slow4', include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='MDD', task_type='restAP', band_type='slow5', include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='MDD', task_type='restPA', band_type='slow3', include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='MDD', task_type='restPA', band_type='slow4', include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='MDD', task_type='restPA', band_type='slow5', include_all_runs=include_all_runs, vectorize=True) 
+                load_zFCs(group='MDD', task_type='restAP', band_type='slow3', include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='MDD', task_type='restAP', band_type='slow4', include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='MDD', task_type='restAP', band_type='slow5', include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='MDD', task_type='restPA', band_type='slow3', include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='MDD', task_type='restPA', band_type='slow4', include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='MDD', task_type='restPA', band_type='slow5', include_all_runs=include_all_runs, vectorize=True, network_means=network_means) 
             ], axis=0)
         else:
             X_HC = np.concatenate([
-                load_zFCs(group='HC', task_type=task_type, band_type='slow3', include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='HC', task_type=task_type, band_type='slow4', include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='HC', task_type=task_type, band_type='slow5', include_all_runs=include_all_runs, vectorize=True) 
+                load_zFCs(group='HC', task_type=task_type, band_type='slow3', include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='HC', task_type=task_type, band_type='slow4', include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='HC', task_type=task_type, band_type='slow5', include_all_runs=include_all_runs, vectorize=True, network_means=network_means) 
             ], axis=0)
             X_MDD = np.concatenate([
-                load_zFCs(group='MDD', task_type=task_type, band_type='slow3', include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='MDD', task_type=task_type, band_type='slow4', include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='MDD', task_type=task_type, band_type='slow5', include_all_runs=include_all_runs, vectorize=True) 
+                load_zFCs(group='MDD', task_type=task_type, band_type='slow3', include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='MDD', task_type=task_type, band_type='slow4', include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='MDD', task_type=task_type, band_type='slow5', include_all_runs=include_all_runs, vectorize=True, network_means=network_means) 
             ], axis=0)
     else:
         band_label = band_type[0]+band_type[-1]
         feature_labels = []
-        for idx, i in enumerate(n):
-            feature_labels.extend([f'{i} - {j} ({band_label})' for j in n[idx:]])
+        if network_means:
+            for idx, i in enumerate(n):
+                feature_labels.extend([f'{i} - {j} ({band_label})' for j in n[idx:]])
+        else:
+            for i in range(int(434*435/2)):
+                feature_labels.extend([f'label {i}'])
         if task_type == 'all':
             X_HC = np.concatenate([
-                load_zFCs(group='HC', task_type='restAP', band_type=band_type, include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='HC', task_type='restPA', band_type=band_type, include_all_runs=include_all_runs, vectorize=True)
+                load_zFCs(group='HC', task_type='restAP', band_type=band_type, include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='HC', task_type='restPA', band_type=band_type, include_all_runs=include_all_runs, vectorize=True, network_means=network_means)
             ])
             X_MDD = np.concatenate([
-                load_zFCs(group='MDD', task_type='restAP', band_type=band_type, include_all_runs=include_all_runs, vectorize=True),
-                load_zFCs(group='MDD', task_type='restPA', band_type=band_type, include_all_runs=include_all_runs, vectorize=True)
+                load_zFCs(group='MDD', task_type='restAP', band_type=band_type, include_all_runs=include_all_runs, vectorize=True, network_means=network_means),
+                load_zFCs(group='MDD', task_type='restPA', band_type=band_type, include_all_runs=include_all_runs, vectorize=True, network_means=network_means)
             ])
         else:
-            X_HC = load_zFCs(group='HC', task_type=task_type, band_type=band_type, include_all_runs=include_all_runs, vectorize=True)
-            X_MDD = load_zFCs(group='MDD', task_type=task_type, band_type=band_type, include_all_runs=include_all_runs, vectorize=True)
+            X_HC = load_zFCs(group='HC', task_type=task_type, band_type=band_type, include_all_runs=include_all_runs, vectorize=True, network_means=network_means)
+            X_MDD = load_zFCs(group='MDD', task_type=task_type, band_type=band_type, include_all_runs=include_all_runs, vectorize=True, network_means=network_means)
     
     X = np.concatenate([X_HC, X_MDD], axis=0)
     df = pd.DataFrame(X, columns=feature_labels)
