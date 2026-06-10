@@ -17,6 +17,12 @@ plots/permutation_test_results.png
 # Processed MEMD data
 data/MEMD_processed/
 data/*/old
+data/all_runs/
+data/permutation_test_results/all_runs/
+data/permutation_test_results/single_run/
+data/permutation_test_results/with_diagonal/
+data/BOLD_signals_parcelled/Schaefer400/
+
 
 # Artifacts
 artifacts/
