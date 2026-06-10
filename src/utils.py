@@ -2,6 +2,8 @@ import os, sys
 from datetime import datetime
 import numpy as np
 from pathlib import Path
+import random
+import torch
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 from src.config import PROJECT_ROOT
@@ -68,3 +70,13 @@ def extract_run_id(path: str) -> str:
 
     raise ValueError(f"No known atlas token {atlases} found in filename: {base}")
 
+
+def set_seed(seed: int = 42):
+    """
+    Set random seed for reproducibility. 
+    Should be updated if CUDA is used.
+    """
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.use_deterministic_algorithms(True, warn_only=True)
