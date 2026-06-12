@@ -2,7 +2,7 @@ import os, sys
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split, StratifiedKFold
+from sklearn.model_selection import train_test_split, StratifiedKFold, RepeatedStratifiedKFold
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from sklearn.preprocessing import StandardScaler
 from pathlib import Path
@@ -38,249 +38,177 @@ import numpy as np
 import pandas as pd
 
 
-def save_cv_report(
-    df: pd.DataFrame,
-    param_keys: list[str],
-    out_path: str,
-    primary_metric: str = "f1",
-):
-    group_cols = [
-        "task_type",
-        "band_type",
-        "param_id",
-        *param_keys,
-    ]
+from sklearn.model_selection import train_test_split, RepeatedStratifiedKFold
+from itertools import product
+import os
+import json
+import numpy as np
+import pandas as pd
 
-    metrics = [
-        metric for metric in ["accuracy", "precision", "recall", "f1"]
-        if metric in df.columns
-    ]
-
-    report = {
-        "n_folds": int(df["fold"].nunique()),
-        "parameter_summary": {},
-        "configs": [],
-    }
-
-    grouped = df.groupby(group_cols, dropna=False)
-    summary_rows = []
-
-    summary_rows = []
-
-    for group_values, group_df in grouped:
-        if not isinstance(group_values, tuple):
-            group_values = (group_values,)
-
-        config_info = dict(zip(group_cols, group_values))
-
-        group_df = group_df.sort_values("fold")
-
-        depth = config_info.get("max_depth")
-        if pd.notna(depth) and float(depth).is_integer():
-            depth = int(depth)
-
-        ccp_alpha = config_info.get("ccp_alpha")
-        if pd.notna(ccp_alpha) and float(ccp_alpha).is_integer():
-            ccp_alpha = int(ccp_alpha)
-
-        config_str = (
-            f"[{config_info['task_type']}, "
-            f"{config_info['band_type']}, "
-            f"n={config_info.get('n_estimators')}, "
-            f"depth={depth}, "
-            f"min_smpl={config_info.get('min_samples_leaf')}, "
-            f"ccp_a={ccp_alpha}]"
-        )
-
-        config_entry = {
-            "config": config_str,
-        }
-
-        summary_row = {
-            **config_info,
-            "n_folds": int(len(group_df)),
-        }
-
-        for metric in metrics:
-            vals = group_df[metric].to_numpy(dtype=float)
-
-            vals_list = group_df[metric].round(4).tolist()
-            mean_val = round(vals.mean(), 4)
-            std_val = round(vals.std(ddof=0), 4)
-
-            config_entry[metric] = (
-                f"{vals_list} | mean={mean_val} | std={std_val}"
-            )
-
-            summary_row[f"mean_{metric}"] = mean_val
-            summary_row[f"std_{metric}"] = std_val
-
-        report["configs"].append(config_entry)
-        summary_rows.append(summary_row)
-
-    summary_df = pd.DataFrame(summary_rows)
-
-    score_col = f"mean_{primary_metric}"
-
-    for param in param_keys:
-        comp_df = (
-            summary_df
-            .groupby(param, dropna=False)[score_col]
-            .agg(
-                mean="mean",
-                std=lambda x: x.std(ddof=0),
-                best="max",
-            )
-            .reset_index()
-            .sort_values(param, key=lambda col: col.astype(str))
-        )
-
-        values = comp_df[param].tolist()
-        means = comp_df["mean"].tolist()
-        stds = comp_df["std"].tolist()
-        bests = comp_df["best"].tolist()
-
-        value_strs = [
-            "None" if pd.isna(v)
-            else str(int(v)) if isinstance(v, float) and v.is_integer()
-            else f"{v:g}" if isinstance(v, float)
-            else str(v)
-            for v in values
-        ]
-
-        mean_strs = [f"{v:.4g}" for v in means]
-        std_strs = [f"{v:.4g}" for v in stds]
-        best_strs = [f"{v:.4g}" for v in bests]
-
-        width = max(
-            max(len(s) for s in value_strs),
-            max(len(s) for s in mean_strs),
-            max(len(s) for s in std_strs),
-            max(len(s) for s in best_strs),
-        )
-
-        report["parameter_summary"][param] = [
-            "values: [" + ", ".join(f"{s:>{width}}" for s in value_strs) + "]",
-            "mean:   [" + ", ".join(f"{s:>{width}}" for s in mean_strs) + "]",
-            "std:    [" + ", ".join(f"{s:>{width}}" for s in std_strs) + "]",
-            "best:   [" + ", ".join(f"{s:>{width}}" for s in best_strs) + "]",
-        ]
-
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(report, f, indent=4, default=lambda x: x.item())
-
-    return summary_df
 
 def crossval_fc_forest(
-    fc_types: dict = {
-        'task_types':       ['restAP', 'restPA'],
-        'band_types':       ['slow3', 'slow4', 'slow5', 'full'],
-    },
-    param_grid: dict = {
-        'n_estimators':     [10, 40, 70, 100],
-        'max_depth':        [5, 10, 15, None],
-        'min_samples_leaf': [3, 6, 9],
-        'ccp_alpha':        [0.0, 0.03, 0.06],
-    },
+    fc_types=None,
+    param_grid=None,
     folds: int = 5,
-    primary_metric: str = 'f1',
+    repeats: int = 10,
+    primary_metric: str = "f1",
     random_state: int = 42,
 ):
-    """
-    Cross-validate FCRandomForestClassifier across all task/band combos and pruning params.
+    if fc_types is None:
+        fc_types = {
+            "task_types": ["restAP", "restPA"],
+            "band_types": ["slow3", "slow4", "slow5", "full"],
+        }
 
-    Args:
-        datasets:   {'task_types': [TaskTypeA, TaskTypeB, ...]
-                     'band_types': [BandTypeA, BandTypeB, ...]}
-        param_grid: pruning hyperparams to search, e.g.:
-                    {'max_depth':        [3, 5, None], 
-                     'min_samples_leaf': [1, 5, 10],
-                     'ccp_alpha':        [0.0, 0.01, 0.05]}
-        folds:      number of folds
-        random_state: for reproducibility
+    if param_grid is None:
+        param_grid = {
+            "n_estimators": [200, 250],
+            "max_depth": [1, 2],
+            "min_samples_leaf": [2, 3],
+            "ccp_alpha": [0.0],
+        }
 
-    Returns:
-        pd.DataFrame with mean CV scores per configuration
-    """
-    # Build all combinations of pruning params
     param_keys = list(param_grid.keys())
     param_combos = [
         dict(zip(param_keys, vals))
         for vals in product(*param_grid.values())
     ]
 
-    results = []
-    skf = StratifiedKFold(n_splits=folds, shuffle=True, random_state=random_state)
+    cv = RepeatedStratifiedKFold(
+        n_splits=folds,
+        n_repeats=repeats,
+        random_state=random_state,
+    )
 
-    for task_type, band_type in product(fc_types['task_types'], fc_types['band_types']):
-        print(f"\n=== Task: {task_type} | Band: {band_type} ===")
-        data = load_zFC_df(band_type=band_type, task_type=task_type)
+    cv_results = []
+    selected_results = []
 
-        X, y = data.iloc[:, 0:-1], data.MDD
-        X_t, X_test, y_t, y_test = train_test_split(
-                                        X, 
-                                        y, 
-                                        test_size=0.30, 
-                                        random_state=random_state,
-                                        stratify=y,
-                                    )
+    for task_type, band_type in product(
+        fc_types["task_types"],
+        fc_types["band_types"],
+    ):
+        print(f"\n=== Task: {task_type} | Band: {band_type} | run01 only ===")
 
-        scaler = StandardScaler()
-        X_t = pd.DataFrame(scaler.fit_transform(X_t), columns=X.columns)
-        X_test = pd.DataFrame(scaler.fit_transform(X_test), columns=X.columns)
+        data = load_zFC_df(
+            band_type=band_type,
+            task_type=task_type,
+            network_means=True,
+            include_all_runs=False,
+        )
 
-        best_params, best_score = None, (-1.0, 0.0)
+        data = data.sort_index()
+
+        X = data.iloc[:, 0:-1]
+        y = data["MDD"]
+
+        best_params = None
+        best_score = (-1.0, np.inf)
+        best_param_id = None
+
         for param_id, params in enumerate(param_combos):
             fold_scores = []
 
-            for fold, (train_idx, val_idx) in enumerate(skf.split(X_t, y_t), start=1):
-                X_train, X_val = X_t.iloc[train_idx], X_t.iloc[val_idx]
-                y_train, y_val = y_t.iloc[train_idx], y_t.iloc[val_idx]
+            for split_id, (train_idx, val_idx) in enumerate(cv.split(X, y), start=1):
+                repeat = ((split_id - 1) // folds) + 1
+                fold = ((split_id - 1) % folds) + 1
+
+                X_train, X_val = X.iloc[train_idx], X.iloc[val_idx]
+                y_train, y_val = y.iloc[train_idx], y.iloc[val_idx]
 
                 model = FCRandomForestClassifier(
                     band_type=band_type,
                     task_type=task_type,
-                    **params
+                    **params,
                 )
+
                 model.fit(X_train, y_train)
                 scores = model.evaluate(X_val, y_val)
 
                 fold_scores.append(scores[primary_metric])
 
                 row = {
-                    'param_id': param_id, 
-                    'task_type': task_type, 
-                    'band_type': band_type, 
-                    'fold': fold, **params
+                    "param_id": param_id,
+                    "task_type": task_type,
+                    "band_type": band_type,
+                    "repeat": repeat,
+                    "fold": fold,
+                    **params,
                 }
 
                 for metric, val in scores.items():
                     row[metric] = val
-                
-                results.append(row)
 
-            fold_scores = np.asarray(fold_scores)
+                cv_results.append(row)
+
+            fold_scores = np.asarray(fold_scores, dtype=float)
             mean_score = fold_scores.mean()
-            std_score = fold_scores.std()
+            std_score = fold_scores.std(ddof=0)
 
-            if not best_params or mean_score > best_score[0] or (mean_score == best_score[0] and std_score < best_score[1]):
-                best_params, best_score = params, (mean_score, std_score)
-        
+            if (
+                best_params is None
+                or mean_score > best_score[0]
+                or (
+                    mean_score == best_score[0]
+                    and std_score < best_score[1]
+                )
+            ):
+                best_params = params
+                best_score = (mean_score, std_score)
+                best_param_id = param_id
 
-        model = FCRandomForestClassifier(
+        print(
+            f"Best CV {primary_metric}: "
+            f"mean={best_score[0]:.4f}, std={best_score[1]:.4f}, "
+            f"params={best_params}"
+        )
+
+        selected_results.append({
+            "task_type": task_type,
+            "band_type": band_type,
+            "best_param_id": best_param_id,
+            "cv_mean_score": best_score[0],
+            "cv_std_score": best_score[1],
+            **best_params,
+        })
+
+        final_model = FCRandomForestClassifier(
             task_type=task_type,
             band_type=band_type,
             **best_params,
         )
-        model.fit(X_t, y_t)
-        model.evaluate(X_test, y_test)
-        model.save()
 
-    df = pd.DataFrame(results)
-    save_cv_report(df, param_keys, 'cv_report.json')
-    df.to_csv('cv_fold_results.csv', index=False)
+        final_model.fit(X, y)
+        final_model.save()
 
-    return df.sort_values('param_id', ascending=False).reset_index(drop=True)
+    cv_df = pd.DataFrame(cv_results)
+    selected_df = pd.DataFrame(selected_results)
+
+    report_dir = os.path.join(ARTIFACT_DIR, "reports", "RF")
+    os.makedirs(report_dir, exist_ok=True)
+
+    save_cv_report(
+        df=cv_df,
+        param_keys=param_keys,
+        out_path=os.path.join(report_dir, "cv_report_run01.json"),
+        primary_metric=primary_metric,
+    )
+
+    cv_df.to_csv(
+        os.path.join(report_dir, "cv_fold_results_run01.csv"),
+        index=False,
+    )
+
+    selected_df.to_csv(
+        os.path.join(report_dir, "selected_params_run01.csv"),
+        index=False,
+    )
+
+    return (
+        cv_df
+        .sort_values(["task_type", "band_type", "param_id", "repeat", "fold"])
+        .reset_index(drop=True),
+        selected_df,
+    )
 
 
 class FCRandomForestClassifier(RandomForestClassifier):
@@ -512,3 +440,198 @@ def plot_hyp_param_res_comparison():
     plt.boxplot(x, widths=8)
     print(noise.shape)
     plt.savefig(os.path.join(ARTIFACT_DIR, 'models', 'random_forest', 'box_plot.svg'), format='svg')
+
+
+
+
+
+    
+def _make_summary_block(values, means, stds, bests):
+    value_strs = [_format_json_value(v) for v in values]
+    mean_strs = [f"{v:.4g}" for v in means]
+    std_strs = [f"{v:.4g}" for v in stds]
+    best_strs = [f"{v:.4g}" for v in bests]
+
+    width = max(
+        max(len(s) for s in value_strs),
+        max(len(s) for s in mean_strs),
+        max(len(s) for s in std_strs),
+        max(len(s) for s in best_strs),
+    ) + 3
+
+    return [
+        "values: [" + ", ".join(f"{s:>{width}}" for s in value_strs) + "]",
+        "mean:   [" + ", ".join(f"{s:>{width}}" for s in mean_strs) + "]",
+        "std:    [" + ", ".join(f"{s:>{width}}" for s in std_strs) + "]",
+        "best:   [" + ", ".join(f"{s:>{width}}" for s in best_strs) + "]",
+    ]
+
+
+def _format_json_value(value):
+    if pd.isna(value):
+        return "None"
+
+    if isinstance(value, (np.integer, int)):
+        return str(int(value))
+
+    if isinstance(value, (np.floating, float)):
+        value = float(value)
+
+        if value.is_integer():
+            return str(int(value))
+
+        return f"{value:g}"
+
+    return str(value)
+
+def save_cv_report(
+    df: pd.DataFrame,
+    param_keys: list[str],
+    out_path: str,
+    primary_metric: str = "f1",
+):
+    group_cols = [
+        "task_type",
+        "band_type",
+        "param_id",
+        *param_keys,
+    ]
+
+    metrics = [
+        metric for metric in ["accuracy", "precision", "recall", "f1"]
+        if metric in df.columns
+    ]
+
+    has_repeats = "repeat" in df.columns
+
+    if has_repeats:
+        n_repeats = int(df["repeat"].nunique())
+        n_splits = int(df["fold"].nunique())
+        n_cv_evaluations = int(
+            df[["repeat", "fold"]]
+            .drop_duplicates()
+            .shape[0]
+        )
+    else:
+        n_repeats = 1
+        n_splits = int(df["fold"].nunique())
+        n_cv_evaluations = n_splits
+
+    report = {
+        "n_folds": n_splits,
+        "n_repeats": n_repeats,
+        "n_cv_evaluations": n_cv_evaluations,
+        "primary_metric": primary_metric,
+        "parameter_summary": {},
+        "condition_summary": {},
+        "configs": [],
+    }
+
+    grouped = df.groupby(group_cols, dropna=False, sort=False)
+    summary_rows = []
+
+    for group_values, group_df in grouped:
+        if not isinstance(group_values, tuple):
+            group_values = (group_values,)
+
+        config_info = dict(zip(group_cols, group_values))
+
+        sort_cols = ["repeat", "fold"] if has_repeats else ["fold"]
+        group_df = group_df.sort_values(sort_cols)
+
+        depth = _format_json_value(config_info.get("max_depth"))
+        ccp_alpha = _format_json_value(config_info.get("ccp_alpha"))
+
+        config_str = (
+            f"[{config_info['task_type']}, "
+            f"{config_info['band_type']}, "
+            f"n={_format_json_value(config_info.get('n_estimators'))}, "
+            f"depth={depth}, "
+            f"min_smpl={_format_json_value(config_info.get('min_samples_leaf'))}, "
+            f"ccp_a={ccp_alpha}]"
+        )
+
+        config_entry = {
+            "config": config_str,
+        }
+
+        summary_row = {
+            **config_info,
+            "n_cv_evaluations": int(len(group_df)),
+        }
+
+        for metric in metrics:
+            vals = group_df[metric].to_numpy(dtype=float)
+
+            vals_list = group_df[metric].round(4).tolist()
+            mean_val = round(vals.mean(), 4)
+            std_val = round(vals.std(ddof=0), 4)
+
+            config_entry[metric] = (
+                f"{vals_list} | mean={mean_val} | std={std_val}"
+            )
+
+            summary_row[f"mean_{metric}"] = mean_val
+            summary_row[f"std_{metric}"] = std_val
+
+        report["configs"].append(config_entry)
+        summary_rows.append(summary_row)
+
+    summary_df = pd.DataFrame(summary_rows)
+
+    score_col = f"mean_{primary_metric}"
+
+    for param in param_keys:
+        comp_df = (
+            summary_df
+            .groupby(param, dropna=False, sort=False)[score_col]
+            .agg(
+                mean="mean",
+                std=lambda x: x.std(ddof=0),
+                best="max",
+            )
+            .reset_index()
+        )
+
+        report["parameter_summary"][param] = _make_summary_block(
+            values=comp_df[param].tolist(),
+            means=comp_df["mean"].tolist(),
+            stds=comp_df["std"].tolist(),
+            bests=comp_df["best"].tolist(),
+        )
+
+    summary_df["task_band"] = (
+        summary_df["task_type"].astype(str)
+        + "-"
+        + summary_df["band_type"].astype(str)
+    )
+
+    for col, name in [
+        ("task_type", "task"),
+        ("band_type", "band"),
+        ("task_band", "task_band"),
+    ]:
+        comp_df = (
+            summary_df
+            .groupby(col, dropna=False, sort=False)[score_col]
+            .agg(
+                mean="mean",
+                std=lambda x: x.std(ddof=0),
+                best="max",
+            )
+            .reset_index()
+        )
+
+        report["condition_summary"][name] = _make_summary_block(
+            values=comp_df[col].tolist(),
+            means=comp_df["mean"].tolist(),
+            stds=comp_df["std"].tolist(),
+            bests=comp_df["best"].tolist(),
+        )
+
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(report, f, indent=4, default=lambda x: x.item())
+
+    print(json.dumps(report["condition_summary"], indent=4))
+
+    return summary_df
