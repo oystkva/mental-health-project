@@ -169,7 +169,6 @@ def load_fc_graph_dataset(
     decomp_method: str = "memd",
     groups: tuple[str, ...] = ("HC", "MDD"),
     threshold: float = 0.5,
-    remove_self_loops: bool = True,
 ):
     dataset = []
 
@@ -234,8 +233,6 @@ class FCGCN(torch.nn.Module):
 
         self.dropout = dropout
 
-        self._save_model_info()
-
     def forward(self, data):
         x =  data.x
         edge_index = data.edge_index
@@ -264,26 +261,21 @@ class FCGCN(torch.nn.Module):
         lr=0.001,
         log_every=10,
         weight_decay=1e-4,
-        crit='CE'
+        device=None
     ):
-        
-        device = torch.device("cpu")
+        self._ensure_model_dir()
+        if device is None:        
+            device = torch.device("cpu")
+        else:
+            device = torch.device(device)
         self.to(device)
 
 
         optimizer = torch.optim.Adam(self.parameters(), lr=lr, weight_decay=weight_decay)
         
-        if crit == 'SB':
-            criterion = SoftFBetaLoss(beta=1.1)
+        class_weights = torch.tensor([1.0, 1.7], device=device)
 
-        elif crit == 'CESB':
-            criterion = CompoundProbabilityRecallLoss(beta=1)
-
-        elif crit == 'CERP':
-            criterion = CrossEntropyRecallPenaltyLoss(recall_weight=0.25)
-
-        else:
-            criterion = nn.CrossEntropyLoss(label_smoothing=label_smoothing, weight=torch.tensor([1.0, 1.7]))
+        criterion = nn.CrossEntropyLoss(label_smoothing=label_smoothing, weight=class_weights)
 
         self._save_train_info(
             criterion=type(criterion).__name__,
@@ -373,7 +365,7 @@ class FCGCN(torch.nn.Module):
                     str(self.model_dir),
                     f"checkpoint_epoch_{epoch_num:03d}.pt"
                 )
-                self.save_checkpoint(optimizer=optimizer, path=checkpoint_path, epoch=epoch)
+                self.save_checkpoint(optimizer=optimizer, path=checkpoint_path, epoch=epoch_num, history=history)
 
             pbar.set_postfix(self._format_epoch_postfix(epoch_result))
             
@@ -443,6 +435,7 @@ class FCGCN(torch.nn.Module):
                 "num_node_features": self.num_node_features,
                 "hidden_channels": self.hidden_channels,
                 "num_classes": self.num_classes,
+                "dropout": self.dropout,
             },
             "epoch": epoch,
             "model_type": "final",
@@ -469,6 +462,7 @@ class FCGCN(torch.nn.Module):
                 "num_node_features": self.num_node_features,
                 "hidden_channels": self.hidden_channels,
                 "num_classes": self.num_classes,
+                "dropout": self.dropout,
             },
             "epoch": epoch,
             "history": history,
@@ -539,6 +533,7 @@ class FCGCN(torch.nn.Module):
             hidden_channels=config["hidden_channels"],
             num_classes=config["num_classes"],
             model_dir=os.path.dirname(path),
+            dropout=config.get("dropout", 0.3),
         )
 
         model.load_state_dict(checkpoint["state_dict"])
@@ -562,6 +557,7 @@ class FCGCN(torch.nn.Module):
             hidden_channels=config["hidden_channels"],
             num_classes=config["num_classes"],
             model_dir=os.path.dirname(path),
+            dropout=config.get("dropout", 0.3),
         )
 
         model.load_state_dict(checkpoint["state_dict"])
@@ -595,8 +591,6 @@ class FCGCN(torch.nn.Module):
         return next(self.parameters()).device
 
     def _save_model_info(self):
-        model_dir = self._ensure_model_dir()
-
         info = {"gcn_model_info":
             {
                 "task": self.task,
@@ -609,7 +603,7 @@ class FCGCN(torch.nn.Module):
             }
         }
         
-        info_path = os.path.join(model_dir, "_info.json")
+        info_path = os.path.join(str(self._model_dir), "_info.json")
         with open(info_path, 'w') as f:
             json.dump(info, f, indent=4)
 
@@ -673,6 +667,7 @@ class FCGCN(torch.nn.Module):
     def _ensure_model_dir(self):
         if self._model_dir is None:
             self._model_dir = self._create_model_dir()
+            self._save_model_info()
         return self._model_dir
 
     def _evaluate_loader(self, loader, criterion=None):
