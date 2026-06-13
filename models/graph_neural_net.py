@@ -1,4 +1,6 @@
 import json
+import math
+import copy
 import os, sys
 from pathlib import Path
 from typing import Optional
@@ -13,7 +15,9 @@ from torch_geometric.utils import dense_to_sparse
 from torch_geometric.data import Data
 from torchmetrics.classification import BinaryAccuracy, BinaryF1Score, BinaryRecall
 from tqdm.auto import tqdm
-# from torch_geometric.loader import DataLoader
+from torch_geometric.loader import DataLoader
+from sklearn.model_selection import StratifiedKFold, train_test_split, ParameterGrid
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
@@ -22,6 +26,7 @@ from src.config import (
     ARTIFACT_DIR,
 )
 from src.data_loader import load_zFCs
+from src.utils import set_seed
 from src.functional_connectivity import fisher_z2r
 from datetime import datetime
 
@@ -257,9 +262,15 @@ class FCGCN(torch.nn.Module):
         train_loader, 
         val_loader=None, 
         epochs=100, 
+        early_stopping=True,
+        min_epochs=30,
+        patience=20,
+        loss_patience=10,
+        min_delta=1e-4,
         label_smoothing=0.0, 
         lr=0.001,
-        log_every=10,
+        class_weights = torch.tensor([1.0, 1.1]),
+        log_every=1000,
         weight_decay=1e-4,
         device=None
     ):
@@ -273,7 +284,9 @@ class FCGCN(torch.nn.Module):
 
         optimizer = torch.optim.Adam(self.parameters(), lr=lr, weight_decay=weight_decay)
         
-        class_weights = torch.tensor([1.0, 1.7], device=device)
+        if class_weights is None:
+            class_weights = torch.tensor([1.0, 1.1])
+        class_weights.to(device)
 
         criterion = nn.CrossEntropyLoss(label_smoothing=label_smoothing, weight=class_weights)
 
@@ -293,7 +306,24 @@ class FCGCN(torch.nn.Module):
 
         history = []
 
+        # Early stopping
+        if early_stopping and val_loader is None:
+            early_stopping = False
+
+        best_loss = math.inf
+        best_f1_loss_pair = (-math.inf, math.inf)
+        best_epoch = None
+        best_state_dict = None
+
+        epochs_without_f1_improvement = 0
+        epochs_with_bad_loss = 0
+        epochs_with_perfect_train_scores = 0
+
+
         pbar = tqdm(range(epochs), desc="Training")
+
+        should_stop = False
+        stop_reason = None
 
         for epoch in pbar:
             self.train()
@@ -365,17 +395,112 @@ class FCGCN(torch.nn.Module):
                     str(self.model_dir),
                     f"checkpoint_epoch_{epoch_num:03d}.pt"
                 )
-                self.save_checkpoint(optimizer=optimizer, path=checkpoint_path, epoch=epoch_num, history=history)
+                self.save_checkpoint(optimizer=optimizer, path=checkpoint_path, epoch=epoch_num, history=history+[epoch_result])
 
             pbar.set_postfix(self._format_epoch_postfix(epoch_result))
             
             if (epoch_num) % log_every == 0:
                 self._print_epoch_result(epoch_result)
 
+            if early_stopping:
+                if "val_f1" not in epoch_result or "val_loss" not in epoch_result:
+                    raise ValueError(
+                        "Early stopping requires both 'val_f1' and 'val_loss' in epoch_result."
+                    )
+                loss_tolerance = 0.02
+
+                current_f1 = epoch_result["val_f1"]
+                current_loss = epoch_result["val_loss"]
+
+                # Warm-up period:
+                # Do not select a best model and do not count patience before min_epochs.
+                if epoch_num < min_epochs + loss_patience:
+                    history.append(epoch_result)
+                    continue
+
+                # First valid epoch becomes the initial best.
+                if best_state_dict is None:
+                    best_f1_loss_pair = (current_f1, current_loss)
+                    best_loss = current_loss
+                    best_epoch = epoch_num
+                    best_state_dict = copy.deepcopy(self.state_dict())
+
+                    epochs_without_f1_improvement = 0
+                    epochs_with_bad_loss = 0
+
+                    best_path = os.path.join(str(self.model_dir), "model_best.pt")
+                    self.save(path=best_path, epoch=epoch_num)
+
+                    history.append(epoch_result)
+                    continue
+
+                best_f1, best_pair_loss = best_f1_loss_pair
+
+                f1_improved = current_f1 > best_f1 + min_delta
+                f1_tied = abs(current_f1 - best_f1) <= min_delta
+                pair_improved = f1_improved or (
+                    f1_tied and current_loss < best_pair_loss - 1e-4
+                )
+
+                if pair_improved:
+                    best_f1_loss_pair = (current_f1, current_loss)
+                    best_epoch = epoch_num
+                    best_state_dict = copy.deepcopy(self.state_dict())
+                    epochs_without_f1_improvement = 0
+
+                    best_path = os.path.join(str(self.model_dir), "model_best.pt")
+                    self.save(path=best_path, epoch=epoch_num)
+                else:
+                    epochs_without_f1_improvement += 1
+
+                    # Loss overfitting guard:
+                    # only count it as bad if loss is clearly worse than the best saved loss.
+                if current_loss < best_loss - 1e-4:
+                    best_loss = current_loss
+                    epochs_with_bad_loss = 0
+                elif current_loss > best_loss + loss_tolerance:
+                    epochs_with_bad_loss += 1
+                    if current_loss > best_loss + 3*loss_tolerance:
+                        epochs_with_bad_loss += 1
+                
+                if epochs_without_f1_improvement >= patience:
+                    should_stop = True
+                    stop_reason = f"no val_f1 improvement for {patience} epochs"
+                elif epochs_with_bad_loss >= loss_patience:
+                    should_stop = True
+                    stop_reason = f"no val_loss improvevment for {loss_patience} epochs."
+
+                if (epoch_result["train_acc"] + epoch_result["train_recall"] + epoch_result["train_f1"] > 2.99):
+                    epochs_with_perfect_train_scores += 1
+                else:
+                    epochs_with_perfect_train_scores = 0
+                if (epochs_with_perfect_train_scores > 5
+                    and epochs_without_f1_improvement >= 10 and epochs_with_bad_loss >= 10):
+                    should_stop = True
+                    stop_reason = f"model perfectly fitted to training data, stopping for overfitting"
+
+                if should_stop:
+                    tqdm.write(
+                        f"Early stopping at epoch {epoch_num:03d}. "
+                        f"Best val_f1: {best_f1_loss_pair[0]:.4f}, "
+                        f"best val_loss: {best_loss:.4f}, "
+                        f"best epoch: {best_epoch:03d}. "
+                        f"Reason: {stop_reason}."
+                    )
+
+                    history.append(epoch_result)
+                    break
+
             history.append(epoch_result)
             #endregion
-        self.save(epoch=epochs)
+        if best_state_dict is not None:
+            self.load_state_dict(best_state_dict)
+            self.save(epoch=best_epoch)
+        else:
+            self.save(epoch=epoch_num)
+
         return history
+
 
     def predict(self, loader, return_probabilities=True):
         device = self._get_device()
@@ -661,13 +786,18 @@ class FCGCN(torch.nn.Module):
 
     def _create_model_dir(self):
         model_dir = str(os.path.join(ARTIFACT_DIR, "models", "gcns", self._generate_model_name()))
-        os.makedirs(model_dir, exist_ok=True)
         return model_dir
 
     def _ensure_model_dir(self):
         if self._model_dir is None:
             self._model_dir = self._create_model_dir()
             self._save_model_info()
+        os.makedirs(self._model_dir, exist_ok=True)
+
+        info_path = os.path.join(self._model_dir, "_info.json")
+        if not os.path.exists(info_path):
+            self._save_model_info()
+
         return self._model_dir
 
     def _evaluate_loader(self, loader, criterion=None):
@@ -748,3 +878,441 @@ class FCGCN(torch.nn.Module):
                 parts.append(f"{key}: {epoch_result[key]:.4f}")
 
         tqdm.write(" | ".join(parts))
+
+
+
+
+def _get_graph_labels(dataset):
+    labels = []
+
+    for graph in dataset:
+        y = graph.y
+
+        if torch.is_tensor(y):
+            y = int(y.view(-1)[0].item())
+        else:
+            y = int(y)
+
+        labels.append(y)
+
+    return np.array(labels, dtype=int)
+
+
+def _make_graph_loader(dataset, indices, batch_size=7, shuffle=False):
+    graphs = [dataset[int(i)] for i in indices]
+
+    return DataLoader(
+        graphs,
+        batch_size=batch_size,
+        shuffle=shuffle,
+    )
+
+
+def _train_val_split(train_val_idx, labels, val_size=0.25, random_state=42):
+    train_val_idx = np.asarray(train_val_idx)
+    y_train_val = labels[train_val_idx]
+
+    try:
+        train_idx, val_idx = train_test_split(
+            train_val_idx,
+            test_size=val_size,
+            random_state=random_state,
+            stratify=y_train_val,
+        )
+    except ValueError:
+        train_idx, val_idx = train_test_split(
+            train_val_idx,
+            test_size=val_size,
+            random_state=random_state,
+            stratify=None,
+        )
+
+    return np.asarray(train_idx), np.asarray(val_idx)
+
+
+def _evaluate_predictions(model, loader):
+    preds, probs = model.predict(loader, return_probabilities=True)
+
+    y_true = []
+
+    for batch in loader:
+        y_true.extend(batch.y.view(-1).cpu().numpy().astype(int).tolist())
+
+    y_true = np.asarray(y_true, dtype=int)
+    y_pred = preds.cpu().numpy().astype(int)
+
+    return {
+        "acc": float(accuracy_score(y_true, y_pred)),
+        "precision": float(precision_score(y_true, y_pred, zero_division=0)),
+        "recall": float(recall_score(y_true, y_pred, zero_division=0)),
+        "f1": float(f1_score(y_true, y_pred, zero_division=0)),
+    }
+
+
+def _mean_std(values):
+    values = np.asarray(values, dtype=float)
+
+    return {
+        "mean": float(np.mean(values)),
+        "std": float(np.std(values, ddof=1)) if len(values) > 1 else 0.0,
+        "values": [float(v) for v in values],
+    }
+
+
+def _format_param_summary(config_summaries, primary_metric="f1"):
+    metric_key = f"test_{primary_metric}"
+
+    param_names = sorted(
+        {
+            param_name
+            for row in config_summaries
+            for param_name in row["config"].keys()
+        }
+    )
+
+    param_summary = {}
+
+    for param_name in param_names:
+        values = sorted(
+            {
+                str(row["config"][param_name])
+                for row in config_summaries
+                if param_name in row["config"]
+            }
+        )
+
+        param_summary[param_name] = {}
+
+        for value in values:
+            scores = []
+
+            for row in config_summaries:
+                if str(row["config"].get(param_name)) == value:
+                    scores.append(row["summary"][metric_key]["mean"])
+
+            param_summary[param_name][value] = {
+                "mean": float(np.mean(scores)),
+                "std": float(np.std(scores, ddof=1)) if len(scores) > 1 else 0.0,
+                "n_configs": len(scores),
+            }
+
+    return param_summary
+
+
+def crossval_gcn(
+    fc_types=None,
+    param_grid=None,
+    folds: int = 3,
+    repeats: int = 1,
+    val_size: float = 0.25,
+    epochs: int = 80,
+    patience: int = 10,
+    min_delta: float = 1e-4,
+    batch_size: int = 7,
+    primary_metric: str = "f1",
+    random_state: int = 42,
+    include_all_runs: bool = True,
+    atlas_type: str = "Schaefer400",
+    network_means: bool = False,
+    decomp_method: str = "memd",
+    device=None,
+    save_path=None,
+):
+    set_seed(random_state)
+
+    if device is None:        
+        device = torch.device("cpu")
+    else:
+        device = torch.device(device)
+
+    if fc_types is None:
+        fc_types = {
+            "task_types": ["restAP", "restPA"],
+            "band_types": ["slow4", "slow5"],
+        }
+
+    if param_grid is None:
+        param_grid = [
+            {
+                "hidden_channels": 32,
+                "dropout": 0.3,
+                "lr": 0.001,
+                "weight_decay": 1e-4,
+                "label_smoothing": 0.05,
+                "mdd_weight": 1.1,
+            },
+            {
+                "hidden_channels": 64,
+                "dropout": 0.3,
+                "lr": 0.001,
+                "weight_decay": 1e-4,
+                "label_smoothing": 0.05,
+                "mdd_weight": 1.1,
+            },
+        ]
+
+    if isinstance(param_grid, dict):
+        configs = list(ParameterGrid(param_grid))
+    else:
+        configs = list(param_grid)
+
+    all_results = []
+    config_summaries = []
+
+    task_types = fc_types.get("task_types", ["restAP", "restPA"])
+    band_types = fc_types.get("band_types", ["slow4", "slow5"])
+
+    total_runs = (
+        len(task_types)
+        * len(band_types)
+        * len(configs)
+        * repeats
+        * folds
+    )
+
+    for task_type in task_types:
+        for band_type in band_types:
+
+            dataset_name = f"{task_type}-{band_type}"
+
+            dataset = load_fc_graph_dataset(
+                task_type=task_type,
+                band_type=band_type,
+                include_all_runs=include_all_runs,
+                atlas_type=atlas_type,
+                network_means=network_means,
+                decomp_method=decomp_method,
+            )
+
+            labels = _get_graph_labels(dataset)
+            n_samples = len(dataset)
+
+            class_counts = {
+                int(label): int(count)
+                for label, count in zip(*np.unique(labels, return_counts=True))
+            }
+
+            num_node_features = int(dataset[0].x.shape[-1])
+
+            for config_idx, config in enumerate(configs):
+                fold_rows_for_config = []
+
+                for repeat in range(repeats):
+
+                    print(f"Starting run number {repeat + 1} out of {repeats} for config {config_idx + 1} out of {len(configs)} ({band_type} | {task_type}): ")
+
+                    split_seed = random_state + 1000 * repeat
+
+                    skf = StratifiedKFold(
+                        n_splits=folds,
+                        shuffle=True,
+                        random_state=split_seed,
+                    )
+
+                    for fold_idx, (train_val_idx, test_idx) in enumerate(
+                        skf.split(np.zeros(n_samples), labels)
+                    ):
+                        run_seed = (
+                            random_state
+                            + 10000 * repeat
+                            + 100 * fold_idx
+                            + config_idx
+                        )
+
+                        set_seed(run_seed)
+
+                        train_idx, val_idx = _train_val_split(
+                            train_val_idx=train_val_idx,
+                            labels=labels,
+                            val_size=val_size,
+                            random_state=run_seed,
+                        )
+
+                        train_loader = _make_graph_loader(
+                            dataset,
+                            train_idx,
+                            batch_size=batch_size,
+                            shuffle=True,
+                        )
+
+                        val_loader = _make_graph_loader(
+                            dataset,
+                            val_idx,
+                            batch_size=batch_size,
+                            shuffle=False,
+                        )
+
+                        test_loader = _make_graph_loader(
+                            dataset,
+                            test_idx,
+                            batch_size=batch_size,
+                            shuffle=False,
+                        )
+
+                        model_dir = os.path.join(
+                            ARTIFACT_DIR,
+                            "models",
+                            "gcn_crossval",
+                            dataset_name,
+                            f"config_{config_idx:03d}",
+                            f"repeat_{repeat + 1:02d}_fold_{fold_idx + 1:02d}",
+                        )
+
+                        model = FCGCN(
+                            task=task_type,
+                            band=band_type,
+                            atlas=atlas_type,
+                            num_node_features=num_node_features,
+                            hidden_channels=config.get("hidden_channels", 64),
+                            dropout=config.get("dropout", 0.3),
+                            model_dir=model_dir,
+                        )
+
+                        history = model.fit(
+                            train_loader=train_loader,
+                            val_loader=val_loader,
+                            epochs=epochs,
+                            early_stopping=True,
+                            patience=patience,
+                            min_delta=min_delta,
+                            label_smoothing=config.get("label_smoothing", 0.0),
+                            lr=config.get("lr", 0.001),
+                            class_weights=torch.tensor([1.0, config.get("mdd_weight", 1.1)]),
+                            weight_decay=config.get("weight_decay", 1e-4),
+                            device=device,
+                        )
+
+                        with open(os.path.join(str(model.model_dir), "_history.json"), 'w') as f:
+                            json.dump(
+                                obj=history,
+                                fp=f,
+                                indent=4,
+                            )
+
+                        test_scores = _evaluate_predictions(
+                            model=model,
+                            loader=test_loader,
+                        )
+
+                        val_f1_values = [
+                            row["val_f1"]
+                            for row in history
+                            if "val_f1" in row
+                        ]
+
+                        val_loss_values = [
+                            row["val_loss"]
+                            for row in history
+                            if "val_loss" in row
+                        ]
+
+                        best_val_f1 = (
+                            float(np.max(val_f1_values))
+                            if len(val_f1_values) > 0
+                            else np.nan
+                        )
+
+                        best_val_loss = (
+                            float(np.min(val_loss_values))
+                            if len(val_loss_values) > 0
+                            else np.nan
+                        )
+
+                        best_epoch = None
+                        if len(val_f1_values) > 0:
+                            best_epoch = max(
+                                history,
+                                key=lambda row: row.get("val_f1", -math.inf),
+                            )["epoch"]
+
+                        row = {
+                            "dataset": dataset_name,
+                            "task_type": task_type,
+                            "band_type": band_type,
+                            "threshold": 0.5,
+                            "atlas_type": atlas_type,
+                            "n_samples": n_samples,
+                            "class_counts": class_counts,
+                            "config_idx": config_idx,
+                            "config": copy.deepcopy(config),
+                            "repeat": repeat + 1,
+                            "fold": fold_idx + 1,
+                            "n_train": int(len(train_idx)),
+                            "n_val": int(len(val_idx)),
+                            "n_test": int(len(test_idx)),
+                            "best_epoch": int(best_epoch) if best_epoch is not None else None,
+                            "best_val_f1": best_val_f1,
+                            "best_val_loss": best_val_loss,
+                            "test_acc": test_scores["acc"],
+                            "test_precision": test_scores["precision"],
+                            "test_recall": test_scores["recall"],
+                            "test_f1": test_scores["f1"],
+                        }
+
+                        all_results.append(row)
+                        fold_rows_for_config.append(row)
+
+                summary = {
+                    "test_acc": _mean_std([r["test_acc"] for r in fold_rows_for_config]),
+                    "test_precision": _mean_std([r["test_precision"] for r in fold_rows_for_config]),
+                    "test_recall": _mean_std([r["test_recall"] for r in fold_rows_for_config]),
+                    "test_f1": _mean_std([r["test_f1"] for r in fold_rows_for_config]),
+                    "best_val_f1": _mean_std([r["best_val_f1"] for r in fold_rows_for_config]),
+                    "best_epoch": _mean_std([r["best_epoch"] for r in fold_rows_for_config]),
+                }
+
+                config_summary = {
+                    "dataset": dataset_name,
+                    "task_type": task_type,
+                    "band_type": band_type,
+                    "threshold": 0.5,
+                    "atlas_type": atlas_type,
+                    "config_idx": config_idx,
+                    "config": copy.deepcopy(config),
+                    "summary": summary,
+                }
+
+                config_summaries.append(config_summary)
+
+    metric_key = f"test_{primary_metric}"
+
+    best_config = max(
+        config_summaries,
+        key=lambda row: row["summary"][metric_key]["mean"],
+    )
+
+    report = {
+        "n_folds": folds,
+        "n_repeats": repeats,
+        "val_size": val_size,
+        "epochs": epochs,
+        "patience": patience,
+        "min_delta": min_delta,
+        "batch_size": batch_size,
+        "primary_metric": primary_metric,
+        "device": str(device),
+        "fc_types": fc_types,
+        "configs_tested": len(configs),
+        "best_config": best_config,
+        "parameter_summary": _format_param_summary(
+            config_summaries,
+            primary_metric=primary_metric,
+        ),
+        "config_summaries": config_summaries,
+        "fold_results": all_results,
+    }
+
+    if save_path is None:
+        save_path = os.path.join(
+            ARTIFACT_DIR,
+            "gcn_crossval_report.json",
+        )
+
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+
+    with open(save_path, "w") as f:
+        json.dump(report, f, indent=4)
+
+    
+
+    return report
